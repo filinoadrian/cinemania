@@ -1,12 +1,12 @@
 package com.far_sstrwnt.cinemania.ui
 
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.far_sstrwnt.cinemania.model.Movie
 
-class MoviesAdapter : ListAdapter<Movie, RecyclerView.ViewHolder>(MOVIE_COMPARATOR) {
+class MoviesAdapter : PagingDataAdapter<Movie, RecyclerView.ViewHolder>(MOVIE_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return MovieViewHolder.create(parent)

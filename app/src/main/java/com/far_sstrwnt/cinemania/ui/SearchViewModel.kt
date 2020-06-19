@@ -1,39 +1,29 @@
 package com.far_sstrwnt.cinemania.ui
 
 import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.data.MovieRepository
-import com.far_sstrwnt.cinemania.model.MovieSearchResult
-import kotlinx.coroutines.Dispatchers
+import com.far_sstrwnt.cinemania.model.Movie
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 
 @ExperimentalCoroutinesApi
 class SearchViewModel(private val repository: MovieRepository) : ViewModel() {
 
-    companion object {
-        private const val VISIBLE_THRESHOLD = 5
-    }
+    private var currentQueryValue: String? = null
 
-    private val queryLiveData = MutableLiveData<String>()
-    val movieResult: LiveData<MovieSearchResult> = queryLiveData.switchMap { queryString ->
-        liveData {
-            val movies = repository.getSearchResultStream(queryString).asLiveData(Dispatchers.Main)
-            emitSource(movies)
+    private var currentSearchResult: Flow<PagingData<Movie>>? = null
+
+    fun searchMovie(queryString: String): Flow<PagingData<Movie>> {
+        val lastResult = currentSearchResult
+        if (queryString == currentQueryValue && lastResult != null) {
+            return lastResult
         }
-    }
-
-    fun searchMovie(queryString: String) {
-        queryLiveData.postValue(queryString)
-    }
-
-    fun listScrolled(visibleItemCount: Int, lastVisibleItemPosition: Int, totalItemCount: Int) {
-        if (visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD >= totalItemCount) {
-            val immutableQuery = queryLiveData.value
-            if (immutableQuery != null) {
-                viewModelScope.launch {
-                    repository.requestMore(immutableQuery)
-                }
-            }
-        }
+        currentQueryValue = queryString
+        val newResult: Flow<PagingData<Movie>> = repository.getSearchResultStream(queryString)
+            .cachedIn(viewModelScope)
+        currentSearchResult = newResult
+        return newResult
     }
 }
