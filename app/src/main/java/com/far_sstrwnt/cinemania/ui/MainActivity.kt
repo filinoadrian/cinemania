@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.lifecycle.observe
 import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadState
 import com.far_sstrwnt.cinemania.Injection
 import com.far_sstrwnt.cinemania.databinding.ActivityMainBinding
 import com.far_sstrwnt.cinemania.model.MovieSearchResult
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         val query = savedInstanceState?.getString(LAST_SEARCH_QUERY) ?: DEFAULT_QUERY
         search(query)
         initSearch(query)
+        binding.retryButton.setOnClickListener { adapter.retry() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -65,7 +67,40 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initAdapter() {
-        binding.searchList.adapter = adapter
+        binding.searchList.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = MoviesLoadStateAdapter { adapter.retry() },
+            footer = MoviesLoadStateAdapter { adapter.retry() }
+        )
+        adapter.addLoadStateListener { loadState ->
+            if (loadState.refresh !is LoadState.NotLoading) {
+                binding.searchList.visibility = View.GONE
+                binding.progressBar.visibility = toVisibility(loadState.refresh is LoadState.Loading)
+                binding.retryButton.visibility = toVisibility(loadState.refresh is LoadState.Error)
+            } else {
+                binding.searchList.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
+                binding.retryButton.visibility = View.GONE
+
+                val errorState = when {
+                    loadState.append is LoadState.Error -> {
+                        loadState.append as LoadState.Error
+                    }
+                    loadState.prepend is LoadState.Error -> {
+                        loadState.prepend as LoadState.Error
+                    }
+                    else -> {
+                        null
+                    }
+                }
+                errorState?.let {
+                    Toast.makeText(
+                        this,
+                        "\uD83D\uDE28 Wooops ${it.error}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
     }
 
     private fun initSearch(query: String) {
