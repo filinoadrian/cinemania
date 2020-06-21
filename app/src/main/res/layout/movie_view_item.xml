@@ -5,7 +5,7 @@
 
         <variable
             name="movie"
-            type="com.far_sstrwnt.cinemania.model.Movie" />
+            type="com.far_sstrwnt.cinemania.model.MovieEntity" />
 
     </data>
 

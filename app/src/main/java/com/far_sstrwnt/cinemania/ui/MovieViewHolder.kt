@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.far_sstrwnt.cinemania.databinding.MovieViewItemBinding
-import com.far_sstrwnt.cinemania.model.Movie
+import com.far_sstrwnt.cinemania.model.MovieEntity
 
 class MovieViewHolder(val binding: MovieViewItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(movie: Movie?) {
+    fun bind(movie: MovieEntity?) {
         binding.movie = movie
         binding.executePendingBindings()
     }

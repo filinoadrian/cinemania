@@ -1,2 +1,4 @@
+include ':shared'
+include ':model'
 rootProject.name='Cinemania'
 include ':app'
