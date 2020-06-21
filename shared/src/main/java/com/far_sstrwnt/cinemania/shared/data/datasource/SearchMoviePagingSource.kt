@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 private const val TMDB_STARTING_PAGE_INDEX = 1
 
-class MoviePagingSource @Inject constructor(
+class SearchMoviePagingSource @Inject constructor(
     private val dataSource: MovieRemoteDataSource,
     private val query: String
 ) : PagingSource<Int, MovieEntity>() {
