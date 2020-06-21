@@ -9,4 +9,8 @@ class MovieRemoteDataSource @Inject constructor(
     suspend fun getSearchMovie(query: String, page: Int): ResultsResponse<NetworkMovieEntity> {
         return service.searchMovie(query, page)
     }
+
+    suspend fun getDiscoverMovie(page: Int): ResultsResponse<NetworkMovieEntity> {
+        return service.discoverMovie(page)
+    }
 }
