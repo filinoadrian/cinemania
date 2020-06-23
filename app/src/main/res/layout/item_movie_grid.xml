@@ -26,7 +26,7 @@
             <ImageView
                 android:id="@+id/movie_poster"
                 android:layout_width="match_parent"
-                android:layout_height="231dp"
+                android:layout_height="275dp"
                 android:background="#ADBBC4"
                 android:scaleType="centerCrop"
                 android:contentDescription="Movie Poster"

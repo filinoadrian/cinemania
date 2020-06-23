@@ -4,13 +4,13 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class MovieGridItemDecoration(private val largePadding: Int, private val smallPadding: Int) : RecyclerView.ItemDecoration() {
+class MovieGridItemDecoration(private val padding: Int) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View,
                                 parent: RecyclerView, state: RecyclerView.State) {
-        outRect.left = smallPadding
-        outRect.right = smallPadding
-        outRect.top = largePadding
-        outRect.bottom = largePadding
+        outRect.left = padding
+        outRect.right = padding
+        outRect.top = padding
+        outRect.bottom = padding
     }
 }

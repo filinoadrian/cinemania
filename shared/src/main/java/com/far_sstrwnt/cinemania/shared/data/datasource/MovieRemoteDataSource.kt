@@ -1,16 +1,24 @@
 package com.far_sstrwnt.cinemania.shared.data.datasource
 
+import com.far_sstrwnt.cinemania.shared.result.Result
 import javax.inject.Inject
 
 class MovieRemoteDataSource @Inject constructor(
         private val service: TmdbService
 ) {
-
-    suspend fun getSearchMovie(query: String, page: Int): ResultsResponse<NetworkMovieEntity> {
-        return service.searchMovie(query, page)
+    suspend fun genreMovie(): Result<List<NetworkGenreEntity>> {
+        return try {
+            Result.Success(service.getGenreMovie().genres)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
     }
 
-    suspend fun getDiscoverMovie(page: Int): ResultsResponse<NetworkMovieEntity> {
-        return service.discoverMovie(page)
+    suspend fun searchMovie(query: String, page: Int): ResultsResponse<NetworkMovieEntity> {
+        return service.getSearchMovie(query, page)
+    }
+
+    suspend fun discoverMovie(genre: String?, page: Int): ResultsResponse<NetworkMovieEntity> {
+        return service.getDiscoverMovie(genre, page)
     }
 }

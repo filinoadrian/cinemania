@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.FragmentMoviesBinding
@@ -16,9 +17,11 @@ import com.far_sstrwnt.cinemania.ui.MoviesAdapter
 import com.far_sstrwnt.cinemania.ui.MoviesLoadStateAdapter
 import com.far_sstrwnt.cinemania.ui.toVisibility
 import com.far_sstrwnt.cinemania.util.viewModelProvider
+import com.google.android.material.chip.Chip
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -53,12 +56,12 @@ class MoviesFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
 
         initAdapter()
-        loadMovies()
+        loadMovies(null)
+        initGenre()
 
         binding.moviesList.setHasFixedSize(true)
-        val largePadding = resources.getDimensionPixelSize(R.dimen.padding_normal)
-        val smallPadding = resources.getDimensionPixelSize(R.dimen.padding_extra_small)
-        binding.moviesList.addItemDecoration(MovieGridItemDecoration(largePadding, smallPadding))
+        val padding = resources.getDimensionPixelSize(R.dimen.padding_small)
+        binding.moviesList.addItemDecoration(MovieGridItemDecoration(padding))
         binding.retryButton.setOnClickListener { adapter.retry() }
     }
 
@@ -101,12 +104,50 @@ class MoviesFragment : DaggerFragment() {
         }
     }
 
-    private fun loadMovies() {
+    private fun initGenre() {
+
+        viewModel.genreList.observe(viewLifecycleOwner, Observer { genreList ->
+            val chipGroup = binding.genreList
+            val inflater = LayoutInflater.from(chipGroup.context)
+
+            val children = genreList.map { genre ->
+                val chip = inflater.inflate(R.layout.item_genre, chipGroup, false) as Chip
+                chip.text = genre.name
+                chip.tag = genre.name
+                chip.setOnClickListener {
+                    updateMovieListFromInput(genre.id)
+                }
+                chip
+            }
+
+            chipGroup.removeAllViews()
+
+            for (chip in children) {
+                chipGroup.addView(chip)
+            }
+        })
+
+        lifecycleScope.launch {
+            @OptIn(ExperimentalPagingApi::class)
+            adapter.dataRefreshFlow.collect {
+                binding.moviesList.scrollToPosition(0)
+            }
+        }
+    }
+
+    private fun loadMovies(genre: String?) {
         moviesJob?.cancel()
         moviesJob = lifecycleScope.launch {
-            viewModel.discoverMovie().collectLatest {
+            viewModel.discoverMovie(genre).collectLatest {
                 adapter.submitData(it)
             }
+        }
+    }
+
+    private fun updateMovieListFromInput(genre: String) {
+        binding.genreList.checkedChipId.let {
+            binding.moviesList.scrollToPosition(0)
+            loadMovies(genre)
         }
     }
 }
