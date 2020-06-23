@@ -7,13 +7,17 @@ interface TmdbService {
 
     // https://api.themoviedb.org/3/discover/movie?api_key=a1f3faf95d3a6c30d3e3b20acfcdbeae&page=1
 
+    @GET("genre/movie/list")
+    suspend fun getGenreMovie(): GenresResponse
+
     @GET("discover/movie")
-    suspend fun discoverMovie(
+    suspend fun getDiscoverMovie(
+        @Query("with_genres") genre: String?,
         @Query("page") page: Int
     ): ResultsResponse<NetworkMovieEntity>
 
     @GET("search/movie")
-    suspend fun searchMovie(
+    suspend fun getSearchMovie(
         @Query("query") query: String,
         @Query("page") page: Int
     ): ResultsResponse<NetworkMovieEntity>

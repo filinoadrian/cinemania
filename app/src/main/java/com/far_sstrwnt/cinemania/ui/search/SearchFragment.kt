@@ -106,7 +106,7 @@ class SearchFragment : DaggerFragment() {
 
         binding.searchMovie.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
-                updateRepoListFromInput()
+                updateMovieListFromInput()
                 true
             } else {
                 false
@@ -115,7 +115,7 @@ class SearchFragment : DaggerFragment() {
 
         binding.searchMovie.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                updateRepoListFromInput()
+                updateMovieListFromInput()
                 true
             } else {
                 false
@@ -139,7 +139,7 @@ class SearchFragment : DaggerFragment() {
         }
     }
 
-    private fun updateRepoListFromInput() {
+    private fun updateMovieListFromInput() {
         binding.searchMovie.text.trim().let {
             if (it.isNotEmpty()) {
                 binding.searchList.scrollToPosition(0)
