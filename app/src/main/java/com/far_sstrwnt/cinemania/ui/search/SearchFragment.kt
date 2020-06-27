@@ -9,13 +9,16 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.FragmentSearchBinding
+import com.far_sstrwnt.cinemania.shared.result.EventObserver
 import com.far_sstrwnt.cinemania.ui.MoviesAdapter
 import com.far_sstrwnt.cinemania.ui.MoviesLoadStateAdapter
+import com.far_sstrwnt.cinemania.ui.movies.MoviesFragmentDirections
 import com.far_sstrwnt.cinemania.ui.toVisibility
 import com.far_sstrwnt.cinemania.util.viewModelProvider
 import dagger.android.support.DaggerFragment
@@ -36,7 +39,7 @@ class SearchFragment : DaggerFragment() {
 
     private lateinit var binding: FragmentSearchBinding
 
-    private var adapter = MoviesAdapter(R.layout.item_movie_search)
+    private lateinit var adapter: MoviesAdapter
 
     private var searchJob: Job? = null
 
@@ -57,6 +60,7 @@ class SearchFragment : DaggerFragment() {
 
         initAdapter()
         initSearch()
+        initNavigation()
 
         val decoration = DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL)
         binding.searchList.addItemDecoration(decoration)
@@ -64,6 +68,7 @@ class SearchFragment : DaggerFragment() {
     }
 
     private fun initAdapter() {
+        adapter = MoviesAdapter(viewModel, R.layout.item_movie_search)
         binding.searchList.adapter = adapter.withLoadStateHeaderAndFooter(
             header = MoviesLoadStateAdapter { adapter.retry() },
             footer = MoviesLoadStateAdapter { adapter.retry() }
@@ -146,6 +151,17 @@ class SearchFragment : DaggerFragment() {
                 search(it.toString())
             }
         }
+    }
+
+    private fun initNavigation() {
+        viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            openMovieDetail(it)
+        })
+    }
+
+    private fun openMovieDetail(id: String) {
+        val action = SearchFragmentDirections.actionNavSearchToNavMovieDetail(id)
+        findNavController().navigate(action)
     }
 
 //    private fun showEmptyList(show: Boolean) {

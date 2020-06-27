@@ -21,4 +21,12 @@ class MovieRemoteDataSource @Inject constructor(
     suspend fun discoverMovie(genre: String?, page: Int): ResultsResponse<NetworkMovieEntity> {
         return service.getDiscoverMovie(genre, page)
     }
+
+    suspend fun detailMovie(id: String): Result<NetworkMovieEntity> {
+        return try {
+            Result.Success(service.getMovieDetail(id))
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
 }

@@ -10,7 +10,9 @@ import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MovieEntity
 import com.far_sstrwnt.cinemania.shared.domain.DiscoverMovieUseCase
 import com.far_sstrwnt.cinemania.shared.domain.FetchGenreMovieUseCase
+import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
+import com.far_sstrwnt.cinemania.ui.common.MovieActions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -19,11 +21,18 @@ import javax.inject.Inject
 class MoviesViewModel @Inject constructor(
     private val discoverMovieUseCase: DiscoverMovieUseCase,
     private val fetchGenreMovieUseCase: FetchGenreMovieUseCase
-) : ViewModel() {
+) : ViewModel(), MovieActions {
 
     private val _genreList = MutableLiveData<List<GenreEntity>>().apply { value = emptyList() }
     val genreList: LiveData<List<GenreEntity>>
         get() = _genreList
+
+    private val _navigateToMovieDetailAction = MutableLiveData<Event<String>>()
+    val navigateToMovieDetailAction: LiveData<Event<String>> = _navigateToMovieDetailAction
+
+    override fun openMovieDetail(id: String) {
+        _navigateToMovieDetailAction.value = Event(id)
+    }
 
     private var currentGenreValue: String? = null
 

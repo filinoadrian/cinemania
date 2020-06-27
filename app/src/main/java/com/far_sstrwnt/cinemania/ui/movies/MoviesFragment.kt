@@ -8,10 +8,12 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.FragmentMoviesBinding
+import com.far_sstrwnt.cinemania.shared.result.EventObserver
 import com.far_sstrwnt.cinemania.ui.MovieGridItemDecoration
 import com.far_sstrwnt.cinemania.ui.MoviesAdapter
 import com.far_sstrwnt.cinemania.ui.MoviesLoadStateAdapter
@@ -36,7 +38,7 @@ class MoviesFragment : DaggerFragment() {
 
     private lateinit var binding: FragmentMoviesBinding
 
-    private var adapter = MoviesAdapter(R.layout.item_movie_grid)
+    private lateinit var adapter: MoviesAdapter
 
     private var moviesJob: Job? = null
 
@@ -56,8 +58,10 @@ class MoviesFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
 
         initAdapter()
-        loadMovies(null)
         initGenre()
+        initNavigation()
+
+        loadMovies(null)
 
         binding.moviesList.setHasFixedSize(true)
         val padding = resources.getDimensionPixelSize(R.dimen.padding_small)
@@ -66,6 +70,7 @@ class MoviesFragment : DaggerFragment() {
     }
 
     private fun initAdapter() {
+        adapter = MoviesAdapter(viewModel, R.layout.item_movie_grid)
         binding.moviesList.adapter = adapter.withLoadStateHeaderAndFooter(
             header = MoviesLoadStateAdapter { adapter.retry() },
             footer = MoviesLoadStateAdapter { adapter.retry() }
@@ -149,5 +154,16 @@ class MoviesFragment : DaggerFragment() {
             binding.moviesList.scrollToPosition(0)
             loadMovies(genre)
         }
+    }
+
+    private fun initNavigation() {
+        viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            openMovieDetail(it)
+        })
+    }
+
+    private fun openMovieDetail(id: String) {
+        val action = MoviesFragmentDirections.actionNavMovieToNavMovieDetail(id)
+        findNavController().navigate(action)
     }
 }
