@@ -1,9 +1,17 @@
 <resources>
 
-    <style name="Widget.Cinemania.Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+<!--    <style name="Widget.Cinemania.Toolbar" parent="Widget.AppCompat.Toolbar">-->
+<!--        <item name="android:background">?attr/colorPrimary</item>-->
+<!--        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>-->
+<!--        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>-->
+<!--    </style>-->
+
+    <style name="AppTheme.AppbarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+
+    <style name="TextAppearance.Cinemania.H1" parent="@style/TextAppearance.MaterialComponents.Headline5">
+        <item name="android:fontFamily">@font/open_sans</item>
+        <item name="android:textSize">18sp</item>
+        <item name="fontFamily">@font/open_sans</item>
     </style>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.far_sstrwnt.cinemania.shared.data.datasource
 
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TmdbService {
@@ -21,4 +22,9 @@ interface TmdbService {
         @Query("query") query: String,
         @Query("page") page: Int
     ): ResultsResponse<NetworkMovieEntity>
+
+    @GET("movie/{id}")
+    suspend fun getMovieDetail(
+        @Path("id") id: String
+    ): NetworkMovieEntity
 }

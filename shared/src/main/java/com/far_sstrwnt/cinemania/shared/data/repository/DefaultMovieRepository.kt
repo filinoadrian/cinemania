@@ -20,6 +20,7 @@ interface MovieRepository {
     suspend fun getGenreMovieList(): Result<List<GenreEntity>>
     fun getSearchResultStream(query: String): Flow<PagingData<MovieEntity>>
     fun getDiscoverResultStream(genre: String?): Flow<PagingData<MovieEntity>>
+    suspend fun getDetailMovie(id: String): Result<MovieEntity>
 }
 
 @Singleton
@@ -65,6 +66,18 @@ class DefaultMovieRepository @Inject constructor(
                 DiscoverMoviePagingSource(dataSource, genre)
             }
         ).flow
+    }
+
+    override suspend fun getDetailMovie(id: String): Result<MovieEntity> {
+        return withContext(Dispatchers.IO) {
+            val movie = dataSource.detailMovie(id)
+
+            (movie as? Result.Success)?.let {
+                return@withContext Result.Success(it.data.asDomainModel())
+            }
+
+            return@withContext Result.Error(Exception("Remote data source fetch failed"))
+        }
     }
 
     companion object {
