@@ -1,6 +1,6 @@
 package com.far_sstrwnt.cinemania.shared.di
 
-import com.far_sstrwnt.cinemania.shared.data.datasource.TmdbService
+import com.far_sstrwnt.cinemania.shared.data.datasource.api.TmdbService
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

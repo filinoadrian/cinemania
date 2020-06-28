@@ -4,14 +4,14 @@ import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.MovieEntity
-import com.far_sstrwnt.cinemania.shared.domain.SearchMovieUseCase
+import com.far_sstrwnt.cinemania.shared.domain.FetchMovieSearchUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.ui.common.MovieActions
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
-        private val searchMovieUseCase: SearchMovieUseCase
+        private val fetchMovieSearchUseCase: FetchMovieSearchUseCase
 ) : ViewModel(), MovieActions {
 
     private var currentQueryValue: String? = null
@@ -24,7 +24,7 @@ class SearchViewModel @Inject constructor(
             return lastResult
         }
         currentQueryValue = queryString
-        val newResult: Flow<PagingData<MovieEntity>> = searchMovieUseCase.execute(queryString)
+        val newResult: Flow<PagingData<MovieEntity>> = fetchMovieSearchUseCase.execute(queryString)
             .cachedIn(viewModelScope)
         currentSearchResult = newResult
         return newResult

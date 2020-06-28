@@ -1,4 +1,4 @@
-package com.far_sstrwnt.cinemania.shared.data.datasource
+package com.far_sstrwnt.cinemania.shared.data.datasource.api
 
 import com.google.gson.annotations.SerializedName
 

@@ -3,8 +3,8 @@ package com.far_sstrwnt.cinemania.shared.domain
 import com.far_sstrwnt.cinemania.shared.data.repository.MovieRepository
 import javax.inject.Inject
 
-class FetchGenreMovieUseCase @Inject constructor(
+class FetchMovieDetailUseCase @Inject constructor(
     private val repository: MovieRepository
 ) {
-    suspend fun execute() = repository.getGenreMovieList()
+    suspend fun execute(id: String) = repository.getMovieDetail(id)
 }
