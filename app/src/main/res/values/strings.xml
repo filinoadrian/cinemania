@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Cinemania</string>
     <string name="cast_header">Cast</string>
+    <string name="similar_header">Similar</string>
 </resources>

@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.far_sstrwnt.cinemania.databinding.ItemMovieBinding
 import com.far_sstrwnt.cinemania.model.MovieEntity
-import com.far_sstrwnt.cinemania.ui.common.EntityActions
+import com.far_sstrwnt.cinemania.ui.common.EventActions
 
-class MovieAdapter(private val eventListener: EntityActions)
+class MovieAdapter(private val eventListener: EventActions)
     : ListAdapter<MovieEntity, RecyclerView.ViewHolder>(MovieDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -26,7 +26,7 @@ class MovieAdapter(private val eventListener: EntityActions)
     class ViewHolder private constructor(val binding: ItemMovieBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(eventListener: EntityActions, movie: MovieEntity) {
+        fun bind(eventListener: EventActions, movie: MovieEntity) {
             binding.eventListener = eventListener
             binding.movie = movie
             binding.executePendingBindings()

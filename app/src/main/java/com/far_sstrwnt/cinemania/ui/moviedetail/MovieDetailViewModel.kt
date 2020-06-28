@@ -4,20 +4,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.CastEntity
+import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.MovieEntity
 import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieCastUseCase
 import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieDetailUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieSimilarUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
-import com.far_sstrwnt.cinemania.ui.common.EntityActions
+import com.far_sstrwnt.cinemania.ui.common.EventActions
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MovieDetailViewModel @Inject constructor(
     private val fetchMovieDetailUseCase: FetchMovieDetailUseCase,
-    private val fetchMovieCastUseCase: FetchMovieCastUseCase
-) : ViewModel(), EntityActions {
+    private val fetchMovieCastUseCase: FetchMovieCastUseCase,
+    private val fetchMovieSimilarUseCase: FetchMovieSimilarUseCase
+) : ViewModel(), EventActions {
 
     private val _movie = MutableLiveData<MovieEntity>()
     val movie: LiveData<MovieEntity>
@@ -31,8 +37,16 @@ class MovieDetailViewModel @Inject constructor(
     val navigateToPeopleDetailAction: LiveData<Event<String>>
         get() = _navigateToPeopleDetailAction
 
-    override fun openDetail(id: String) {
-        _navigateToPeopleDetailAction.value = Event(id)
+    private val _navigateToMovieDetailAction = MutableLiveData<Event<String>>()
+    val navigateToMovieDetailAction: LiveData<Event<String>>
+        get() = _navigateToMovieDetailAction
+
+    override fun openDetail(entity: Entity, id: String) {
+        if (entity == Entity.MOVIE) {
+            _navigateToMovieDetailAction.value = Event(id)
+        } else if (entity == Entity.PEOPLE) {
+            _navigateToPeopleDetailAction.value = Event(id)
+        }
     }
 
     fun loadMovieDetail(id: String) {
@@ -55,5 +69,9 @@ class MovieDetailViewModel @Inject constructor(
                 _cast.value = cast
             }
         }
+    }
+
+    fun loadMovieSimilar(id: String): Flow<PagingData<MovieEntity>> {
+        return fetchMovieSimilarUseCase.execute(id).cachedIn(viewModelScope)
     }
 }

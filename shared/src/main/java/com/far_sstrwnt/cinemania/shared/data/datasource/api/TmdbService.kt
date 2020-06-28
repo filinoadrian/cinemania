@@ -36,6 +36,12 @@ interface TmdbService {
         @Path("id") id: String
     ): CreditResponse<NetworkCastEntity>
 
+    @GET("movie/{id}/similar")
+    suspend fun getMovieSimilar(
+        @Path("id") id: String,
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkMovieEntity>
+
     @GET("person/{id}")
     suspend fun getPeopleDetail(
         @Path("id") id: String

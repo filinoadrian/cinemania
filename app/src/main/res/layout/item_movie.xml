@@ -6,8 +6,12 @@
     <data>
 
         <variable
+            name="entity"
+            type="com.far_sstrwnt.cinemania.model.Entity" />
+
+        <variable
             name="eventListener"
-            type="com.far_sstrwnt.cinemania.ui.common.EntityActions" />
+            type="com.far_sstrwnt.cinemania.ui.common.EventActions" />
 
         <variable
             name="movie"
@@ -19,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:onClick="@{() -> eventListener.openDetail(movie.id)}">
+        android:onClick="@{() -> eventListener.openDetail(entity.MOVIE, movie.id)}">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/movie_card"

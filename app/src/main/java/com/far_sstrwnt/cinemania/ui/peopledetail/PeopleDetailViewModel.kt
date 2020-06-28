@@ -4,20 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.MovieEntity
 import com.far_sstrwnt.cinemania.model.PeopleEntity
 import com.far_sstrwnt.cinemania.shared.domain.people.FetchPeopleDetailUseCase
 import com.far_sstrwnt.cinemania.shared.domain.people.FetchPeopleMovieCreditsUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
-import com.far_sstrwnt.cinemania.ui.common.EntityActions
+import com.far_sstrwnt.cinemania.ui.common.EventActions
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PeopleDetailViewModel @Inject constructor(
     private val fetchPeopleDetailUseCase: FetchPeopleDetailUseCase,
     private val fetchPeopleMovieCreditsUseCase: FetchPeopleMovieCreditsUseCase
-) : ViewModel(), EntityActions {
+) : ViewModel(), EventActions {
 
     private val _people = MutableLiveData<PeopleEntity>()
     val people: LiveData<PeopleEntity>
@@ -31,7 +32,7 @@ class PeopleDetailViewModel @Inject constructor(
     val navigateToMovieDetailAction: LiveData<Event<String>>
         get() = _navigateToMovieDetailAction
 
-    override fun openDetail(id: String) {
+    override fun openDetail(entity: Entity, id: String) {
         _navigateToMovieDetailAction.value = Event(id)
     }
 

@@ -9,15 +9,15 @@ import javax.inject.Inject
 
 private const val TMDB_STARTING_PAGE_INDEX = 1
 
-class SearchMoviePagingSource @Inject constructor(
+class MovieDiscoverPagingSource @Inject constructor(
     private val dataSource: MovieRemoteDataSource,
-    private val query: String
+    private val genre: String?
 ) : PagingSource<Int, MovieEntity>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieEntity> {
         val position = params.key ?: TMDB_STARTING_PAGE_INDEX
         return try {
-            val response = dataSource.movieSearch(query, position)
+            val response = dataSource.movieDiscover(genre, position)
             val movies = response.results.map {
                 it.asDomainModel()
             }

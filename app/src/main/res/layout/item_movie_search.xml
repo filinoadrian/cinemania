@@ -4,8 +4,12 @@
     <data>
 
         <variable
+            name="entity"
+            type="com.far_sstrwnt.cinemania.model.Entity" />
+
+        <variable
             name="eventListener"
-            type="com.far_sstrwnt.cinemania.ui.common.EntityActions" />
+            type="com.far_sstrwnt.cinemania.ui.common.EventActions" />
 
         <variable
             name="movie"
@@ -21,7 +25,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="12dp"
         android:paddingVertical="12dp"
-        android:onClick="@{() -> eventListener.openDetail(movie.id)}">
+        android:onClick="@{() -> eventListener.openDetail(entity.MOVIE, movie.id)}">
 
         <ImageView
             android:id="@+id/movie_poster"

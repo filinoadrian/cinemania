@@ -6,13 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MovieEntity
 import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieDiscoverUseCase
 import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieGenreUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
-import com.far_sstrwnt.cinemania.ui.common.EntityActions
+import com.far_sstrwnt.cinemania.ui.common.EventActions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class MoviesViewModel @Inject constructor(
     private val fetchDiscoverMovieUseCase: FetchMovieDiscoverUseCase,
     private val fetchGenreMovieUseCase: FetchMovieGenreUseCase
-) : ViewModel(), EntityActions {
+) : ViewModel(), EventActions {
 
     private val _genreList = MutableLiveData<List<GenreEntity>>().apply { value = emptyList() }
     val genreList: LiveData<List<GenreEntity>>
@@ -30,7 +31,7 @@ class MoviesViewModel @Inject constructor(
     val navigateToMovieDetailAction: LiveData<Event<String>>
         get() = _navigateToMovieDetailAction
 
-    override fun openDetail(id: String) {
+    override fun openDetail(entity: Entity, id: String) {
         _navigateToMovieDetailAction.value = Event(id)
     }
 
