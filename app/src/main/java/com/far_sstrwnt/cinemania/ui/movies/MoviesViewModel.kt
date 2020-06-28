@@ -8,8 +8,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MovieEntity
-import com.far_sstrwnt.cinemania.shared.domain.FetchMovieDiscoverUseCase
-import com.far_sstrwnt.cinemania.shared.domain.FetchMovieGenreUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieDiscoverUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieGenreUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.MovieActions
@@ -27,7 +27,8 @@ class MoviesViewModel @Inject constructor(
         get() = _genreList
 
     private val _navigateToMovieDetailAction = MutableLiveData<Event<String>>()
-    val navigateToMovieDetailAction: LiveData<Event<String>> = _navigateToMovieDetailAction
+    val navigateToMovieDetailAction: LiveData<Event<String>>
+        get() = _navigateToMovieDetailAction
 
     override fun openMovieDetail(id: String) {
         _navigateToMovieDetailAction.value = Event(id)

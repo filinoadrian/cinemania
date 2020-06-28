@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.MovieEntity
-import com.far_sstrwnt.cinemania.shared.domain.FetchMovieSearchUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieSearchUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.ui.common.MovieActions
 import kotlinx.coroutines.flow.Flow

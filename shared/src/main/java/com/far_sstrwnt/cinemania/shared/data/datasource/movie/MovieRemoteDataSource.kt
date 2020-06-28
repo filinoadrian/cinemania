@@ -1,6 +1,9 @@
-package com.far_sstrwnt.cinemania.shared.data.datasource
+package com.far_sstrwnt.cinemania.shared.data.datasource.movie
 
 import com.far_sstrwnt.cinemania.shared.data.datasource.api.*
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkCastEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkGenreEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkMovieEntity
 import com.far_sstrwnt.cinemania.shared.result.Result
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,7 +39,6 @@ class MovieRemoteDataSource @Inject constructor(
         return try {
             Result.Success(service.getMovieCredit(id).cast)
         } catch (e: Exception) {
-            Timber.e(e.message)
             Result.Error(e)
         }
     }

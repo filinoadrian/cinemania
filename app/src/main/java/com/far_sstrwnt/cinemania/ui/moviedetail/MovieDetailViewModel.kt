@@ -6,16 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.MovieEntity
-import com.far_sstrwnt.cinemania.shared.domain.FetchMovieCastUseCase
-import com.far_sstrwnt.cinemania.shared.domain.FetchMovieDetailUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieCastUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieDetailUseCase
+import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
+import com.far_sstrwnt.cinemania.ui.common.MovieActions
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MovieDetailViewModel @Inject constructor(
     private val fetchMovieDetailUseCase: FetchMovieDetailUseCase,
     private val fetchMovieCastUseCase: FetchMovieCastUseCase
-) : ViewModel() {
+) : ViewModel(), MovieDetailEventListener {
 
     private val _movie = MutableLiveData<MovieEntity>()
     val movie: LiveData<MovieEntity>
@@ -24,6 +26,14 @@ class MovieDetailViewModel @Inject constructor(
     private val _cast = MutableLiveData<List<CastEntity>>()
     val cast: LiveData<List<CastEntity>>
         get() = _cast
+
+    private val _navigateToPeopleDetailAction = MutableLiveData<Event<String>>()
+    val navigateToPeopleDetailAction: LiveData<Event<String>>
+        get() = _navigateToPeopleDetailAction
+
+    override fun openPeopleDetail(id: String) {
+        _navigateToPeopleDetailAction.value = Event(id)
+    }
 
     fun loadMovieDetail(id: String) {
         viewModelScope.launch {
@@ -46,4 +56,8 @@ class MovieDetailViewModel @Inject constructor(
             }
         }
     }
+}
+
+interface MovieDetailEventListener {
+    fun openPeopleDetail(id: String)
 }
