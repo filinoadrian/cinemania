@@ -1,4 +1,4 @@
-package com.far_sstrwnt.cinemania.shared.data.datasource
+package com.far_sstrwnt.cinemania.shared.data.datasource.movie
 
 import androidx.paging.PagingSource
 import com.far_sstrwnt.cinemania.model.MovieEntity

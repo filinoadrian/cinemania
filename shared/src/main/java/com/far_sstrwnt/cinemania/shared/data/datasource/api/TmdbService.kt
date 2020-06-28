@@ -1,5 +1,8 @@
 package com.far_sstrwnt.cinemania.shared.data.datasource.api
 
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkCastEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkMovieEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkPeopleEntity
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -32,4 +35,9 @@ interface TmdbService {
     suspend fun getMovieCredit(
         @Path("id") id: String
     ): CreditResponse<NetworkCastEntity>
+
+    @GET("person/{id}")
+    suspend fun getPeopleDetail(
+        @Path("id") id: String
+    ): NetworkPeopleEntity
 }

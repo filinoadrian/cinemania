@@ -6,9 +6,9 @@ import androidx.paging.PagingData
 import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MovieEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.DiscoverMoviePagingSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.MovieRemoteDataSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.SearchMoviePagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.movie.DiscoverMoviePagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieRemoteDataSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.movie.SearchMoviePagingSource
 import com.far_sstrwnt.cinemania.shared.data.mapper.asDomainModel
 import com.far_sstrwnt.cinemania.shared.result.Result
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +52,10 @@ class DefaultMovieRepository @Inject constructor(
                 enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
             ),
             pagingSourceFactory = {
-                SearchMoviePagingSource(dataSource, query)
+                SearchMoviePagingSource(
+                    dataSource,
+                    query
+                )
             }
         ).flow
     }
@@ -65,7 +68,10 @@ class DefaultMovieRepository @Inject constructor(
                 enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
             ),
             pagingSourceFactory = {
-                DiscoverMoviePagingSource(dataSource, genre)
+                DiscoverMoviePagingSource(
+                    dataSource,
+                    genre
+                )
             }
         ).flow
     }
