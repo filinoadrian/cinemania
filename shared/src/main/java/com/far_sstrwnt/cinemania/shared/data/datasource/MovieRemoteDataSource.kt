@@ -1,31 +1,42 @@
 package com.far_sstrwnt.cinemania.shared.data.datasource
 
+import com.far_sstrwnt.cinemania.shared.data.datasource.api.*
 import com.far_sstrwnt.cinemania.shared.result.Result
+import timber.log.Timber
 import javax.inject.Inject
 
 class MovieRemoteDataSource @Inject constructor(
         private val service: TmdbService
 ) {
-    suspend fun genreMovie(): Result<List<NetworkGenreEntity>> {
+    suspend fun movieGenre(): Result<List<NetworkGenreEntity>> {
         return try {
-            Result.Success(service.getGenreMovie().genres)
+            Result.Success(service.getMovieGenre().genres)
         } catch (e: Exception) {
             Result.Error(e)
         }
     }
 
-    suspend fun searchMovie(query: String, page: Int): ResultsResponse<NetworkMovieEntity> {
-        return service.getSearchMovie(query, page)
+    suspend fun movieSearch(query: String, page: Int): ResultsResponse<NetworkMovieEntity> {
+        return service.getMovieSearch(query, page)
     }
 
-    suspend fun discoverMovie(genre: String?, page: Int): ResultsResponse<NetworkMovieEntity> {
-        return service.getDiscoverMovie(genre, page)
+    suspend fun movieDiscover(genre: String?, page: Int): ResultsResponse<NetworkMovieEntity> {
+        return service.getMovieDiscover(genre, page)
     }
 
-    suspend fun detailMovie(id: String): Result<NetworkMovieEntity> {
+    suspend fun movieDetail(id: String): Result<NetworkMovieEntity> {
         return try {
             Result.Success(service.getMovieDetail(id))
         } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    suspend fun movieCast(id: String): Result<List<NetworkCastEntity>> {
+        return try {
+            Result.Success(service.getMovieCredit(id).cast)
+        } catch (e: Exception) {
+            Timber.e(e.message)
             Result.Error(e)
         }
     }

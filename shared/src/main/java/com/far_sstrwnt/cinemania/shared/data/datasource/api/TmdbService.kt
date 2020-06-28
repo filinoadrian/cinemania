@@ -1,4 +1,4 @@
-package com.far_sstrwnt.cinemania.shared.data.datasource
+package com.far_sstrwnt.cinemania.shared.data.datasource.api
 
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -9,16 +9,16 @@ interface TmdbService {
     // https://api.themoviedb.org/3/discover/movie?api_key=a1f3faf95d3a6c30d3e3b20acfcdbeae&page=1
 
     @GET("genre/movie/list")
-    suspend fun getGenreMovie(): GenresResponse
+    suspend fun getMovieGenre(): GenresResponse
 
     @GET("discover/movie")
-    suspend fun getDiscoverMovie(
+    suspend fun getMovieDiscover(
         @Query("with_genres") genre: String?,
         @Query("page") page: Int
     ): ResultsResponse<NetworkMovieEntity>
 
     @GET("search/movie")
-    suspend fun getSearchMovie(
+    suspend fun getMovieSearch(
         @Query("query") query: String,
         @Query("page") page: Int
     ): ResultsResponse<NetworkMovieEntity>
@@ -27,4 +27,9 @@ interface TmdbService {
     suspend fun getMovieDetail(
         @Path("id") id: String
     ): NetworkMovieEntity
+
+    @GET("movie/{id}/credits")
+    suspend fun getMovieCredit(
+        @Path("id") id: String
+    ): CreditResponse<NetworkCastEntity>
 }

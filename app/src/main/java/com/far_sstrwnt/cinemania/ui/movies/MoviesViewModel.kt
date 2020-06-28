@@ -8,19 +8,18 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MovieEntity
-import com.far_sstrwnt.cinemania.shared.domain.DiscoverMovieUseCase
-import com.far_sstrwnt.cinemania.shared.domain.FetchGenreMovieUseCase
+import com.far_sstrwnt.cinemania.shared.domain.FetchMovieDiscoverUseCase
+import com.far_sstrwnt.cinemania.shared.domain.FetchMovieGenreUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.MovieActions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 class MoviesViewModel @Inject constructor(
-    private val discoverMovieUseCase: DiscoverMovieUseCase,
-    private val fetchGenreMovieUseCase: FetchGenreMovieUseCase
+    private val fetchDiscoverMovieUseCase: FetchMovieDiscoverUseCase,
+    private val fetchGenreMovieUseCase: FetchMovieGenreUseCase
 ) : ViewModel(), MovieActions {
 
     private val _genreList = MutableLiveData<List<GenreEntity>>().apply { value = emptyList() }
@@ -44,7 +43,7 @@ class MoviesViewModel @Inject constructor(
             return lastResult
         }
         currentGenreValue = genre
-        val newResult: Flow<PagingData<MovieEntity>> = discoverMovieUseCase.execute(genre)
+        val newResult: Flow<PagingData<MovieEntity>> = fetchDiscoverMovieUseCase.execute(genre)
             .cachedIn(viewModelScope)
         currentMovieResult = newResult
         return newResult

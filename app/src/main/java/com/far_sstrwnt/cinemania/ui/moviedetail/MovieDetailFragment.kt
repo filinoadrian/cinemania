@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.far_sstrwnt.cinemania.databinding.FragmentMovieDetailBinding
+import com.far_sstrwnt.cinemania.ui.CastAdapter
 import com.far_sstrwnt.cinemania.util.viewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.support.DaggerFragment
@@ -21,6 +23,8 @@ class MovieDetailFragment : DaggerFragment() {
     private lateinit var viewModel: MovieDetailViewModel
 
     private lateinit var binding: FragmentMovieDetailBinding
+
+    private lateinit var castAdapter: CastAdapter
 
     private val args: MovieDetailFragmentArgs by navArgs()
 
@@ -42,12 +46,16 @@ class MovieDetailFragment : DaggerFragment() {
 
         binding.lifecycleOwner = this.viewLifecycleOwner
 
-        setupAppBar()
+        initAppBar()
+        initAdapter()
 
         viewModel.loadMovieDetail(args.id)
+        viewModel.loadMovieCast(args.id)
+
+        subscribeUi()
     }
 
-    private fun setupAppBar() {
+    private fun initAppBar() {
         val appCompatActivity = activity as AppCompatActivity
         appCompatActivity.setSupportActionBar(binding.toolbar)
         appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -65,6 +73,17 @@ class MovieDetailFragment : DaggerFragment() {
                 binding.collapsingToolbar.title = " "
                 isShow = false
             }
+        })
+    }
+
+    private fun initAdapter() {
+        castAdapter = CastAdapter()
+        binding.movieCast.adapter = castAdapter
+    }
+
+    private fun subscribeUi() {
+        viewModel.cast.observe(this.viewLifecycleOwner, Observer {
+            castAdapter.submitList(it)
         })
     }
 }

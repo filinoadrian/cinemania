@@ -17,7 +17,7 @@ class DiscoverMoviePagingSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieEntity> {
         val position = params.key ?: TMDB_STARTING_PAGE_INDEX
         return try {
-            val response = dataSource.discoverMovie(genre, position)
+            val response = dataSource.movieDiscover(genre, position)
             val movies = response.results.map {
                 it.asDomainModel()
             }
