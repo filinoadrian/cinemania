@@ -6,13 +6,13 @@ import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.MovieEntity
 import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieSearchUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
-import com.far_sstrwnt.cinemania.ui.common.MovieActions
+import com.far_sstrwnt.cinemania.ui.common.EntityActions
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
         private val fetchMovieSearchUseCase: FetchMovieSearchUseCase
-) : ViewModel(), MovieActions {
+) : ViewModel(), EntityActions {
 
     private var currentQueryValue: String? = null
 
@@ -33,7 +33,7 @@ class SearchViewModel @Inject constructor(
     private val _navigateToMovieDetailAction = MutableLiveData<Event<String>>()
     val navigateToMovieDetailAction: LiveData<Event<String>> = _navigateToMovieDetailAction
 
-    override fun openMovieDetail(id: String) {
+    override fun openDetail(id: String) {
         _navigateToMovieDetailAction.value = Event(id)
     }
 }

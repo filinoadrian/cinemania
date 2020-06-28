@@ -15,7 +15,7 @@ import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.FragmentMoviesBinding
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
 import com.far_sstrwnt.cinemania.ui.MovieGridItemDecoration
-import com.far_sstrwnt.cinemania.ui.MoviesAdapter
+import com.far_sstrwnt.cinemania.ui.MoviesPagingAdapter
 import com.far_sstrwnt.cinemania.ui.MoviesLoadStateAdapter
 import com.far_sstrwnt.cinemania.ui.toVisibility
 import com.far_sstrwnt.cinemania.util.viewModelProvider
@@ -38,7 +38,7 @@ class MoviesFragment : DaggerFragment() {
 
     private lateinit var binding: FragmentMoviesBinding
 
-    private lateinit var adapter: MoviesAdapter
+    private lateinit var adapter: MoviesPagingAdapter
 
     private var moviesJob: Job? = null
 
@@ -70,7 +70,7 @@ class MoviesFragment : DaggerFragment() {
     }
 
     private fun initAdapter() {
-        adapter = MoviesAdapter(viewModel, R.layout.item_movie_grid)
+        adapter = MoviesPagingAdapter(viewModel, R.layout.item_movie_grid)
         binding.moviesList.adapter = adapter.withLoadStateHeaderAndFooter(
             header = MoviesLoadStateAdapter { adapter.retry() },
             footer = MoviesLoadStateAdapter { adapter.retry() }

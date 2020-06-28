@@ -7,7 +7,7 @@
 
         <variable
             name="eventListener"
-            type="com.far_sstrwnt.cinemania.ui.common.MovieActions" />
+            type="com.far_sstrwnt.cinemania.ui.common.EntityActions" />
         
         <variable
             name="movie"
@@ -17,7 +17,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> eventListener.openMovieDetail(movie.id)}"
+        android:onClick="@{() -> eventListener.openDetail(movie.id)}"
         app:cardBackgroundColor="@android:color/white"
         app:cardElevation="2dp"
         app:cardCornerRadius="4dp"

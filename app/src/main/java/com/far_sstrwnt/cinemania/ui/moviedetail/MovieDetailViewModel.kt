@@ -10,14 +10,14 @@ import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieCastUseCase
 import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieDetailUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
-import com.far_sstrwnt.cinemania.ui.common.MovieActions
+import com.far_sstrwnt.cinemania.ui.common.EntityActions
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MovieDetailViewModel @Inject constructor(
     private val fetchMovieDetailUseCase: FetchMovieDetailUseCase,
     private val fetchMovieCastUseCase: FetchMovieCastUseCase
-) : ViewModel(), MovieDetailEventListener {
+) : ViewModel(), EntityActions {
 
     private val _movie = MutableLiveData<MovieEntity>()
     val movie: LiveData<MovieEntity>
@@ -31,7 +31,7 @@ class MovieDetailViewModel @Inject constructor(
     val navigateToPeopleDetailAction: LiveData<Event<String>>
         get() = _navigateToPeopleDetailAction
 
-    override fun openPeopleDetail(id: String) {
+    override fun openDetail(id: String) {
         _navigateToPeopleDetailAction.value = Event(id)
     }
 
@@ -56,8 +56,4 @@ class MovieDetailViewModel @Inject constructor(
             }
         }
     }
-}
-
-interface MovieDetailEventListener {
-    fun openPeopleDetail(id: String)
 }

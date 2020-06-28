@@ -5,37 +5,37 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.far_sstrwnt.cinemania.databinding.ItemCastBinding
-import com.far_sstrwnt.cinemania.model.CastEntity
+import com.far_sstrwnt.cinemania.databinding.ItemMovieBinding
+import com.far_sstrwnt.cinemania.model.MovieEntity
 import com.far_sstrwnt.cinemania.ui.common.EntityActions
 
-class CastAdapter(private val eventListener: EntityActions)
-    : ListAdapter<CastEntity, RecyclerView.ViewHolder>(CastDiffCallback()) {
+class MovieAdapter(private val eventListener: EntityActions)
+    : ListAdapter<MovieEntity, RecyclerView.ViewHolder>(MovieDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val castItem = getItem(position)
-        castItem?.let {
-            (holder as ViewHolder).bind(eventListener, castItem)
+        val movieItem = getItem(position)
+        movieItem?.let {
+            (holder as ViewHolder).bind(eventListener, movieItem)
         }
     }
 
-    class ViewHolder private constructor(val binding: ItemCastBinding) :
+    class ViewHolder private constructor(val binding: ItemMovieBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(eventListener: EntityActions, cast: CastEntity) {
+        fun bind(eventListener: EntityActions, movie: MovieEntity) {
             binding.eventListener = eventListener
-            binding.cast = cast
+            binding.movie = movie
             binding.executePendingBindings()
         }
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ItemCastBinding.inflate(layoutInflater, parent, false)
+                val binding = ItemMovieBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }
@@ -43,10 +43,10 @@ class CastAdapter(private val eventListener: EntityActions)
     }
 }
 
-class CastDiffCallback: DiffUtil.ItemCallback<CastEntity>() {
-    override fun areItemsTheSame(oldItem: CastEntity, newItem: CastEntity): Boolean =
+class MovieDiffCallback: DiffUtil.ItemCallback<MovieEntity>() {
+    override fun areItemsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean =
         oldItem.id == newItem.id
 
-    override fun areContentsTheSame(oldItem: CastEntity, newItem: CastEntity): Boolean =
+    override fun areContentsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean =
         oldItem == newItem
 }

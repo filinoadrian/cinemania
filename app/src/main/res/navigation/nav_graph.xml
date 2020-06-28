@@ -46,6 +46,9 @@
         <argument
             android:name="id"
             app:argType="string" />
+        <action
+            android:id="@+id/action_nav_people_detail_to_nav_movie_detail"
+            app:destination="@id/nav_movie_detail" />
     </fragment>
 
 </navigation>
