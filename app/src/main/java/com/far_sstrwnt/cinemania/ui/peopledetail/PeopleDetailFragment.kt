@@ -5,9 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.far_sstrwnt.cinemania.databinding.FragmentPeopleDetailBinding
+import com.far_sstrwnt.cinemania.shared.result.EventObserver
+import com.far_sstrwnt.cinemania.ui.CastAdapter
+import com.far_sstrwnt.cinemania.ui.MovieAdapter
 import com.far_sstrwnt.cinemania.util.viewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.support.DaggerFragment
@@ -21,6 +26,8 @@ class PeopleDetailFragment : DaggerFragment() {
     private lateinit var viewModel: PeopleDetailViewModel
 
     private lateinit var binding: FragmentPeopleDetailBinding
+
+    private lateinit var movieAdapter: MovieAdapter
 
     private val args: PeopleDetailFragmentArgs by navArgs()
 
@@ -43,8 +50,13 @@ class PeopleDetailFragment : DaggerFragment() {
         binding.lifecycleOwner = this.viewLifecycleOwner
 
         initAppBar()
+        initAdapter()
+        initNavigation()
 
         viewModel.loadPeopleDetail(args.id)
+        viewModel.loadPeopleMovieCredit(args.id)
+
+        subscribeUi()
     }
 
     private fun initAppBar() {
@@ -65,6 +77,28 @@ class PeopleDetailFragment : DaggerFragment() {
                 binding.collapsingToolbar.title = " "
                 isShow = false
             }
+        })
+    }
+
+    private fun initAdapter() {
+        movieAdapter = MovieAdapter(viewModel)
+        binding.peopleCast.adapter = movieAdapter
+    }
+
+    private fun initNavigation() {
+        viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            openMovieDetail(it)
+        })
+    }
+
+    private fun openMovieDetail(id: String) {
+        val action = PeopleDetailFragmentDirections.actionNavPeopleDetailToNavMovieDetail(id)
+        findNavController().navigate(action)
+    }
+
+    private fun subscribeUi() {
+        viewModel.movies.observe(this.viewLifecycleOwner, Observer {
+            movieAdapter.submitList(it)
         })
     }
 }

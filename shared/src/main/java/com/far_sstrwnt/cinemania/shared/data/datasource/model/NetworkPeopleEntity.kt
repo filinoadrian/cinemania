@@ -3,7 +3,7 @@ package com.far_sstrwnt.cinemania.shared.data.datasource.model
 import com.google.gson.annotations.SerializedName
 
 data class NetworkPeopleEntity(
-    @field:SerializedName("id") val id: String?,
+    @field:SerializedName("id") val id: String,
     @field:SerializedName("popularity") val popularity: Double,
     @field:SerializedName("known_for_department") val knownForDepartment: String?,
     @field:SerializedName("birthday") val birthday: String?,

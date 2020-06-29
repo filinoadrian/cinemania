@@ -6,9 +6,10 @@ import androidx.paging.PagingData
 import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MovieEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.movie.DiscoverMoviePagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieDiscoverPagingSource
 import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieRemoteDataSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.movie.SearchMoviePagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieSearchPagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieSimilarPagingSource
 import com.far_sstrwnt.cinemania.shared.data.mapper.asDomainModel
 import com.far_sstrwnt.cinemania.shared.result.Result
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ interface MovieRepository {
     suspend fun getMovieGenreList(): Result<List<GenreEntity>>
     fun getSearchResultStream(query: String): Flow<PagingData<MovieEntity>>
     fun getDiscoverResultStream(genre: String?): Flow<PagingData<MovieEntity>>
+    fun getSimilarResultStream(id: String): Flow<PagingData<MovieEntity>>
     suspend fun getMovieDetail(id: String): Result<MovieEntity>
     suspend fun getMovieCastList(id: String): Result<List<CastEntity>>
 }
@@ -52,7 +54,7 @@ class DefaultMovieRepository @Inject constructor(
                 enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
             ),
             pagingSourceFactory = {
-                SearchMoviePagingSource(
+                MovieSearchPagingSource(
                     dataSource,
                     query
                 )
@@ -68,9 +70,25 @@ class DefaultMovieRepository @Inject constructor(
                 enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
             ),
             pagingSourceFactory = {
-                DiscoverMoviePagingSource(
+                MovieDiscoverPagingSource(
                     dataSource,
                     genre
+                )
+            }
+        ).flow
+    }
+
+    override fun getSimilarResultStream(id: String): Flow<PagingData<MovieEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                MovieSimilarPagingSource(
+                    dataSource,
+                    id
                 )
             }
         ).flow
