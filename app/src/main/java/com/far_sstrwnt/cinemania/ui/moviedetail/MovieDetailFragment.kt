@@ -16,8 +16,8 @@ import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.FragmentMovieDetailBinding
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
 import com.far_sstrwnt.cinemania.ui.CastAdapter
-import com.far_sstrwnt.cinemania.ui.MoviesLoadStateAdapter
-import com.far_sstrwnt.cinemania.ui.MoviesPagingAdapter
+import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
+import com.far_sstrwnt.cinemania.ui.movies.MoviesPagingAdapter
 import com.far_sstrwnt.cinemania.ui.toVisibility
 import com.far_sstrwnt.cinemania.util.viewModelProvider
 import com.google.android.material.appbar.AppBarLayout
@@ -100,10 +100,13 @@ class MovieDetailFragment : DaggerFragment() {
         castAdapter = CastAdapter(viewModel)
         binding.movieCast.adapter = castAdapter
 
-        similarAdapter = MoviesPagingAdapter(viewModel, R.layout.item_movie)
+        similarAdapter = MoviesPagingAdapter(
+            viewModel,
+            R.layout.item_movie
+        )
         binding.movieSimilarList.adapter = similarAdapter.withLoadStateHeaderAndFooter(
-            header = MoviesLoadStateAdapter { similarAdapter.retry() },
-            footer = MoviesLoadStateAdapter { similarAdapter.retry() }
+            header = EntityLoadStateAdapter { similarAdapter.retry() },
+            footer = EntityLoadStateAdapter { similarAdapter.retry() }
         )
         similarAdapter.addLoadStateListener { loadState ->
             if (loadState.refresh !is LoadState.NotLoading) {

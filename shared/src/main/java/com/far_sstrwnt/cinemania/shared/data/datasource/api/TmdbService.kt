@@ -3,6 +3,7 @@ package com.far_sstrwnt.cinemania.shared.data.datasource.api
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkCastEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkMovieEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkPeopleEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkTvEntity
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -11,6 +12,7 @@ interface TmdbService {
 
     // https://api.themoviedb.org/3/discover/movie?api_key=a1f3faf95d3a6c30d3e3b20acfcdbeae&page=1
 
+    // MOVIE
     @GET("genre/movie/list")
     suspend fun getMovieGenre(): GenresResponse
 
@@ -42,6 +44,17 @@ interface TmdbService {
         @Query("page") page: Int
     ): ResultsResponse<NetworkMovieEntity>
 
+    // TV
+    @GET("genre/tv/list")
+    suspend fun getTvGenre(): GenresResponse
+
+    @GET("discover/tv")
+    suspend fun getTvDiscover(
+        @Query("with_genres") genre: String?,
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkTvEntity>
+
+    // PEOPLE
     @GET("person/{id}")
     suspend fun getPeopleDetail(
         @Path("id") id: String

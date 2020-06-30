@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.FragmentSearchBinding
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
-import com.far_sstrwnt.cinemania.ui.MoviesPagingAdapter
-import com.far_sstrwnt.cinemania.ui.MoviesLoadStateAdapter
+import com.far_sstrwnt.cinemania.ui.movies.MoviesPagingAdapter
+import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
 import com.far_sstrwnt.cinemania.ui.toVisibility
 import com.far_sstrwnt.cinemania.util.viewModelProvider
 import dagger.android.support.DaggerFragment
@@ -67,10 +67,13 @@ class SearchFragment : DaggerFragment() {
     }
 
     private fun initAdapter() {
-        adapter = MoviesPagingAdapter(viewModel, R.layout.item_movie_search)
+        adapter = MoviesPagingAdapter(
+            viewModel,
+            R.layout.item_movie_search
+        )
         binding.searchList.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = MoviesLoadStateAdapter { adapter.retry() },
-            footer = MoviesLoadStateAdapter { adapter.retry() }
+            header = EntityLoadStateAdapter { adapter.retry() },
+            footer = EntityLoadStateAdapter { adapter.retry() }
         )
         adapter.addLoadStateListener { loadState ->
             if (loadState.refresh !is LoadState.NotLoading) {
