@@ -1,15 +1,15 @@
 package com.far_sstrwnt.cinemania.model
 
-data class MovieEntity(
+data class TvEntity(
     val id: String,
     val popularity: Double,
     val voteCount: Long,
     val posterPath: String?,
     val backdropPath: String?,
     val originalLanguage: String,
-    val originalTitle: String,
-    val title: String,
+    val originalName: String,
+    val name: String,
     val voteAverage: Float,
     val overview: String,
-    val releaseDate: String?
+    val firstAirDate: String?
 )

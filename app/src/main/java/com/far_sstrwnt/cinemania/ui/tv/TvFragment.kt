@@ -1,4 +1,4 @@
-package com.far_sstrwnt.cinemania.ui.movies
+package com.far_sstrwnt.cinemania.ui.tv
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,10 +12,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import com.far_sstrwnt.cinemania.R
-import com.far_sstrwnt.cinemania.databinding.FragmentMoviesBinding
+import com.far_sstrwnt.cinemania.databinding.FragmentTvBinding
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
-import com.far_sstrwnt.cinemania.ui.GridItemDecoration
 import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
+import com.far_sstrwnt.cinemania.ui.GridItemDecoration
 import com.far_sstrwnt.cinemania.ui.toVisibility
 import com.far_sstrwnt.cinemania.util.viewModelProvider
 import com.google.android.material.chip.Chip
@@ -28,18 +28,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
-class MoviesFragment : DaggerFragment() {
+class TvFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: MoviesViewModel
+    private lateinit var viewModel: TvViewModel
 
-    private lateinit var binding: FragmentMoviesBinding
+    private lateinit var binding: FragmentTvBinding
 
-    private lateinit var adapter: MoviesPagingAdapter
+    private lateinit var adapter: TvPagingAdapter
 
-    private var moviesJob: Job? = null
+    private var tvJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +48,7 @@ class MoviesFragment : DaggerFragment() {
     ): View? {
         viewModel = viewModelProvider(viewModelFactory)
 
-        binding = FragmentMoviesBinding.inflate(inflater, container, false)
+        binding = FragmentTvBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -60,32 +60,29 @@ class MoviesFragment : DaggerFragment() {
         initGenre()
         initNavigation()
 
-        loadMovies(null)
+        loadTv(null)
 
-        binding.moviesList.setHasFixedSize(true)
+        binding.tvList.setHasFixedSize(true)
         val padding = resources.getDimensionPixelSize(R.dimen.padding_small)
-        binding.moviesList.addItemDecoration(GridItemDecoration(padding))
+        binding.tvList.addItemDecoration(GridItemDecoration(padding))
         binding.retryButton.setOnClickListener { adapter.retry() }
     }
 
     private fun initAdapter() {
-        adapter = MoviesPagingAdapter(
-            viewModel,
-            R.layout.item_movie_grid
-        )
-        binding.moviesList.adapter = adapter.withLoadStateHeaderAndFooter(
+        adapter = TvPagingAdapter(viewModel, R.layout.item_tv_grid)
+        binding.tvList.adapter = adapter.withLoadStateHeaderAndFooter(
             header = EntityLoadStateAdapter { adapter.retry() },
             footer = EntityLoadStateAdapter { adapter.retry() }
         )
         adapter.addLoadStateListener { loadState ->
             if (loadState.refresh !is LoadState.NotLoading) {
-                binding.moviesList.visibility = View.GONE
+                binding.tvList.visibility = View.GONE
                 binding.progressBar.visibility =
                     toVisibility(loadState.refresh is LoadState.Loading)
                 binding.retryButton.visibility =
                     toVisibility(loadState.refresh is LoadState.Error)
             } else {
-                binding.moviesList.visibility = View.VISIBLE
+                binding.tvList.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
                 binding.retryButton.visibility = View.GONE
 
@@ -122,7 +119,7 @@ class MoviesFragment : DaggerFragment() {
                 chip.text = genre.name
                 chip.tag = genre.name
                 chip.setOnClickListener {
-                    updateMovieListFromInput(genre.id)
+                    updateTvListFromInput(genre.id)
                 }
                 chip
             }
@@ -137,35 +134,35 @@ class MoviesFragment : DaggerFragment() {
         lifecycleScope.launch {
             @OptIn(ExperimentalPagingApi::class)
             adapter.dataRefreshFlow.collect {
-                binding.moviesList.scrollToPosition(0)
+                binding.tvList.scrollToPosition(0)
             }
         }
     }
 
-    private fun loadMovies(genre: String?) {
-        moviesJob?.cancel()
-        moviesJob = lifecycleScope.launch {
-            viewModel.discoverMovie(genre).collectLatest {
+    private fun loadTv(genre: String?) {
+        tvJob?.cancel()
+        tvJob = lifecycleScope.launch {
+            viewModel.discoverTv(genre).collectLatest {
                 adapter.submitData(it)
             }
         }
     }
 
-    private fun updateMovieListFromInput(genre: String) {
+    private fun updateTvListFromInput(genre: String) {
         binding.genreList.checkedChipId.let {
-            binding.moviesList.scrollToPosition(0)
-            loadMovies(genre)
+            binding.tvList.scrollToPosition(0)
+            loadTv(genre)
         }
     }
 
     private fun initNavigation() {
-        viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            openMovieDetail(it)
+        viewModel.navigateToTvDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            openTvDetail(it)
         })
     }
 
-    private fun openMovieDetail(id: String) {
-        val action = MoviesFragmentDirections.actionNavMovieToNavMovieDetail(id)
-        findNavController().navigate(action)
+    private fun openTvDetail(id: String) {
+//        val action = MoviesFragmentDirections.actionNavMovieToNavMovieDetail(id)
+//        findNavController().navigate(action)
     }
 }

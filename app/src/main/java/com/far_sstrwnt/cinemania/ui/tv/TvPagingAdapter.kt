@@ -1,4 +1,4 @@
-package com.far_sstrwnt.cinemania.ui
+package com.far_sstrwnt.cinemania.ui.tv
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,11 +9,11 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.far_sstrwnt.cinemania.BR
-import com.far_sstrwnt.cinemania.model.MovieEntity
+import com.far_sstrwnt.cinemania.model.TvEntity
 import com.far_sstrwnt.cinemania.ui.common.EventActions
 
-class MoviesPagingAdapter(private val eventListener: EventActions, @LayoutRes val layoutId: Int) :
-    PagingDataAdapter<MovieEntity, RecyclerView.ViewHolder>(MOVIE_COMPARATOR) {
+class TvPagingAdapter(private val eventListener: EventActions, @LayoutRes val layoutId: Int) :
+    PagingDataAdapter<TvEntity, RecyclerView.ViewHolder>(TV_COMPARATOR){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -22,28 +22,28 @@ class MoviesPagingAdapter(private val eventListener: EventActions, @LayoutRes va
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val movieItem = getItem(position)
-        movieItem?.let {
-            (holder as ViewHolder).bind(eventListener, movieItem)
+        val tvItem = getItem(position)
+        tvItem?.let {
+            (holder as ViewHolder).bind(eventListener, tvItem)
         }
     }
 
     class ViewHolder(private val binding: ViewDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(eventListener: EventActions, movie: MovieEntity) {
+        fun bind(eventListener: EventActions, tv: TvEntity) {
             binding.setVariable(BR.eventListener, eventListener)
-            binding.setVariable(BR.movie, movie)
+            binding.setVariable(BR.tv, tv)
             binding.executePendingBindings()
         }
     }
 
     companion object {
-        private val MOVIE_COMPARATOR = object : DiffUtil.ItemCallback<MovieEntity>() {
-            override fun areItemsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean =
+        private val TV_COMPARATOR = object : DiffUtil.ItemCallback<TvEntity>() {
+            override fun areItemsTheSame(oldItem: TvEntity, newItem: TvEntity): Boolean =
                 oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean =
+            override fun areContentsTheSame(oldItem: TvEntity, newItem: TvEntity): Boolean =
                 oldItem == newItem
         }
     }

@@ -42,6 +42,16 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nav_tv"
+        android:name="com.far_sstrwnt.cinemania.ui.tv.TvFragment"
+        android:label="TV"
+        tools:layout="@layout/fragment_tv">
+<!--        <action-->
+<!--            android:id="@+id/action_nav_tv_to_nav_tv_detail"-->
+<!--            app:destination="@id/nav_tv_detail" />-->
+    </fragment>
+
+    <fragment
         android:id="@+id/nav_people_detail"
         android:name="com.far_sstrwnt.cinemania.ui.peopledetail.PeopleDetailFragment"
         android:label="People Detail"

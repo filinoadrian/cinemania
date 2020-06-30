@@ -1,20 +1,20 @@
 package com.far_sstrwnt.cinemania.shared.data.mapper
 
-import com.far_sstrwnt.cinemania.model.MovieEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkMovieEntity
+import com.far_sstrwnt.cinemania.model.TvEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkTvEntity
 
-fun NetworkMovieEntity.asDomainModel(): MovieEntity {
-    return MovieEntity(
+fun NetworkTvEntity.asDomainModel(): TvEntity {
+    return TvEntity(
         id = id,
         popularity = popularity,
         voteCount = voteCount,
         posterPath = posterPath,
         backdropPath = backdropPath,
         originalLanguage = originalLanguage,
-        originalTitle = originalTitle,
-        title = title,
+        originalName = originalName,
+        name = name,
         voteAverage = voteAverage,
         overview = overview,
-        releaseDate = releaseDate
+        firstAirDate = firstAirDate
     )
 }
