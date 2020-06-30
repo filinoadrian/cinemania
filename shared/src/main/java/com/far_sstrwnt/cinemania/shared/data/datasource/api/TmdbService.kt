@@ -54,6 +54,11 @@ interface TmdbService {
         @Query("page") page: Int
     ): ResultsResponse<NetworkTvEntity>
 
+    @GET("tv/{id}")
+    suspend fun getTvDetail(
+        @Path("id") id: String
+    ): NetworkTvEntity
+
     // PEOPLE
     @GET("person/{id}")
     suspend fun getPeopleDetail(

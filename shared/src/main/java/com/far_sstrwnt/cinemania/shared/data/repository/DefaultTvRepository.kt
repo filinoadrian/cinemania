@@ -18,6 +18,7 @@ import javax.inject.Singleton
 interface TvRepository {
     suspend fun getTvGenreList(): Result<List<GenreEntity>>
     fun getDiscoverResultStream(genre: String?): Flow<PagingData<TvEntity>>
+    suspend fun getTvDetail(id: String): Result<TvEntity>
 }
 
 @Singleton
@@ -52,6 +53,18 @@ class DefaultTvRepository @Inject constructor(
                 )
             }
         ).flow
+    }
+
+    override suspend fun getTvDetail(id: String): Result<TvEntity> {
+        return withContext(Dispatchers.IO) {
+            val tv = dataSource.tvDetail(id)
+
+            (tv as? Result.Success)?.let {
+                return@withContext Result.Success(it.data.asDomainModel())
+            }
+
+            return@withContext Result.Error(Exception("Remote data source fetch failed"))
+        }
     }
 
     companion object {

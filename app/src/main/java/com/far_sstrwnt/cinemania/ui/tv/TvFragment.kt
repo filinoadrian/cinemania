@@ -162,7 +162,7 @@ class TvFragment : DaggerFragment() {
     }
 
     private fun openTvDetail(id: String) {
-//        val action = MoviesFragmentDirections.actionNavMovieToNavMovieDetail(id)
-//        findNavController().navigate(action)
+        val action = TvFragmentDirections.actionNavTvToNavTvDetail(id)
+        findNavController().navigate(action)
     }
 }
