@@ -7,6 +7,7 @@ import com.far_sstrwnt.cinemania.ui.movies.MoviesModule
 import com.far_sstrwnt.cinemania.ui.peopledetail.PeopleDetailModule
 import com.far_sstrwnt.cinemania.ui.search.SearchModule
 import com.far_sstrwnt.cinemania.ui.tv.TvModule
+import com.far_sstrwnt.cinemania.ui.tvdetail.TvDetailModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -21,6 +22,7 @@ abstract class ActivityBindingModule {
             SearchModule::class,
             MovieDetailModule::class,
             TvModule::class,
+            TvDetailModule::class,
             PeopleDetailModule::class
         ]
     )

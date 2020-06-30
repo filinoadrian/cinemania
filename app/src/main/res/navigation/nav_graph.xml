@@ -46,9 +46,25 @@
         android:name="com.far_sstrwnt.cinemania.ui.tv.TvFragment"
         android:label="TV"
         tools:layout="@layout/fragment_tv">
+        <action
+            android:id="@+id/action_nav_tv_to_nav_tv_detail"
+            app:destination="@id/nav_tv_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_tv_detail"
+        android:name="com.far_sstrwnt.cinemania.ui.tvdetail.TvDetailFragment"
+        android:label="TV Detail"
+        tools:layout="@layout/fragment_tv_detail">
+        <argument
+            android:name="id"
+            app:argType="string" />
 <!--        <action-->
-<!--            android:id="@+id/action_nav_tv_to_nav_tv_detail"-->
-<!--            app:destination="@id/nav_tv_detail" />-->
+<!--            android:id="@+id/action_nav_movie_detail_to_nav_people_detail"-->
+<!--            app:destination="@id/nav_people_detail" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_nav_movie_detail_to_self"-->
+<!--            app:destination="@id/nav_movie_detail" />-->
     </fragment>
 
     <fragment

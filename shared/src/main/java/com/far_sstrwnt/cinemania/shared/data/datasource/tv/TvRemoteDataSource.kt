@@ -21,4 +21,12 @@ class TvRemoteDataSource @Inject constructor(
     suspend fun tvDiscover(genre: String?, page: Int): ResultsResponse<NetworkTvEntity> {
         return service.getTvDiscover(genre, page)
     }
+
+    suspend fun tvDetail(id: String): Result<NetworkTvEntity> {
+        return try {
+            Result.Success(service.getTvDetail(id))
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
 }
