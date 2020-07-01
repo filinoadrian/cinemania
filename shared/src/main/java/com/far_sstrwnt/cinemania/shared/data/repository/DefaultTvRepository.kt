@@ -8,6 +8,7 @@ import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.TvEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.tv.TvDiscoverPagingSource
 import com.far_sstrwnt.cinemania.shared.data.datasource.tv.TvRemoteDataSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.tv.TvSimilarPagingSource
 import com.far_sstrwnt.cinemania.shared.data.mapper.asDomainModel
 import com.far_sstrwnt.cinemania.shared.result.Result
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,7 @@ import javax.inject.Singleton
 interface TvRepository {
     suspend fun getTvGenreList(): Result<List<GenreEntity>>
     fun getDiscoverResultStream(genre: String?): Flow<PagingData<TvEntity>>
+    fun getSimilarResultStream(id: String): Flow<PagingData<TvEntity>>
     suspend fun getTvDetail(id: String): Result<TvEntity>
     suspend fun getTvCastList(id: String): Result<List<CastEntity>>
 }
@@ -52,6 +54,21 @@ class DefaultTvRepository @Inject constructor(
             pagingSourceFactory = {
                 TvDiscoverPagingSource(
                     dataSource, genre
+                )
+            }
+        ).flow
+    }
+
+    override fun getSimilarResultStream(id: String): Flow<PagingData<TvEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                TvSimilarPagingSource(
+                    dataSource, id
                 )
             }
         ).flow

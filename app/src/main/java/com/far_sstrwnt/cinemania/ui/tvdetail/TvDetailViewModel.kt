@@ -4,20 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.TvEntity
 import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvCastUseCase
 import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvDetailUseCase
+import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvSimilarUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.EventActions
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class TvDetailViewModel @Inject constructor(
     private val fetchTvDetailUseCase: FetchTvDetailUseCase,
-    private val fetchTvCastUseCase: FetchTvCastUseCase
+    private val fetchTvCastUseCase: FetchTvCastUseCase,
+    private val fetchTvSimilarUseCase: FetchTvSimilarUseCase
 ) : ViewModel(), EventActions {
 
     private val _tv = MutableLiveData<TvEntity>()
@@ -64,5 +69,9 @@ class TvDetailViewModel @Inject constructor(
                 _cast.value = cast
             }
         }
+    }
+
+    fun loadTvSimilar(id: String): Flow<PagingData<TvEntity>> {
+        return fetchTvSimilarUseCase.execute(id).cachedIn(viewModelScope)
     }
 }
