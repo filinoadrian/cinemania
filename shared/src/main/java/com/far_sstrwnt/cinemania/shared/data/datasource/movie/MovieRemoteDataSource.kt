@@ -4,6 +4,7 @@ import com.far_sstrwnt.cinemania.shared.data.datasource.api.*
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkCastEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkGenreEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkMovieEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkVideoEntity
 import com.far_sstrwnt.cinemania.shared.result.Result
 import timber.log.Timber
 import javax.inject.Inject
@@ -42,6 +43,14 @@ class MovieRemoteDataSource @Inject constructor(
     suspend fun movieCast(id: String): Result<List<NetworkCastEntity>> {
         return try {
             Result.Success(service.getMovieCredit(id).cast)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    suspend fun movieVideo(id: String): Result<List<NetworkVideoEntity>> {
+        return try {
+            Result.Success(service.getMovieVideos(id).results)
         } catch (e: Exception) {
             Result.Error(e)
         }

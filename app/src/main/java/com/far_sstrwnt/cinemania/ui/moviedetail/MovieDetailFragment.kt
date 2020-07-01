@@ -17,6 +17,7 @@ import com.far_sstrwnt.cinemania.databinding.FragmentMovieDetailBinding
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
 import com.far_sstrwnt.cinemania.ui.CastAdapter
 import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
+import com.far_sstrwnt.cinemania.ui.VideoAdapter
 import com.far_sstrwnt.cinemania.ui.movies.MoviesPagingAdapter
 import com.far_sstrwnt.cinemania.ui.toVisibility
 import com.far_sstrwnt.cinemania.util.viewModelProvider
@@ -39,6 +40,8 @@ class MovieDetailFragment : DaggerFragment() {
     private lateinit var castAdapter: CastAdapter
 
     private lateinit var similarAdapter: MoviesPagingAdapter
+
+    private lateinit var videoAdapter: VideoAdapter
 
     private val args: MovieDetailFragmentArgs by navArgs()
 
@@ -68,6 +71,7 @@ class MovieDetailFragment : DaggerFragment() {
 
         viewModel.loadMovieDetail(args.id)
         viewModel.loadMovieCast(args.id)
+        viewModel.loadMovieVideo(args.id)
         loadMovieSimilar(args.id)
 
         subscribeUi()
@@ -99,6 +103,9 @@ class MovieDetailFragment : DaggerFragment() {
     private fun initAdapter() {
         castAdapter = CastAdapter(viewModel)
         binding.movieCast.adapter = castAdapter
+
+        videoAdapter = VideoAdapter()
+        binding.movieVideo.adapter = videoAdapter
 
         similarAdapter = MoviesPagingAdapter(
             viewModel,
@@ -173,6 +180,9 @@ class MovieDetailFragment : DaggerFragment() {
     private fun subscribeUi() {
         viewModel.cast.observe(this.viewLifecycleOwner, Observer {
             castAdapter.submitList(it)
+        })
+        viewModel.video.observe(this.viewLifecycleOwner, Observer {
+            videoAdapter.submitList(it)
         })
     }
 }
