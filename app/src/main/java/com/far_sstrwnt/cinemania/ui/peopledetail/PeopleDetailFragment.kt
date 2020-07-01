@@ -13,6 +13,7 @@ import com.far_sstrwnt.cinemania.databinding.FragmentPeopleDetailBinding
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
 import com.far_sstrwnt.cinemania.ui.CastAdapter
 import com.far_sstrwnt.cinemania.ui.MovieAdapter
+import com.far_sstrwnt.cinemania.ui.TvAdapter
 import com.far_sstrwnt.cinemania.util.viewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.support.DaggerFragment
@@ -28,6 +29,8 @@ class PeopleDetailFragment : DaggerFragment() {
     private lateinit var binding: FragmentPeopleDetailBinding
 
     private lateinit var movieAdapter: MovieAdapter
+
+    private lateinit var tvAdapter: TvAdapter
 
     private val args: PeopleDetailFragmentArgs by navArgs()
 
@@ -55,6 +58,7 @@ class PeopleDetailFragment : DaggerFragment() {
 
         viewModel.loadPeopleDetail(args.id)
         viewModel.loadPeopleMovieCredit(args.id)
+        viewModel.loadPeopleTvCredit(args.id)
 
         subscribeUi()
     }
@@ -82,12 +86,18 @@ class PeopleDetailFragment : DaggerFragment() {
 
     private fun initAdapter() {
         movieAdapter = MovieAdapter(viewModel)
-        binding.peopleCast.adapter = movieAdapter
+        binding.peopleMovies.adapter = movieAdapter
+
+        tvAdapter = TvAdapter(viewModel)
+        binding.peopleTv.adapter = tvAdapter
     }
 
     private fun initNavigation() {
         viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
             openMovieDetail(it)
+        })
+        viewModel.navigateToTvDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            openTvDetail(it)
         })
     }
 
@@ -96,9 +106,17 @@ class PeopleDetailFragment : DaggerFragment() {
         findNavController().navigate(action)
     }
 
+    private fun openTvDetail(id: String) {
+        val action = PeopleDetailFragmentDirections.actionNavPeopleDetailToNavTvDetail(id)
+        findNavController().navigate(action)
+    }
+
     private fun subscribeUi() {
         viewModel.movies.observe(this.viewLifecycleOwner, Observer {
             movieAdapter.submitList(it)
+        })
+        viewModel.tv.observe(this.viewLifecycleOwner, Observer {
+            tvAdapter.submitList(it)
         })
     }
 }

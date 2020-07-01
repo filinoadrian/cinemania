@@ -103,7 +103,7 @@
                     tools:text="As the Avengers and their allies have continued to protect the world from threats too large for any one hero to handle, a new danger has emerged from the cosmic shadows: Thanos. A despot of intergalactic infamy, his goal is to collect all six Infinity Stones, artifacts of unimaginable power, and use them to inflict his twisted will on all of reality. Everything the Avengers have fought for has led up to this moment - the fate of Earth and existence itself has never been more uncertain."/>
 
                 <TextView
-                    android:id="@+id/people_cast_header"
+                    android:id="@+id/people_movies_header"
                     style="@style/TextAppearance.Cinemania.H3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
                     app:layout_constraintEnd_toEndOf="@id/guideline_end"/>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/people_cast"
+                    android:id="@+id/people_movies"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -125,8 +125,34 @@
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/people_cast_header"
+                    app:layout_constraintTop_toBottomOf="@id/people_movies_header"
                     tools:listitem="@layout/item_movie"/>
+
+                <TextView
+                    android:id="@+id/people_tv_header"
+                    style="@style/TextAppearance.Cinemania.H3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="TV"
+                    app:layout_constraintTop_toBottomOf="@id/people_movies"
+                    app:layout_constraintStart_toStartOf="@id/guideline_start"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_end"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/people_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:paddingStart="@dimen/padding_normal"
+                    android:paddingEnd="@dimen/padding_normal"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/people_tv_header"
+                    tools:listitem="@layout/item_tv"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

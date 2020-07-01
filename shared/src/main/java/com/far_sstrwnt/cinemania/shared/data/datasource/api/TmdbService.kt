@@ -74,4 +74,9 @@ interface TmdbService {
     suspend fun getPeopleMovieCredit(
         @Path("id") id: String
     ): CreditResponse<NetworkMovieEntity>
+
+    @GET("person/{id}/tv_credits")
+    suspend fun getPeopleTvCredit(
+        @Path("id") id: String
+    ): CreditResponse<NetworkTvEntity>
 }
