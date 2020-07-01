@@ -5,9 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.far_sstrwnt.cinemania.databinding.FragmentTvDetailBinding
+import com.far_sstrwnt.cinemania.shared.result.EventObserver
+import com.far_sstrwnt.cinemania.ui.CastAdapter
 import com.far_sstrwnt.cinemania.util.viewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.support.DaggerFragment
@@ -21,6 +25,8 @@ class TvDetailFragment : DaggerFragment() {
     private lateinit var viewModel: TvDetailViewModel
 
     private lateinit var binding: FragmentTvDetailBinding
+
+    private lateinit var castAdapter: CastAdapter
 
     private val args: TvDetailFragmentArgs by navArgs()
 
@@ -44,8 +50,13 @@ class TvDetailFragment : DaggerFragment() {
         binding.lifecycleOwner = this.viewLifecycleOwner
 
         initAppBar()
+        initAdapter()
+        initNavigation()
 
         viewModel.loadTvDetail(args.id)
+        viewModel.loadTvCast(args.id)
+
+        subscribeUi()
     }
 
     private fun initAppBar() {
@@ -66,6 +77,28 @@ class TvDetailFragment : DaggerFragment() {
                 binding.collapsingToolbar.title = " "
                 isShow = false
             }
+        })
+    }
+
+    private fun initAdapter() {
+        castAdapter = CastAdapter(viewModel)
+        binding.tvCast.adapter = castAdapter
+    }
+
+    private fun initNavigation() {
+        viewModel.navigateToPeopleDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            openPeopleDetail(it)
+        })
+    }
+
+    private fun openPeopleDetail(id: String) {
+        val action = TvDetailFragmentDirections.actionNavTvDetailToNavPeopleDetail(id)
+        findNavController().navigate(action)
+    }
+
+    private fun subscribeUi() {
+        viewModel.cast.observe(this.viewLifecycleOwner, Observer {
+            castAdapter.submitList(it)
         })
     }
 }

@@ -3,6 +3,7 @@ package com.far_sstrwnt.cinemania.shared.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.TvEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.tv.TvDiscoverPagingSource
@@ -19,6 +20,7 @@ interface TvRepository {
     suspend fun getTvGenreList(): Result<List<GenreEntity>>
     fun getDiscoverResultStream(genre: String?): Flow<PagingData<TvEntity>>
     suspend fun getTvDetail(id: String): Result<TvEntity>
+    suspend fun getTvCastList(id: String): Result<List<CastEntity>>
 }
 
 @Singleton
@@ -61,6 +63,20 @@ class DefaultTvRepository @Inject constructor(
 
             (tv as? Result.Success)?.let {
                 return@withContext Result.Success(it.data.asDomainModel())
+            }
+
+            return@withContext Result.Error(Exception("Remote data source fetch failed"))
+        }
+    }
+
+    override suspend fun getTvCastList(id: String): Result<List<CastEntity>> {
+        return withContext(Dispatchers.IO) {
+            val cast = dataSource.tvCast(id)
+
+            (cast as? Result.Success)?.let {
+                return@withContext Result.Success(it.data.map { results ->
+                    results.asDomainModel()
+                })
             }
 
             return@withContext Result.Error(Exception("Remote data source fetch failed"))
