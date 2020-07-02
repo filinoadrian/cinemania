@@ -13,7 +13,7 @@ import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvDiscoverUseCase
 import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvGenreUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
-import com.far_sstrwnt.cinemania.ui.common.EventActions
+import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class TvViewModel @Inject constructor(
     private val fetchTvGenreUseCase: FetchTvGenreUseCase,
     private val fetchTvDiscoverUseCase: FetchTvDiscoverUseCase
-) : ViewModel(), EventActions {
+) : ViewModel(), EventActionsHandler {
 
     private val _genreList = MutableLiveData<List<GenreEntity>>().apply { value = emptyList() }
     val genreList: LiveData<List<GenreEntity>>

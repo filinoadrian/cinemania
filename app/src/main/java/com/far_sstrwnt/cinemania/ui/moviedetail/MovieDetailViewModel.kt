@@ -16,7 +16,7 @@ import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieSimilarUseCase
 import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieVideoUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
-import com.far_sstrwnt.cinemania.ui.common.EventActions
+import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class MovieDetailViewModel @Inject constructor(
     private val fetchMovieCastUseCase: FetchMovieCastUseCase,
     private val fetchMovieSimilarUseCase: FetchMovieSimilarUseCase,
     private val fetchMovieVideoUseCase: FetchMovieVideoUseCase
-) : ViewModel(), EventActions {
+) : ViewModel(), EventActionsHandler {
 
     private val _movie = MutableLiveData<MovieEntity>()
     val movie: LiveData<MovieEntity>

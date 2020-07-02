@@ -52,6 +52,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$supportLibVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation "androidx.browser:browser:$rootProject.browserVersion"
     implementation "com.google.android.material:material:$materialVersion"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation "com.jakewharton.timber:timber:$timberVersion"

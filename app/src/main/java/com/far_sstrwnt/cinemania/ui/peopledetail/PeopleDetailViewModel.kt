@@ -13,7 +13,7 @@ import com.far_sstrwnt.cinemania.shared.domain.people.FetchPeopleMovieCreditsUse
 import com.far_sstrwnt.cinemania.shared.domain.people.FetchPeopleTvCreditsUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
-import com.far_sstrwnt.cinemania.ui.common.EventActions
+import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ class PeopleDetailViewModel @Inject constructor(
     private val fetchPeopleDetailUseCase: FetchPeopleDetailUseCase,
     private val fetchPeopleMovieCreditsUseCase: FetchPeopleMovieCreditsUseCase,
     private val fetchPeopleTvCreditsUseCase: FetchPeopleTvCreditsUseCase
-) : ViewModel(), EventActions {
+) : ViewModel(), EventActionsHandler {
 
     private val _people = MutableLiveData<PeopleEntity>()
     val people: LiveData<PeopleEntity>

@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.far_sstrwnt.cinemania.databinding.ItemVideoBinding
 import com.far_sstrwnt.cinemania.model.VideoEntity
+import com.far_sstrwnt.cinemania.ui.common.VideoActionsHandler
 
-class VideoAdapter : ListAdapter<VideoEntity, RecyclerView.ViewHolder>(VideoDiffCallback()) {
+class VideoAdapter(private val videoActionsHandler: VideoActionsHandler) :
+    ListAdapter<VideoEntity, RecyclerView.ViewHolder>(VideoDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return ViewHolder.from(parent)
@@ -17,14 +19,15 @@ class VideoAdapter : ListAdapter<VideoEntity, RecyclerView.ViewHolder>(VideoDiff
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val videoItem = getItem(position)
         videoItem?.let {
-            (holder as ViewHolder).bind(videoItem)
+            (holder as ViewHolder).bind(videoActionsHandler, videoItem)
         }
     }
 
     class ViewHolder private constructor(val binding: ItemVideoBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(video: VideoEntity) {
+        fun bind(videoActionsHandler: VideoActionsHandler, video: VideoEntity) {
+            binding.actionHandler = videoActionsHandler
             binding.video = video
             binding.executePendingBindings()
         }

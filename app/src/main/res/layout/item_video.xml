@@ -7,6 +7,10 @@
     <data>
 
         <variable
+            name="actionHandler"
+            type="com.far_sstrwnt.cinemania.ui.common.VideoActionsHandler" />
+
+        <variable
             name="video"
             type="com.far_sstrwnt.cinemania.model.VideoEntity" />
     </data>
@@ -15,7 +19,8 @@
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp">
+        android:layout_marginEnd="8dp"
+        android:onClick="@{() -> actionHandler.playVideo(video)}">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/video_card"

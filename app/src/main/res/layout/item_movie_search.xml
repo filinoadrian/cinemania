@@ -9,7 +9,7 @@
 
         <variable
             name="eventListener"
-            type="com.far_sstrwnt.cinemania.ui.common.EventActions" />
+            type="com.far_sstrwnt.cinemania.ui.common.EventActionsHandler" />
 
         <variable
             name="movie"
