@@ -3,7 +3,7 @@ package com.far_sstrwnt.cinemania.shared.data.datasource.model
 import com.google.gson.annotations.SerializedName
 
 data class NetworkCastEntity(
-    @field:SerializedName("cast_id") val castId: String,
+    @field:SerializedName("cast_id") val castId: String?,
     @field:SerializedName("character") val character: String,
     @field:SerializedName("credit_id") val creditId: String?,
     @field:SerializedName("gender") val gender: Int?,

@@ -1,7 +1,7 @@
 package com.far_sstrwnt.cinemania.model
 
 data class CastEntity(
-    val castId: String,
+    val castId: String?,
     val character: String,
     val creditId: String?,
     val gender: Int?,

@@ -2,6 +2,7 @@ package com.far_sstrwnt.cinemania.shared.data.datasource.tv
 
 import com.far_sstrwnt.cinemania.shared.data.datasource.api.ResultsResponse
 import com.far_sstrwnt.cinemania.shared.data.datasource.api.TmdbService
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkCastEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkGenreEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkTvEntity
 import com.far_sstrwnt.cinemania.shared.result.Result
@@ -22,9 +23,21 @@ class TvRemoteDataSource @Inject constructor(
         return service.getTvDiscover(genre, page)
     }
 
+    suspend fun tvSimilar(id: String, page: Int): ResultsResponse<NetworkTvEntity> {
+        return service.getTvSimilar(id, page)
+    }
+
     suspend fun tvDetail(id: String): Result<NetworkTvEntity> {
         return try {
             Result.Success(service.getTvDetail(id))
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    suspend fun tvCast(id: String): Result<List<NetworkCastEntity>> {
+        return try {
+            Result.Success(service.getTvCredit(id).cast)
         } catch (e: Exception) {
             Result.Error(e)
         }
