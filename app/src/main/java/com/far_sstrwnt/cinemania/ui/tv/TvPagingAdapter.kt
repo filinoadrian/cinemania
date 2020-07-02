@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.far_sstrwnt.cinemania.BR
 import com.far_sstrwnt.cinemania.model.TvEntity
-import com.far_sstrwnt.cinemania.ui.common.EventActions
+import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
 
-class TvPagingAdapter(private val eventListener: EventActions, @LayoutRes val layoutId: Int) :
+class TvPagingAdapter(private val eventListener: EventActionsHandler, @LayoutRes val layoutId: Int) :
     PagingDataAdapter<TvEntity, RecyclerView.ViewHolder>(TV_COMPARATOR){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -31,7 +31,7 @@ class TvPagingAdapter(private val eventListener: EventActions, @LayoutRes val la
     class ViewHolder(private val binding: ViewDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(eventListener: EventActions, tv: TvEntity) {
+        fun bind(eventListener: EventActionsHandler, tv: TvEntity) {
             binding.setVariable(BR.eventListener, eventListener)
             binding.setVariable(BR.tv, tv)
             binding.executePendingBindings()

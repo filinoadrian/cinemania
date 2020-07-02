@@ -167,13 +167,39 @@
                     tools:listitem="@layout/item_cast"/>
 
                 <TextView
+                    android:id="@+id/movie_video_header"
+                    style="@style/TextAppearance.Cinemania.H3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/video_header"
+                    app:layout_constraintTop_toBottomOf="@id/movie_cast"
+                    app:layout_constraintStart_toStartOf="@id/guideline_start"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_end"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/movie_video"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:paddingStart="@dimen/padding_normal"
+                    android:paddingEnd="@dimen/padding_normal"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/movie_video_header"
+                    tools:listitem="@layout/item_video"/>
+
+                <TextView
                     android:id="@+id/movie_similar_header"
                     style="@style/TextAppearance.Cinemania.H3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/similar_header"
-                    app:layout_constraintTop_toBottomOf="@id/movie_cast"
+                    app:layout_constraintTop_toBottomOf="@id/movie_video"
                     app:layout_constraintStart_toStartOf="@id/guideline_start"
                     app:layout_constraintEnd_toEndOf="@id/guideline_end"/>
 

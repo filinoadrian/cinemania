@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.far_sstrwnt.cinemania.databinding.ItemTvBinding
 import com.far_sstrwnt.cinemania.model.TvEntity
-import com.far_sstrwnt.cinemania.ui.common.EventActions
+import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
 
-class TvAdapter(private val eventListener: EventActions)
+class TvAdapter(private val eventListener: EventActionsHandler)
     :ListAdapter<TvEntity, RecyclerView.ViewHolder>(TvDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -26,7 +26,7 @@ class TvAdapter(private val eventListener: EventActions)
     class ViewHolder private constructor(val binding: ItemTvBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(eventListener: EventActions, tv: TvEntity) {
+        fun bind(eventListener: EventActionsHandler, tv: TvEntity) {
             binding.eventListener = eventListener
             binding.tv = tv
             binding.executePendingBindings()

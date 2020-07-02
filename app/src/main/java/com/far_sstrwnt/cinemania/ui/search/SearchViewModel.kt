@@ -7,13 +7,13 @@ import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.MovieEntity
 import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieSearchUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
-import com.far_sstrwnt.cinemania.ui.common.EventActions
+import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
         private val fetchMovieSearchUseCase: FetchMovieSearchUseCase
-) : ViewModel(), EventActions {
+) : ViewModel(), EventActionsHandler {
 
     private var currentQueryValue: String? = null
 

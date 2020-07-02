@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MovieEntity
+import com.far_sstrwnt.cinemania.model.VideoEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieDiscoverPagingSource
 import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieRemoteDataSource
 import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieSearchPagingSource
@@ -25,6 +26,7 @@ interface MovieRepository {
     fun getSimilarResultStream(id: String): Flow<PagingData<MovieEntity>>
     suspend fun getMovieDetail(id: String): Result<MovieEntity>
     suspend fun getMovieCastList(id: String): Result<List<CastEntity>>
+    suspend fun getMovieVideo(id: String): Result<List<VideoEntity>>
 }
 
 @Singleton
@@ -111,6 +113,20 @@ class DefaultMovieRepository @Inject constructor(
             val cast = dataSource.movieCast(id)
 
             (cast as? Result.Success)?.let {
+                return@withContext Result.Success(it.data.map { results ->
+                    results.asDomainModel()
+                })
+            }
+
+            return@withContext Result.Error(Exception("Remote data source fetch failed"))
+        }
+    }
+
+    override suspend fun getMovieVideo(id: String): Result<List<VideoEntity>> {
+        return withContext(Dispatchers.IO) {
+            val video = dataSource.movieVideo(id)
+
+            (video as? Result.Success)?.let {
                 return@withContext Result.Success(it.data.map { results ->
                     results.asDomainModel()
                 })

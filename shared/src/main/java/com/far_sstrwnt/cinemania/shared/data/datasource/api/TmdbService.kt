@@ -1,9 +1,6 @@
 package com.far_sstrwnt.cinemania.shared.data.datasource.api
 
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkCastEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkMovieEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkPeopleEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkTvEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -43,6 +40,11 @@ interface TmdbService {
         @Path("id") id: String,
         @Query("page") page: Int
     ): ResultsResponse<NetworkMovieEntity>
+
+    @GET("movie/{id}/videos")
+    suspend fun getMovieVideos(
+        @Path("id") id: String
+    ): VideosResponse
 
     // TV
     @GET("genre/tv/list")

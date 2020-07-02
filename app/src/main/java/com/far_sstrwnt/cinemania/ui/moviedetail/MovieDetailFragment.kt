@@ -14,11 +14,16 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.FragmentMovieDetailBinding
+import com.far_sstrwnt.cinemania.model.VideoEntity
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
 import com.far_sstrwnt.cinemania.ui.CastAdapter
 import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
+import com.far_sstrwnt.cinemania.ui.VideoAdapter
+import com.far_sstrwnt.cinemania.ui.common.VideoActionsHandler
 import com.far_sstrwnt.cinemania.ui.movies.MoviesPagingAdapter
 import com.far_sstrwnt.cinemania.ui.toVisibility
+import com.far_sstrwnt.cinemania.util.openWebsiteUri
+import com.far_sstrwnt.cinemania.util.openWebsiteUrl
 import com.far_sstrwnt.cinemania.util.viewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.support.DaggerFragment
@@ -27,7 +32,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MovieDetailFragment : DaggerFragment() {
+class MovieDetailFragment : DaggerFragment(), VideoActionsHandler {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -39,6 +44,8 @@ class MovieDetailFragment : DaggerFragment() {
     private lateinit var castAdapter: CastAdapter
 
     private lateinit var similarAdapter: MoviesPagingAdapter
+
+    private lateinit var videoAdapter: VideoAdapter
 
     private val args: MovieDetailFragmentArgs by navArgs()
 
@@ -68,6 +75,7 @@ class MovieDetailFragment : DaggerFragment() {
 
         viewModel.loadMovieDetail(args.id)
         viewModel.loadMovieCast(args.id)
+        viewModel.loadMovieVideo(args.id)
         loadMovieSimilar(args.id)
 
         subscribeUi()
@@ -99,6 +107,9 @@ class MovieDetailFragment : DaggerFragment() {
     private fun initAdapter() {
         castAdapter = CastAdapter(viewModel)
         binding.movieCast.adapter = castAdapter
+
+        videoAdapter = VideoAdapter(this)
+        binding.movieVideo.adapter = videoAdapter
 
         similarAdapter = MoviesPagingAdapter(
             viewModel,
@@ -174,5 +185,12 @@ class MovieDetailFragment : DaggerFragment() {
         viewModel.cast.observe(this.viewLifecycleOwner, Observer {
             castAdapter.submitList(it)
         })
+        viewModel.video.observe(this.viewLifecycleOwner, Observer {
+            videoAdapter.submitList(it)
+        })
+    }
+
+    override fun playVideo(video: VideoEntity) {
+        openWebsiteUrl(requireContext(), "https://www.youtube.com/watch?v=${video.key}")
     }
 }

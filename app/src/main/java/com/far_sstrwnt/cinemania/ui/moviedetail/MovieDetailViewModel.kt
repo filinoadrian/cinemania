@@ -9,12 +9,14 @@ import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.MovieEntity
+import com.far_sstrwnt.cinemania.model.VideoEntity
 import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieCastUseCase
 import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieDetailUseCase
 import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieSimilarUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieVideoUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
-import com.far_sstrwnt.cinemania.ui.common.EventActions
+import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,8 +24,9 @@ import javax.inject.Inject
 class MovieDetailViewModel @Inject constructor(
     private val fetchMovieDetailUseCase: FetchMovieDetailUseCase,
     private val fetchMovieCastUseCase: FetchMovieCastUseCase,
-    private val fetchMovieSimilarUseCase: FetchMovieSimilarUseCase
-) : ViewModel(), EventActions {
+    private val fetchMovieSimilarUseCase: FetchMovieSimilarUseCase,
+    private val fetchMovieVideoUseCase: FetchMovieVideoUseCase
+) : ViewModel(), EventActionsHandler {
 
     private val _movie = MutableLiveData<MovieEntity>()
     val movie: LiveData<MovieEntity>
@@ -32,6 +35,10 @@ class MovieDetailViewModel @Inject constructor(
     private val _cast = MutableLiveData<List<CastEntity>>()
     val cast: LiveData<List<CastEntity>>
         get() = _cast
+
+    private val _video = MutableLiveData<List<VideoEntity>>()
+    val video: LiveData<List<VideoEntity>>
+        get() = _video
 
     private val _navigateToPeopleDetailAction = MutableLiveData<Event<String>>()
     val navigateToPeopleDetailAction: LiveData<Event<String>>
@@ -67,6 +74,17 @@ class MovieDetailViewModel @Inject constructor(
             if (castResult is Result.Success) {
                 val cast = castResult.data
                 _cast.value = cast
+            }
+        }
+    }
+
+    fun loadMovieVideo(id: String) {
+        viewModelScope.launch {
+            val videoResult = fetchMovieVideoUseCase.execute(id)
+
+            if (videoResult is Result.Success) {
+                val video = videoResult.data
+                _video.value = video
             }
         }
     }

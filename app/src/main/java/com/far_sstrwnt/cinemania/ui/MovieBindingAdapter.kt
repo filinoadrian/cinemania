@@ -23,6 +23,15 @@ fun setBackdrop(view: ImageView, backdropUrl: String?) {
     }
 }
 
+@BindingAdapter("app:thumbnail")
+fun setThumbnail(view: ImageView, thumbnailKey: String?) {
+    if (!thumbnailKey.isNullOrEmpty()) {
+        Glide.with(view.context)
+            .load("https://img.youtube.com/vi/${thumbnailKey}/mqdefault.jpg")
+            .into(view)
+    }
+}
+
 @BindingAdapter("app:rating")
 fun setRating(ratingBar: AppCompatRatingBar, rating: Float?) {
     if (rating != null) {
