@@ -5,6 +5,7 @@ import com.far_sstrwnt.cinemania.shared.data.datasource.api.TmdbService
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkCastEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkGenreEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkTvEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkVideoEntity
 import com.far_sstrwnt.cinemania.shared.result.Result
 import javax.inject.Inject
 
@@ -38,6 +39,14 @@ class TvRemoteDataSource @Inject constructor(
     suspend fun tvCast(id: String): Result<List<NetworkCastEntity>> {
         return try {
             Result.Success(service.getTvCredit(id).cast)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    suspend fun tvVideo(id: String): Result<List<NetworkVideoEntity>> {
+        return try {
+            Result.Success(service.getTvVideos(id).results)
         } catch (e: Exception) {
             Result.Error(e)
         }

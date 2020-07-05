@@ -9,9 +9,11 @@ import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.TvEntity
+import com.far_sstrwnt.cinemania.model.VideoEntity
 import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvCastUseCase
 import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvDetailUseCase
 import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvSimilarUseCase
+import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvVideoUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
@@ -22,7 +24,8 @@ import javax.inject.Inject
 class TvDetailViewModel @Inject constructor(
     private val fetchTvDetailUseCase: FetchTvDetailUseCase,
     private val fetchTvCastUseCase: FetchTvCastUseCase,
-    private val fetchTvSimilarUseCase: FetchTvSimilarUseCase
+    private val fetchTvSimilarUseCase: FetchTvSimilarUseCase,
+    private val fetchTvVideoUseCase: FetchTvVideoUseCase
 ) : ViewModel(), EventActionsHandler {
 
     private val _tv = MutableLiveData<TvEntity>()
@@ -32,6 +35,10 @@ class TvDetailViewModel @Inject constructor(
     private val _cast = MutableLiveData<List<CastEntity>>()
     val cast: LiveData<List<CastEntity>>
         get() = _cast
+
+    private val _video = MutableLiveData<List<VideoEntity>>()
+    val video: LiveData<List<VideoEntity>>
+        get() = _video
 
     private val _navigateToPeopleDetailAction = MutableLiveData<Event<String>>()
     val navigateToPeopleDetailAction: LiveData<Event<String>>
@@ -67,6 +74,17 @@ class TvDetailViewModel @Inject constructor(
             if (castResult is Result.Success) {
                 val cast = castResult.data
                 _cast.value = cast
+            }
+        }
+    }
+
+    fun loadTvVideo(id: String) {
+        viewModelScope.launch {
+            val videoResult = fetchTvVideoUseCase.execute(id)
+
+            if (videoResult is Result.Success) {
+                val video = videoResult.data
+                _video.value = video
             }
         }
     }
