@@ -16,6 +16,12 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nav_search_new"
+        android:name="com.far_sstrwnt.cinemania.ui.newsearch.NewSearchFragment"
+        android:label="New Search"
+        tools:layout="@layout/fragment_search_new"/>
+
+    <fragment
         android:id="@+id/nav_movie"
         android:name="com.far_sstrwnt.cinemania.ui.movies.MoviesFragment"
         android:label="Movies"
