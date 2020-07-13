@@ -20,6 +20,10 @@ class TvRemoteDataSource @Inject constructor(
         }
     }
 
+    suspend fun tvSearch(query: String, page: Int): ResultsResponse<NetworkTvEntity> {
+        return service.getTvSearch(query, page)
+    }
+
     suspend fun tvDiscover(genre: String?, page: Int): ResultsResponse<NetworkTvEntity> {
         return service.getTvDiscover(genre, page)
     }

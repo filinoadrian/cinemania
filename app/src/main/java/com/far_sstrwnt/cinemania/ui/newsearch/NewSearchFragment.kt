@@ -1,7 +1,6 @@
 package com.far_sstrwnt.cinemania.ui.newsearch
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,16 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.far_sstrwnt.cinemania.databinding.FragmentSearchNewBinding
 import com.far_sstrwnt.cinemania.util.viewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -98,9 +93,9 @@ class NewSearchFragment : DaggerFragment() {
         override fun createFragment(position: Int): Fragment {
             var fragment: Fragment? = null
             when (position) {
-                0 -> fragment = ViewPagerFragment(viewModel)
-                1 -> fragment = ViewPagerFragment(viewModel)
-                2 -> fragment = ViewPagerFragment(viewModel)
+                0 -> fragment = SearchMoviePagerFragment(viewModel)
+                1 -> fragment = SearchTvPagerFragment(viewModel)
+                2 -> fragment = SearchMoviePagerFragment(viewModel)
             }
             return fragment!!
         }

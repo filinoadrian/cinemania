@@ -10,28 +10,27 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.far_sstrwnt.cinemania.R
-import com.far_sstrwnt.cinemania.databinding.FragmentViewPagerBinding
+import com.far_sstrwnt.cinemania.databinding.FragmentSearchPagerBinding
 import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
-import com.far_sstrwnt.cinemania.ui.movies.MoviesPagingAdapter
 import com.far_sstrwnt.cinemania.ui.toVisibility
+import com.far_sstrwnt.cinemania.ui.tv.TvPagingAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @ExperimentalCoroutinesApi
-class ViewPagerFragment(private val viewModel: NewSearchViewModel) : Fragment() {
+class SearchTvPagerFragment(private val viewModel: NewSearchViewModel) : Fragment() {
 
-    private lateinit var binding: FragmentViewPagerBinding
+    private lateinit var binding: FragmentSearchPagerBinding
 
-    private lateinit var adapter: MoviesPagingAdapter
+    private lateinit var adapter: TvPagingAdapter
 
     private var searchJob: Job? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding = FragmentViewPagerBinding.inflate(inflater, container, false)
+        binding = FragmentSearchPagerBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -44,23 +43,23 @@ class ViewPagerFragment(private val viewModel: NewSearchViewModel) : Fragment() 
         initAdapter()
 
         viewModel.currentQueryValue.observe(this.viewLifecycleOwner, Observer {
-            searchMovie(it)
+            searchTv(it)
         })
     }
 
-    private fun searchMovie(query: String) {
+    private fun searchTv(query: String) {
         searchJob?.cancel()
         searchJob = lifecycleScope.launch {
-            viewModel.searchMovie(query).collectLatest {
+            viewModel.searchTv(query).collectLatest {
                 adapter.submitData(it)
             }
         }
     }
 
     private fun initAdapter() {
-        adapter = MoviesPagingAdapter(
+        adapter = TvPagingAdapter(
             viewModel,
-            R.layout.item_movie_search
+            R.layout.item_tv_search
         )
         binding.searchList.adapter = adapter.withLoadStateHeaderAndFooter(
             header = EntityLoadStateAdapter { adapter.retry() },
