@@ -1,8 +1,10 @@
 package com.far_sstrwnt.cinemania.shared.data.repository
 
+import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MovieEntity
@@ -22,6 +24,7 @@ import javax.inject.Singleton
 interface MovieRepository {
     suspend fun getMovieGenreList(): Result<List<GenreEntity>>
     fun getSearchResultStream(query: String): Flow<PagingData<MovieEntity>>
+    fun getNewSearchResultStream(query: String): LiveData<PagingData<MovieEntity>>
     fun getDiscoverResultStream(genre: String?): Flow<PagingData<MovieEntity>>
     fun getSimilarResultStream(id: String): Flow<PagingData<MovieEntity>>
     suspend fun getMovieDetail(id: String): Result<MovieEntity>
@@ -62,6 +65,22 @@ class DefaultMovieRepository @Inject constructor(
                 )
             }
         ).flow
+    }
+
+    override fun getNewSearchResultStream(query: String): LiveData<PagingData<MovieEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                MovieSearchPagingSource(
+                    dataSource,
+                    query
+                )
+            }
+        ).liveData
     }
 
     override fun getDiscoverResultStream(genre: String?): Flow<PagingData<MovieEntity>> {
