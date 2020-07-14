@@ -95,7 +95,7 @@ class NewSearchFragment : DaggerFragment() {
             when (position) {
                 0 -> fragment = SearchMoviePagerFragment(viewModel)
                 1 -> fragment = SearchTvPagerFragment(viewModel)
-                2 -> fragment = SearchMoviePagerFragment(viewModel)
+                2 -> fragment = SearchPeoplePagerFragment(viewModel)
             }
             return fragment!!
         }

@@ -84,6 +84,12 @@ interface TmdbService {
     ): VideosResponse
 
     // PEOPLE
+    @GET("search/person")
+    suspend fun getPeopleSearch(
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkPeopleEntity>
+
     @GET("person/{id}")
     suspend fun getPeopleDetail(
         @Path("id") id: String
