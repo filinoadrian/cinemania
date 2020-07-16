@@ -10,8 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.far_sstrwnt.cinemania.databinding.FragmentSearchNewBinding
+import com.far_sstrwnt.cinemania.model.Entity
+import com.far_sstrwnt.cinemania.shared.result.EventObserver
 import com.far_sstrwnt.cinemania.util.viewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.android.support.DaggerFragment
@@ -46,6 +50,7 @@ class NewSearchFragment : DaggerFragment() {
         initAppBar()
         initAdapter()
         initSearch()
+        initNavigation()
     }
 
     private fun initAppBar() {
@@ -55,7 +60,7 @@ class NewSearchFragment : DaggerFragment() {
     }
 
     private fun initAdapter() {
-        binding.viewPager.adapter = MyAdapter(parentFragmentManager, lifecycle)
+        binding.viewPager.adapter = MyAdapter(childFragmentManager, lifecycle)
         TabLayoutMediator(binding.tabLayout, binding.viewPager,
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
                 when (position) {
@@ -85,6 +90,33 @@ class NewSearchFragment : DaggerFragment() {
                 return false;
             }
         })
+    }
+
+    private fun initNavigation() {
+        viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            openDetail(Entity.MOVIE, it)
+        })
+        viewModel.navigateToTvDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            openDetail(Entity.TV, it)
+        })
+        viewModel.navigateToPeopleDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            openDetail(Entity.PEOPLE, it)
+        })
+    }
+
+    private fun openDetail(entity: Entity, id: String) {
+        val action = when (entity) {
+            Entity.MOVIE -> {
+                NewSearchFragmentDirections.actionNavSearchNewToNavMovieDetail(id)
+            }
+            Entity.TV -> {
+                NewSearchFragmentDirections.actionNavSearchNewToNavTvDetail(id)
+            }
+            Entity.PEOPLE -> {
+                NewSearchFragmentDirections.actionNavSearchNewToNavPeopleDetail(id)
+            }
+        }
+        findNavController().navigate(action)
     }
 
     private inner class MyAdapter(fm: FragmentManager?, lifecycle: Lifecycle) : FragmentStateAdapter(fm!!, lifecycle) {
