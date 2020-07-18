@@ -1,5 +1,6 @@
 package com.far_sstrwnt.cinemania.shared.data.datasource.people
 
+import com.far_sstrwnt.cinemania.shared.data.datasource.api.ResultsResponse
 import com.far_sstrwnt.cinemania.shared.data.datasource.api.TmdbService
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkMovieEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkPeopleEntity
@@ -10,6 +11,10 @@ import javax.inject.Inject
 class PeopleRemoteDataSource @Inject constructor(
         private val service: TmdbService
 ) {
+    suspend fun peopleSearch(query: String, page: Int): ResultsResponse<NetworkPeopleEntity> {
+        return service.getPeopleSearch(query, page)
+    }
+
     suspend fun peopleDetail(id: String): Result<NetworkPeopleEntity> {
         return try {
             Result.Success(service.getPeopleDetail(id))
