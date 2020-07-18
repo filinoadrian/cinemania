@@ -1,4 +1,4 @@
-package com.far_sstrwnt.cinemania.ui.newsearch
+package com.far_sstrwnt.cinemania.ui.search
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
-class SearchMoviePagerFragment(private val viewModel: NewSearchViewModel) : Fragment() {
+class SearchMoviePagerFragment(private val viewModel: SearchViewModel) : Fragment() {
 
     private lateinit var binding: FragmentSearchPagerBinding
 

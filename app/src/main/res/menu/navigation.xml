@@ -16,10 +16,4 @@
         android:icon="@drawable/ic_nav_search"
         android:title="Search" />
 
-    <item
-        android:id="@+id/nav_search_new"
-        android:icon="@drawable/ic_mic"
-        android:iconTint="#000000"
-        android:title="Search" />
-
 </menu>

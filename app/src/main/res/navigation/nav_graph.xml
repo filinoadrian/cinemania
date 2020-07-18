@@ -13,21 +13,11 @@
         <action
             android:id="@+id/action_nav_search_to_nav_movie_detail"
             app:destination="@id/nav_movie_detail" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_search_new"
-        android:name="com.far_sstrwnt.cinemania.ui.newsearch.NewSearchFragment"
-        android:label="New Search"
-        tools:layout="@layout/fragment_search_new">
         <action
-            android:id="@+id/action_nav_search_new_to_nav_movie_detail"
+            android:id="@+id/action_nav_search_to_nav_tv_detail"
             app:destination="@id/nav_movie_detail" />
         <action
-            android:id="@+id/action_nav_search_new_to_nav_tv_detail"
-            app:destination="@id/nav_movie_detail" />
-        <action
-            android:id="@+id/action_nav_search_new_to_nav_people_detail"
+            android:id="@+id/action_nav_search_to_nav_people_detail"
             app:destination="@id/nav_movie_detail" />
     </fragment>
 

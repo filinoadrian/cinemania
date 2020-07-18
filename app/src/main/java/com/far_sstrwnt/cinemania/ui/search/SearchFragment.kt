@@ -1,31 +1,24 @@
 package com.far_sstrwnt.cinemania.ui.search
 
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadState
-import androidx.recyclerview.widget.DividerItemDecoration
-import com.far_sstrwnt.cinemania.R
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.far_sstrwnt.cinemania.databinding.FragmentSearchBinding
+import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
-import com.far_sstrwnt.cinemania.ui.movies.MoviesPagingAdapter
-import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
-import com.far_sstrwnt.cinemania.ui.toVisibility
 import com.far_sstrwnt.cinemania.util.viewModelProvider
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -37,10 +30,6 @@ class SearchFragment : DaggerFragment() {
     private lateinit var viewModel: SearchViewModel
 
     private lateinit var binding: FragmentSearchBinding
-
-    private lateinit var adapter: MoviesPagingAdapter
-
-    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,122 +46,108 @@ class SearchFragment : DaggerFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        initAppBar()
         initAdapter()
         initSearch()
         initNavigation()
+    }
 
-        val decoration = DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL)
-        binding.searchList.addItemDecoration(decoration)
-        binding.retryButton.setOnClickListener { adapter.retry() }
+    private fun initAppBar() {
+        val appCompatActivity = activity as AppCompatActivity
+        appCompatActivity.setSupportActionBar(binding.toolbar)
+        appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun initAdapter() {
-        adapter = MoviesPagingAdapter(
-            viewModel,
-            R.layout.item_movie_search
-        )
-        binding.searchList.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = EntityLoadStateAdapter { adapter.retry() },
-            footer = EntityLoadStateAdapter { adapter.retry() }
-        )
-        adapter.addLoadStateListener { loadState ->
-            if (loadState.refresh !is LoadState.NotLoading) {
-                binding.searchList.visibility = View.GONE
-                binding.progressBar.visibility =
-                    toVisibility(loadState.refresh is LoadState.Loading)
-                binding.retryButton.visibility =
-                    toVisibility(loadState.refresh is LoadState.Error)
-            } else {
-                binding.searchList.visibility = View.VISIBLE
-                binding.progressBar.visibility = View.GONE
-                binding.retryButton.visibility = View.GONE
-
-                val errorState = when {
-                    loadState.append is LoadState.Error -> {
-                        loadState.append as LoadState.Error
-                    }
-                    loadState.prepend is LoadState.Error -> {
-                        loadState.prepend as LoadState.Error
-                    }
-                    else -> {
-                        null
-                    }
+        binding.viewPager.adapter = MyAdapter(childFragmentManager, lifecycle)
+        TabLayoutMediator(binding.tabLayout, binding.viewPager,
+            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
+                when (position) {
+                    0 -> tab.text = "Movie"
+                    1 -> tab.text = "Tv Show"
+                    2 -> tab.text = "People"
                 }
-                errorState?.let {
-                    Toast.makeText(
-                        requireActivity(),
-                        "\uD83D\uDE28 Wooops ${it.error}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
+        }).attach()
     }
 
     private fun initSearch() {
 
-        binding.searchMovie.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_GO) {
-                updateMovieListFromInput()
-                true
-            } else {
-                false
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                if (query.isNotEmpty()) {
+                    viewModel.search(query)
+                }
+                return true
             }
-        }
 
-        binding.searchMovie.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                updateMovieListFromInput()
-                true
-            } else {
-                false
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText!!.isNotEmpty()) {
+                    //
+                } else {
+                    //
+                }
+                return false;
             }
-        }
-
-        lifecycleScope.launch {
-            @OptIn(ExperimentalPagingApi::class)
-            adapter.dataRefreshFlow.collect {
-                binding.searchList.scrollToPosition(0)
-            }
-        }
-    }
-
-    private fun search(query: String) {
-        searchJob?.cancel()
-        searchJob = lifecycleScope.launch {
-            viewModel.searchMovie(query).collectLatest {
-                adapter.submitData(it)
-            }
-        }
-    }
-
-    private fun updateMovieListFromInput() {
-        binding.searchMovie.text.trim().let {
-            if (it.isNotEmpty()) {
-                binding.searchList.scrollToPosition(0)
-                search(it.toString())
-            }
-        }
+        })
     }
 
     private fun initNavigation() {
         viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            openMovieDetail(it)
+            openDetail(Entity.MOVIE, it)
+        })
+        viewModel.navigateToTvDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            openDetail(Entity.TV, it)
+        })
+        viewModel.navigateToPeopleDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            openDetail(Entity.PEOPLE, it)
         })
     }
 
-    private fun openMovieDetail(id: String) {
-        val action = SearchFragmentDirections.actionNavSearchToNavMovieDetail(id)
+    private fun openDetail(entity: Entity, id: String) {
+        val action = when (entity) {
+            Entity.MOVIE -> {
+                SearchFragmentDirections.actionNavSearchToNavMovieDetail(
+                    id
+                )
+            }
+            Entity.TV -> {
+                SearchFragmentDirections.actionNavSearchToNavTvDetail(
+                    id
+                )
+            }
+            Entity.PEOPLE -> {
+                SearchFragmentDirections.actionNavSearchToNavPeopleDetail(
+                    id
+                )
+            }
+        }
         findNavController().navigate(action)
     }
 
-//    private fun showEmptyList(show: Boolean) {
-//        if (show) {
-//            binding.emptyList.visibility = View.VISIBLE
-//            binding.searchList.visibility = View.GONE
-//        } else {
-//            binding.emptyList.visibility = View.GONE
-//            binding.searchList.visibility = View.VISIBLE
-//        }
-//    }
+    private inner class MyAdapter(fm: FragmentManager?, lifecycle: Lifecycle) : FragmentStateAdapter(fm!!, lifecycle) {
+        private val intItems = 3
+
+        override fun createFragment(position: Int): Fragment {
+            var fragment: Fragment? = null
+            when (position) {
+                0 -> fragment =
+                    SearchMoviePagerFragment(
+                        viewModel
+                    )
+                1 -> fragment =
+                    SearchTvPagerFragment(
+                        viewModel
+                    )
+                2 -> fragment =
+                    SearchPeoplePagerFragment(
+                        viewModel
+                    )
+            }
+            return fragment!!
+        }
+
+        override fun getItemCount(): Int {
+            return intItems
+        }
+    }
 }
