@@ -1,18 +1,13 @@
 package com.far_sstrwnt.cinemania.shared.data.repository
 
-import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.liveData
 import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MovieEntity
 import com.far_sstrwnt.cinemania.model.VideoEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieDiscoverPagingSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieRemoteDataSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieSearchPagingSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.movie.MovieSimilarPagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.movie.*
 import com.far_sstrwnt.cinemania.shared.data.mapper.asDomainModel
 import com.far_sstrwnt.cinemania.shared.result.Result
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +21,10 @@ interface MovieRepository {
     fun getSearchResultStream(query: String): Flow<PagingData<MovieEntity>>
     fun getDiscoverResultStream(genre: String?): Flow<PagingData<MovieEntity>>
     fun getSimilarResultStream(id: String): Flow<PagingData<MovieEntity>>
+    fun getNowPlayingResultStream(): Flow<PagingData<MovieEntity>>
+    fun getUpcomingResultStream(): Flow<PagingData<MovieEntity>>
+    fun getPopularResultStream(): Flow<PagingData<MovieEntity>>
+    fun getTopRatedResultStream(): Flow<PagingData<MovieEntity>>
     suspend fun getMovieDetail(id: String): Result<MovieEntity>
     suspend fun getMovieCastList(id: String): Result<List<CastEntity>>
     suspend fun getMovieVideo(id: String): Result<List<VideoEntity>>
@@ -93,6 +92,66 @@ class DefaultMovieRepository @Inject constructor(
                 MovieSimilarPagingSource(
                     dataSource,
                     id
+                )
+            }
+        ).flow
+    }
+
+    override fun getNowPlayingResultStream(): Flow<PagingData<MovieEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                MovieNowPlayingPagingSource(
+                    dataSource
+                )
+            }
+        ).flow
+    }
+
+    override fun getUpcomingResultStream(): Flow<PagingData<MovieEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                MovieUpcomingPagingSource(
+                    dataSource
+                )
+            }
+        ).flow
+    }
+
+    override fun getPopularResultStream(): Flow<PagingData<MovieEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                MoviePopularPagingSource(
+                    dataSource
+                )
+            }
+        ).flow
+    }
+
+    override fun getTopRatedResultStream(): Flow<PagingData<MovieEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                MovieTopRatedPagingSource(
+                    dataSource
                 )
             }
         ).flow

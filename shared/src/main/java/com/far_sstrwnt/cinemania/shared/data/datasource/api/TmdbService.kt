@@ -25,6 +25,26 @@ interface TmdbService {
         @Query("page") page: Int
     ): ResultsResponse<NetworkMovieEntity>
 
+    @GET("movie/now_playing")
+    suspend fun getMovieNowPlaying(
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkMovieEntity>
+
+    @GET("movie/upcoming")
+    suspend fun getMovieUpcoming(
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkMovieEntity>
+
+    @GET("movie/popular")
+    suspend fun getMoviePopular(
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkMovieEntity>
+
+    @GET("movie/top_rated")
+    suspend fun getMovieTopRated(
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkMovieEntity>
+
     @GET("movie/{id}")
     suspend fun getMovieDetail(
         @Path("id") id: String
@@ -59,6 +79,26 @@ interface TmdbService {
     @GET("search/tv")
     suspend fun getTvSearch(
         @Query("query") query: String,
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkTvEntity>
+
+    @GET("tv/airing_today")
+    suspend fun getTvAiringToday(
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkTvEntity>
+
+    @GET("tv/on_the_iar")
+    suspend fun getTvOnTheAir(
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkTvEntity>
+
+    @GET("tv/popular")
+    suspend fun getTvPopular(
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkTvEntity>
+
+    @GET("tv/top_rated")
+    suspend fun getTvTopRated(
         @Query("page") page: Int
     ): ResultsResponse<NetworkTvEntity>
 

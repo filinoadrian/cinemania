@@ -7,10 +7,7 @@ import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.TvEntity
 import com.far_sstrwnt.cinemania.model.VideoEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.tv.TvDiscoverPagingSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.tv.TvRemoteDataSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.tv.TvSearchPagingSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.tv.TvSimilarPagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.tv.*
 import com.far_sstrwnt.cinemania.shared.data.mapper.asDomainModel
 import com.far_sstrwnt.cinemania.shared.result.Result
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +21,10 @@ interface TvRepository {
     fun getSearchResultStream(query: String): Flow<PagingData<TvEntity>>
     fun getDiscoverResultStream(genre: String?): Flow<PagingData<TvEntity>>
     fun getSimilarResultStream(id: String): Flow<PagingData<TvEntity>>
+    fun getTvAiringTodayResultStream(): Flow<PagingData<TvEntity>>
+    fun getTvOnTheAirResultStream(): Flow<PagingData<TvEntity>>
+    fun getTvPopularResultStream(): Flow<PagingData<TvEntity>>
+    fun getTvTopRatedResultStream(): Flow<PagingData<TvEntity>>
     suspend fun getTvDetail(id: String): Result<TvEntity>
     suspend fun getTvCastList(id: String): Result<List<CastEntity>>
     suspend fun getTvVideo(id: String): Result<List<VideoEntity>>
@@ -88,6 +89,66 @@ class DefaultTvRepository @Inject constructor(
             pagingSourceFactory = {
                 TvSimilarPagingSource(
                     dataSource, id
+                )
+            }
+        ).flow
+    }
+
+    override fun getTvAiringTodayResultStream(): Flow<PagingData<TvEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                TvAiringTodayPagingSource(
+                    dataSource
+                )
+            }
+        ).flow
+    }
+
+    override fun getTvOnTheAirResultStream(): Flow<PagingData<TvEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                TvOnTheAirPagingSource(
+                    dataSource
+                )
+            }
+        ).flow
+    }
+
+    override fun getTvPopularResultStream(): Flow<PagingData<TvEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                TvPopularPagingSource(
+                    dataSource
+                )
+            }
+        ).flow
+    }
+
+    override fun getTvTopRatedResultStream(): Flow<PagingData<TvEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                TvTopRatedPagingSource(
+                    dataSource
                 )
             }
         ).flow

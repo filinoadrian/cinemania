@@ -32,6 +32,22 @@ class MovieRemoteDataSource @Inject constructor(
         return service.getMovieSimilar(id, page)
     }
 
+    suspend fun movieNowPlaying(page: Int): ResultsResponse<NetworkMovieEntity> {
+        return service.getMovieNowPlaying(page)
+    }
+
+    suspend fun movieUpcoming(page: Int): ResultsResponse<NetworkMovieEntity> {
+        return service.getMovieUpcoming(page)
+    }
+
+    suspend fun moviePopular(page: Int): ResultsResponse<NetworkMovieEntity> {
+        return service.getMoviePopular(page)
+    }
+
+    suspend fun movieTopRated(page: Int): ResultsResponse<NetworkMovieEntity> {
+        return service.getMovieTopRated(page)
+    }
+
     suspend fun movieDetail(id: String): Result<NetworkMovieEntity> {
         return try {
             Result.Success(service.getMovieDetail(id))

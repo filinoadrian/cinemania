@@ -32,6 +32,22 @@ class TvRemoteDataSource @Inject constructor(
         return service.getTvSimilar(id, page)
     }
 
+    suspend fun tvAiringToday(page: Int): ResultsResponse<NetworkTvEntity> {
+        return service.getTvAiringToday(page)
+    }
+
+    suspend fun tvOnTheAir(page: Int): ResultsResponse<NetworkTvEntity> {
+        return service.getTvOnTheAir(page)
+    }
+
+    suspend fun tvPopular(page: Int): ResultsResponse<NetworkTvEntity> {
+        return service.getTvPopular(page)
+    }
+
+    suspend fun tvTopRated(page: Int): ResultsResponse<NetworkTvEntity> {
+        return service.getTvTopRated(page)
+    }
+
     suspend fun tvDetail(id: String): Result<NetworkTvEntity> {
         return try {
             Result.Success(service.getTvDetail(id))
