@@ -9,39 +9,47 @@ interface TmdbService {
 
     // https://api.themoviedb.org/3/discover/movie?api_key=a1f3faf95d3a6c30d3e3b20acfcdbeae&page=1
 
+    @GET("trending/{media_type}/day")
+    suspend fun getMediaTrending(
+        @Path("media_type") mediaType: String
+    ): ResultsResponse<NetworkMediaEntity>
+
+    @GET("genre/{media_type}/list")
+    suspend fun getMediaGenre(
+        @Path("media_type") mediaType: String
+    ): GenresResponse
+
+    @GET("{media_type}/{category}")
+    suspend fun getMediaByCategory(
+        @Path("media_type") mediaType: String,
+        @Path("category") category: String,
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkMediaEntity>
+
+    @GET("{entity}/{id}/credits")
+    suspend fun getCredit(
+        @Path("entity") entity: String,
+        @Path("id") id: String
+    ): CreditResponse<NetworkCastEntity>
+
+    @GET("{entity}/{id}/videos")
+    suspend fun getVideo(
+        @Path("entity") entity: String,
+        @Path("id") id: String
+    ): VideosResponse
+
     // MOVIE
-    @GET("genre/movie/list")
-    suspend fun getMovieGenre(): GenresResponse
-
-    @GET("discover/movie")
-    suspend fun getMovieDiscover(
+    @GET("{path}/movie")
+    suspend fun getMovies(
+        @Path("path") path: String,
         @Query("with_genres") genre: String?,
+        @Query("query") query: String?,
         @Query("page") page: Int
     ): ResultsResponse<NetworkMovieEntity>
 
-    @GET("search/movie")
-    suspend fun getMovieSearch(
-        @Query("query") query: String,
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkMovieEntity>
-
-    @GET("movie/now_playing")
-    suspend fun getMovieNowPlaying(
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkMovieEntity>
-
-    @GET("movie/upcoming")
-    suspend fun getMovieUpcoming(
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkMovieEntity>
-
-    @GET("movie/popular")
-    suspend fun getMoviePopular(
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkMovieEntity>
-
-    @GET("movie/top_rated")
-    suspend fun getMovieTopRated(
+    @GET("movie/{category}")
+    suspend fun getMoviesByCategory(
+        @Path("category") category: String,
         @Query("page") page: Int
     ): ResultsResponse<NetworkMovieEntity>
 
@@ -50,55 +58,24 @@ interface TmdbService {
         @Path("id") id: String
     ): NetworkMovieEntity
 
-    @GET("movie/{id}/credits")
-    suspend fun getMovieCredit(
-        @Path("id") id: String
-    ): CreditResponse<NetworkCastEntity>
-
     @GET("movie/{id}/similar")
     suspend fun getMovieSimilar(
         @Path("id") id: String,
         @Query("page") page: Int
     ): ResultsResponse<NetworkMovieEntity>
 
-    @GET("movie/{id}/videos")
-    suspend fun getMovieVideos(
-        @Path("id") id: String
-    ): VideosResponse
-
     // TV
-    @GET("genre/tv/list")
-    suspend fun getTvGenre(): GenresResponse
-
-    @GET("discover/tv")
-    suspend fun getTvDiscover(
+    @GET("{path}/tv")
+    suspend fun getTv(
+        @Path("path") path: String,
         @Query("with_genres") genre: String?,
+        @Query("query") query: String?,
         @Query("page") page: Int
     ): ResultsResponse<NetworkTvEntity>
 
-    @GET("search/tv")
-    suspend fun getTvSearch(
-        @Query("query") query: String,
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkTvEntity>
-
-    @GET("tv/airing_today")
-    suspend fun getTvAiringToday(
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkTvEntity>
-
-    @GET("tv/on_the_iar")
-    suspend fun getTvOnTheAir(
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkTvEntity>
-
-    @GET("tv/popular")
-    suspend fun getTvPopular(
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkTvEntity>
-
-    @GET("tv/top_rated")
-    suspend fun getTvTopRated(
+    @GET("tv/{category}")
+    suspend fun getTvByCategory(
+        @Path("category") category: String,
         @Query("page") page: Int
     ): ResultsResponse<NetworkTvEntity>
 
@@ -107,21 +84,11 @@ interface TmdbService {
         @Path("id") id: String
     ): NetworkTvEntity
 
-    @GET("tv/{id}/credits")
-    suspend fun getTvCredit(
-        @Path("id") id: String
-    ): CreditResponse<NetworkCastEntity>
-
     @GET("tv/{id}/similar")
     suspend fun getTvSimilar(
         @Path("id") id: String,
         @Query("page") page: Int
     ): ResultsResponse<NetworkTvEntity>
-
-    @GET("tv/{id}/videos")
-    suspend fun getTvVideos(
-        @Path("id") id: String
-    ): VideosResponse
 
     // PEOPLE
     @GET("search/person")

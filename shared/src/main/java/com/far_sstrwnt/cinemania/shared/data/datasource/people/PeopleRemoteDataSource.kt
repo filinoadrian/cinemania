@@ -11,11 +11,11 @@ import javax.inject.Inject
 class PeopleRemoteDataSource @Inject constructor(
         private val service: TmdbService
 ) {
-    suspend fun peopleSearch(query: String, page: Int): ResultsResponse<NetworkPeopleEntity> {
+    suspend fun getPeopleSearch(query: String, page: Int): ResultsResponse<NetworkPeopleEntity> {
         return service.getPeopleSearch(query, page)
     }
 
-    suspend fun peopleDetail(id: String): Result<NetworkPeopleEntity> {
+    suspend fun getPeopleDetail(id: String): Result<NetworkPeopleEntity> {
         return try {
             Result.Success(service.getPeopleDetail(id))
         } catch (e: Exception) {
@@ -23,7 +23,7 @@ class PeopleRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun peopleMovieCredit(id: String): Result<List<NetworkMovieEntity>> {
+    suspend fun getPeopleMovieCredit(id: String): Result<List<NetworkMovieEntity>> {
         return try {
             Result.Success(service.getPeopleMovieCredit(id).cast)
         } catch (e: Exception) {
@@ -31,7 +31,7 @@ class PeopleRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun peopleTvCredit(id: String): Result<List<NetworkTvEntity>> {
+    suspend fun getPeopleTvCredit(id: String): Result<List<NetworkTvEntity>> {
         return try {
             Result.Success(service.getPeopleTvCredit(id).cast)
         } catch (e: Exception) {

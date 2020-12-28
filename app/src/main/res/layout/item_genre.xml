@@ -6,9 +6,11 @@
     style="@style/Widget.MaterialComponents.Chip.Choice"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding_small"
     app:chipBackgroundColor="@color/selected_highlight"
     app:chipCornerRadius="8dp"
+    app:chipStartPadding="24dp"
+    app:chipEndPadding="24dp"
+    app:chipMinHeight="60dp"
     tools:checked="true">
 
 </com.google.android.material.chip.Chip>

@@ -3,13 +3,11 @@ package com.far_sstrwnt.cinemania.shared.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.far_sstrwnt.cinemania.model.CastEntity
-import com.far_sstrwnt.cinemania.model.GenreEntity
-import com.far_sstrwnt.cinemania.model.MovieEntity
-import com.far_sstrwnt.cinemania.model.VideoEntity
+import com.far_sstrwnt.cinemania.model.*
 import com.far_sstrwnt.cinemania.shared.data.datasource.movie.*
 import com.far_sstrwnt.cinemania.shared.data.mapper.asDomainModel
 import com.far_sstrwnt.cinemania.shared.result.Result
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -17,39 +15,23 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface MovieRepository {
-    suspend fun getMovieGenreList(): Result<List<GenreEntity>>
-    fun getSearchResultStream(query: String): Flow<PagingData<MovieEntity>>
-    fun getDiscoverResultStream(genre: String?): Flow<PagingData<MovieEntity>>
+    suspend fun getCast(entity: String, id: String): Result<List<CastEntity>>
+    suspend fun getVideo(entity: String, id: String): Result<List<VideoEntity>>
+    fun getMoviesResultStream(path: String, genre: String? = null, query: String? = null): Flow<PagingData<MovieEntity>>
+    fun getMoviesByCategoryResultStream(category: String): Flow<PagingData<MovieEntity>>
     fun getSimilarResultStream(id: String): Flow<PagingData<MovieEntity>>
-    fun getNowPlayingResultStream(): Flow<PagingData<MovieEntity>>
-    fun getUpcomingResultStream(): Flow<PagingData<MovieEntity>>
-    fun getPopularResultStream(): Flow<PagingData<MovieEntity>>
-    fun getTopRatedResultStream(): Flow<PagingData<MovieEntity>>
     suspend fun getMovieDetail(id: String): Result<MovieEntity>
-    suspend fun getMovieCastList(id: String): Result<List<CastEntity>>
-    suspend fun getMovieVideo(id: String): Result<List<VideoEntity>>
 }
 
 @Singleton
 class DefaultMovieRepository @Inject constructor(
-        private val dataSource: MovieRemoteDataSource
-) : MovieRepository {
+        private val dataSource: MovieRemoteDataSource,
+        private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : MovieRepository, BaseRepository(dataSource, ioDispatcher) {
 
-    override suspend fun getMovieGenreList(): Result<List<GenreEntity>> {
-        return withContext(Dispatchers.IO) {
-            val genres = dataSource.movieGenre()
-
-            (genres as? Result.Success)?.let {
-                return@withContext Result.Success(it.data.map { results ->
-                    results.asDomainModel()
-                })
-            }
-
-            return@withContext Result.Error(Exception("Remote data source fetch failed"))
-        }
-    }
-
-    override fun getSearchResultStream(query: String): Flow<PagingData<MovieEntity>> {
+    override fun getMoviesResultStream(
+        path: String, genre: String?, query: String?
+    ): Flow<PagingData<MovieEntity>> {
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
@@ -57,15 +39,14 @@ class DefaultMovieRepository @Inject constructor(
                 enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
             ),
             pagingSourceFactory = {
-                MovieSearchPagingSource(
-                    dataSource,
-                    query
+                MoviePagingSource(
+                    dataSource = dataSource, path = path, genre = genre, query = query
                 )
             }
         ).flow
     }
 
-    override fun getDiscoverResultStream(genre: String?): Flow<PagingData<MovieEntity>> {
+    override fun getMoviesByCategoryResultStream(category: String): Flow<PagingData<MovieEntity>> {
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
@@ -73,10 +54,7 @@ class DefaultMovieRepository @Inject constructor(
                 enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
             ),
             pagingSourceFactory = {
-                MovieDiscoverPagingSource(
-                    dataSource,
-                    genre
-                )
+                MovieCategoryPagingSource(dataSource = dataSource, category = category)
             }
         ).flow
     }
@@ -97,100 +75,12 @@ class DefaultMovieRepository @Inject constructor(
         ).flow
     }
 
-    override fun getNowPlayingResultStream(): Flow<PagingData<MovieEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
-                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
-            ),
-            pagingSourceFactory = {
-                MovieNowPlayingPagingSource(
-                    dataSource
-                )
-            }
-        ).flow
-    }
-
-    override fun getUpcomingResultStream(): Flow<PagingData<MovieEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
-                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
-            ),
-            pagingSourceFactory = {
-                MovieUpcomingPagingSource(
-                    dataSource
-                )
-            }
-        ).flow
-    }
-
-    override fun getPopularResultStream(): Flow<PagingData<MovieEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
-                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
-            ),
-            pagingSourceFactory = {
-                MoviePopularPagingSource(
-                    dataSource
-                )
-            }
-        ).flow
-    }
-
-    override fun getTopRatedResultStream(): Flow<PagingData<MovieEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
-                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
-            ),
-            pagingSourceFactory = {
-                MovieTopRatedPagingSource(
-                    dataSource
-                )
-            }
-        ).flow
-    }
-
     override suspend fun getMovieDetail(id: String): Result<MovieEntity> {
         return withContext(Dispatchers.IO) {
-            val movie = dataSource.movieDetail(id)
+            val movie = dataSource.getMovieDetail(id)
 
             (movie as? Result.Success)?.let {
                 return@withContext Result.Success(it.data.asDomainModel())
-            }
-
-            return@withContext Result.Error(Exception("Remote data source fetch failed"))
-        }
-    }
-
-    override suspend fun getMovieCastList(id: String): Result<List<CastEntity>> {
-        return withContext(Dispatchers.IO) {
-            val cast = dataSource.movieCast(id)
-
-            (cast as? Result.Success)?.let {
-                return@withContext Result.Success(it.data.map { results ->
-                    results.asDomainModel()
-                })
-            }
-
-            return@withContext Result.Error(Exception("Remote data source fetch failed"))
-        }
-    }
-
-    override suspend fun getMovieVideo(id: String): Result<List<VideoEntity>> {
-        return withContext(Dispatchers.IO) {
-            val video = dataSource.movieVideo(id)
-
-            (video as? Result.Success)?.let {
-                return@withContext Result.Success(it.data.map { results ->
-                    results.asDomainModel()
-                })
             }
 
             return@withContext Result.Error(Exception("Remote data source fetch failed"))

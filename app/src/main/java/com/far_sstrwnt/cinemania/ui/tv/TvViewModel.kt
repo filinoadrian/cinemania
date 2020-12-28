@@ -9,8 +9,8 @@ import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.TvEntity
-import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvDiscoverUseCase
-import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvGenreUseCase
+import com.far_sstrwnt.cinemania.shared.domain.media.GetMediaGenreUseCase
+import com.far_sstrwnt.cinemania.shared.domain.tv.GetTvDiscoverUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
@@ -19,8 +19,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class TvViewModel @Inject constructor(
-    private val fetchTvGenreUseCase: FetchTvGenreUseCase,
-    private val fetchTvDiscoverUseCase: FetchTvDiscoverUseCase
+    private val getMediaGenreUseCase: GetMediaGenreUseCase,
+    private val getTvDiscoverUseCase: GetTvDiscoverUseCase
 ) : ViewModel(), EventActionsHandler {
 
     private val _genreList = MutableLiveData<List<GenreEntity>>().apply { value = emptyList() }
@@ -39,25 +39,25 @@ class TvViewModel @Inject constructor(
 
     private var currentTvResult: Flow<PagingData<TvEntity>>? = null
 
-    fun discoverTv(genre: String?): Flow<PagingData<TvEntity>> {
+    fun fetchDiscover(genre: String?): Flow<PagingData<TvEntity>> {
         val lastResult = currentTvResult
         if (genre == currentGenreValue && lastResult != null) {
             return lastResult
         }
         currentGenreValue = genre
-        val newResult: Flow<PagingData<TvEntity>> = fetchTvDiscoverUseCase.execute(genre)
+        val newResult: Flow<PagingData<TvEntity>> = getTvDiscoverUseCase(genre)
             .cachedIn(viewModelScope)
         currentTvResult = newResult
         return newResult
     }
 
     init {
-        loadGenreTv()
+        fetchGenre(Entity.TV.value)
     }
 
-    private fun loadGenreTv() {
+    private fun fetchGenre(mediaType: String) {
         viewModelScope.launch {
-            val genreResult = fetchTvGenreUseCase.execute()
+            val genreResult = getMediaGenreUseCase(mediaType)
 
             if (genreResult is Result.Success) {
                 val genre = genreResult.data

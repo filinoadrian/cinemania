@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -35,9 +36,9 @@ import javax.inject.Inject
 class TvDetailFragment : DaggerFragment(), VideoActionsHandler {
 
     @Inject
-    lateinit var vieModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: TvDetailViewModel
+    private val viewModel by viewModels<TvDetailViewModel> { viewModelFactory }
 
     private lateinit var binding: FragmentTvDetailBinding
 
@@ -56,8 +57,6 @@ class TvDetailFragment : DaggerFragment(), VideoActionsHandler {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = viewModelProvider(vieModelFactory)
-
         binding = FragmentTvDetailBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
@@ -74,9 +73,9 @@ class TvDetailFragment : DaggerFragment(), VideoActionsHandler {
         initAdapter()
         initNavigation()
 
-        viewModel.loadTvDetail(args.id)
-        viewModel.loadTvCast(args.id)
-        viewModel.loadTvVideo(args.id)
+        viewModel.fetchDetail(args.id)
+        viewModel.fetchCast(args.id)
+        viewModel.fetchVideo(args.id)
         loadTvSimilar(args.id)
 
         subscribeUi()
@@ -157,7 +156,7 @@ class TvDetailFragment : DaggerFragment(), VideoActionsHandler {
     private fun loadTvSimilar(id: String) {
         tvSimilarJob?.cancel()
         tvSimilarJob = lifecycleScope.launch {
-            viewModel.loadTvSimilar(id).collectLatest {
+            viewModel.fetchSimilar(id).collectLatest {
                 similarAdapter.submitData(it)
             }
         }

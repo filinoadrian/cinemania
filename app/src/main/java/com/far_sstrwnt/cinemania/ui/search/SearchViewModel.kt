@@ -10,18 +10,18 @@ import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.MovieEntity
 import com.far_sstrwnt.cinemania.model.PeopleEntity
 import com.far_sstrwnt.cinemania.model.TvEntity
-import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieSearchUseCase
-import com.far_sstrwnt.cinemania.shared.domain.people.FetchPeopleSearchUseCase
-import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvSearchUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.GetMovieSearchUseCase
+import com.far_sstrwnt.cinemania.shared.domain.people.GetPeopleSearchUseCase
+import com.far_sstrwnt.cinemania.shared.domain.tv.GetTvSearchUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
-    private val fetchMovieSearchUseCase: FetchMovieSearchUseCase,
-    private val fetchTvSearchUseCase: FetchTvSearchUseCase,
-    private val fetchPeopleSearchUseCase: FetchPeopleSearchUseCase
+    private val getMovieSearchUseCase: GetMovieSearchUseCase,
+    private val getTvSearchUseCase: GetTvSearchUseCase,
+    private val getPeopleSearchUseCase: GetPeopleSearchUseCase
 ) : ViewModel(), EventActionsHandler {
 
     private val _currentQueryValue = MutableLiveData<String>()
@@ -33,17 +33,17 @@ class SearchViewModel @Inject constructor(
     }
 
     fun searchMovie(queryString: String): Flow<PagingData<MovieEntity>> {
-        return fetchMovieSearchUseCase.execute(queryString)
+        return getMovieSearchUseCase(queryString)
             .cachedIn(viewModelScope)
     }
 
     fun searchTv(queryString: String): Flow<PagingData<TvEntity>> {
-        return fetchTvSearchUseCase.execute(queryString)
+        return getTvSearchUseCase(queryString)
             .cachedIn(viewModelScope)
     }
 
     fun searchPeople(queryString: String): Flow<PagingData<PeopleEntity>> {
-        return fetchPeopleSearchUseCase.execute(queryString)
+        return getPeopleSearchUseCase(queryString)
             .cachedIn(viewModelScope)
     }
 

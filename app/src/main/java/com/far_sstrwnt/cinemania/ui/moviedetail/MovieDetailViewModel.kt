@@ -10,10 +10,10 @@ import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.MovieEntity
 import com.far_sstrwnt.cinemania.model.VideoEntity
-import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieCastUseCase
-import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieDetailUseCase
-import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieSimilarUseCase
-import com.far_sstrwnt.cinemania.shared.domain.movie.FetchMovieVideoUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.GetMovieCastUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.GetMovieDetailUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.GetMovieSimilarUseCase
+import com.far_sstrwnt.cinemania.shared.domain.movie.GetMovieVideoUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
@@ -22,10 +22,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MovieDetailViewModel @Inject constructor(
-    private val fetchMovieDetailUseCase: FetchMovieDetailUseCase,
-    private val fetchMovieCastUseCase: FetchMovieCastUseCase,
-    private val fetchMovieSimilarUseCase: FetchMovieSimilarUseCase,
-    private val fetchMovieVideoUseCase: FetchMovieVideoUseCase
+    private val getMovieDetailUseCase: GetMovieDetailUseCase,
+    private val getMovieCastUseCase: GetMovieCastUseCase,
+    private val getMovieSimilarUseCase: GetMovieSimilarUseCase,
+    private val getMovieVideoUseCase: GetMovieVideoUseCase
 ) : ViewModel(), EventActionsHandler {
 
     private val _movie = MutableLiveData<MovieEntity>()
@@ -56,9 +56,9 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadMovieDetail(id: String) {
+    fun fetchDetail(id: String) {
         viewModelScope.launch {
-            val movieResult = fetchMovieDetailUseCase.execute(id)
+            val movieResult = getMovieDetailUseCase(id)
 
             if (movieResult is Result.Success) {
                 val movie = movieResult.data
@@ -67,9 +67,9 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadMovieCast(id: String) {
+    fun fetchCast(id: String) {
         viewModelScope.launch {
-            val castResult = fetchMovieCastUseCase.execute(id)
+            val castResult = getMovieCastUseCase(id)
 
             if (castResult is Result.Success) {
                 val cast = castResult.data
@@ -78,9 +78,9 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadMovieVideo(id: String) {
+    fun fetchVideo(id: String) {
         viewModelScope.launch {
-            val videoResult = fetchMovieVideoUseCase.execute(id)
+            val videoResult = getMovieVideoUseCase(id)
 
             if (videoResult is Result.Success) {
                 val video = videoResult.data
@@ -89,7 +89,7 @@ class MovieDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadMovieSimilar(id: String): Flow<PagingData<MovieEntity>> {
-        return fetchMovieSimilarUseCase.execute(id).cachedIn(viewModelScope)
+    fun fetchSimilar(id: String): Flow<PagingData<MovieEntity>> {
+        return getMovieSimilarUseCase(id).cachedIn(viewModelScope)
     }
 }

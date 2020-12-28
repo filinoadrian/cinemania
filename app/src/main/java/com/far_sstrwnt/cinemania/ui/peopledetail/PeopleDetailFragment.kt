@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -24,7 +25,7 @@ class PeopleDetailFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: PeopleDetailViewModel
+    private val viewModel by viewModels<PeopleDetailViewModel> { viewModelFactory }
 
     private lateinit var binding: FragmentPeopleDetailBinding
 
@@ -39,8 +40,6 @@ class PeopleDetailFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = viewModelProvider(viewModelFactory)
-
         binding = FragmentPeopleDetailBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
@@ -56,9 +55,9 @@ class PeopleDetailFragment : DaggerFragment() {
         initAdapter()
         initNavigation()
 
-        viewModel.loadPeopleDetail(args.id)
-        viewModel.loadPeopleMovieCredit(args.id)
-        viewModel.loadPeopleTvCredit(args.id)
+        viewModel.fetchDetail(args.id)
+        viewModel.fetchMovieCredit(args.id)
+        viewModel.fetchTvCredit(args.id)
 
         subscribeUi()
     }

@@ -10,10 +10,10 @@ import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.TvEntity
 import com.far_sstrwnt.cinemania.model.VideoEntity
-import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvCastUseCase
-import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvDetailUseCase
-import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvSimilarUseCase
-import com.far_sstrwnt.cinemania.shared.domain.tv.FetchTvVideoUseCase
+import com.far_sstrwnt.cinemania.shared.domain.tv.GetTvCastUseCase
+import com.far_sstrwnt.cinemania.shared.domain.tv.GetTvDetailUseCase
+import com.far_sstrwnt.cinemania.shared.domain.tv.GetTvSimilarUseCase
+import com.far_sstrwnt.cinemania.shared.domain.tv.GetTvVideoUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
@@ -22,10 +22,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class TvDetailViewModel @Inject constructor(
-    private val fetchTvDetailUseCase: FetchTvDetailUseCase,
-    private val fetchTvCastUseCase: FetchTvCastUseCase,
-    private val fetchTvSimilarUseCase: FetchTvSimilarUseCase,
-    private val fetchTvVideoUseCase: FetchTvVideoUseCase
+    private val getTvDetailUseCase: GetTvDetailUseCase,
+    private val getTvCastUseCase: GetTvCastUseCase,
+    private val getTvSimilarUseCase: GetTvSimilarUseCase,
+    private val getTvVideoUseCase: GetTvVideoUseCase
 ) : ViewModel(), EventActionsHandler {
 
     private val _tv = MutableLiveData<TvEntity>()
@@ -56,9 +56,9 @@ class TvDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadTvDetail(id: String) {
+    fun fetchDetail(id: String) {
         viewModelScope.launch {
-            val tvResult = fetchTvDetailUseCase.execute(id)
+            val tvResult = getTvDetailUseCase(id)
 
             if (tvResult is Result.Success) {
                 val tv = tvResult.data
@@ -67,9 +67,9 @@ class TvDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadTvCast(id: String) {
+    fun fetchCast(id: String) {
         viewModelScope.launch {
-            val castResult = fetchTvCastUseCase.execute(id)
+            val castResult = getTvCastUseCase(id)
 
             if (castResult is Result.Success) {
                 val cast = castResult.data
@@ -78,9 +78,9 @@ class TvDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadTvVideo(id: String) {
+    fun fetchVideo(id: String) {
         viewModelScope.launch {
-            val videoResult = fetchTvVideoUseCase.execute(id)
+            val videoResult = getTvVideoUseCase(id)
 
             if (videoResult is Result.Success) {
                 val video = videoResult.data
@@ -89,7 +89,7 @@ class TvDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadTvSimilar(id: String): Flow<PagingData<TvEntity>> {
-        return fetchTvSimilarUseCase.execute(id).cachedIn(viewModelScope)
+    fun fetchSimilar(id: String): Flow<PagingData<TvEntity>> {
+        return getTvSimilarUseCase(id).cachedIn(viewModelScope)
     }
 }

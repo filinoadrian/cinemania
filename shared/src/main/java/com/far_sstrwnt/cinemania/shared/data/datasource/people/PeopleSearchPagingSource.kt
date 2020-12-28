@@ -17,7 +17,7 @@ class PeopleSearchPagingSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PeopleEntity> {
         val position = params.key ?: TMDB_STARTING_PAGE_INDEX
         return try {
-            val response = dataSource.peopleSearch(query, position)
+            val response = dataSource.getPeopleSearch(query, position)
             val people = response.results.map {
                 it.asDomainModel()
             }

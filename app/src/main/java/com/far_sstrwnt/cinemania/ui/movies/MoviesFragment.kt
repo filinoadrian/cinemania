@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -33,7 +34,7 @@ class MoviesFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: MoviesViewModel
+    private val viewModel by viewModels<MoviesViewModel> { viewModelFactory }
 
     private lateinit var binding: FragmentMoviesBinding
 
@@ -45,9 +46,7 @@ class MoviesFragment : DaggerFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        viewModel = viewModelProvider(viewModelFactory)
-
+    ): View {
         binding = FragmentMoviesBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -63,8 +62,7 @@ class MoviesFragment : DaggerFragment() {
         loadMovies(null)
 
         binding.moviesList.setHasFixedSize(true)
-        val padding = resources.getDimensionPixelSize(R.dimen.padding_small)
-        binding.moviesList.addItemDecoration(GridItemDecoration(padding))
+        binding.moviesList.addItemDecoration(GridItemDecoration(resources.getDimensionPixelSize(R.dimen.padding_small)))
         binding.retryButton.setOnClickListener { adapter.retry() }
     }
 
@@ -145,7 +143,7 @@ class MoviesFragment : DaggerFragment() {
     private fun loadMovies(genre: String?) {
         moviesJob?.cancel()
         moviesJob = lifecycleScope.launch {
-            viewModel.discoverMovie(genre).collectLatest {
+            viewModel.fetchDiscover(genre).collectLatest {
                 adapter.submitData(it)
             }
         }

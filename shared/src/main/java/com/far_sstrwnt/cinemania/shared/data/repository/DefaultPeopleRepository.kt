@@ -17,7 +17,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface PeopleRepository {
-    fun getSearchResultStream(query: String): Flow<PagingData<PeopleEntity>>
+    fun getPeopleSearchResultStream(query: String): Flow<PagingData<PeopleEntity>>
     suspend fun getPeopleDetail(id: String): Result<PeopleEntity>
     suspend fun getPeopleMovieCredit(id: String): Result<List<MovieEntity>>
     suspend fun getPeopleTvCredit(id: String): Result<List<TvEntity>>
@@ -28,7 +28,7 @@ class DefaultPeopleRepository @Inject constructor(
         private val dataSource: PeopleRemoteDataSource
 ) : PeopleRepository {
 
-    override fun getSearchResultStream(query: String): Flow<PagingData<PeopleEntity>> {
+    override fun getPeopleSearchResultStream(query: String): Flow<PagingData<PeopleEntity>> {
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
@@ -45,7 +45,7 @@ class DefaultPeopleRepository @Inject constructor(
 
     override suspend fun getPeopleDetail(id: String): Result<PeopleEntity> {
         return withContext(Dispatchers.IO) {
-            val people = dataSource.peopleDetail(id)
+            val people = dataSource.getPeopleDetail(id)
 
             (people as? Result.Success)?.let {
                 return@withContext Result.Success(it.data.asDomainModel())
@@ -57,7 +57,7 @@ class DefaultPeopleRepository @Inject constructor(
 
     override suspend fun getPeopleMovieCredit(id: String): Result<List<MovieEntity>> {
         return withContext(Dispatchers.IO) {
-            val movies = dataSource.peopleMovieCredit(id)
+            val movies = dataSource.getPeopleMovieCredit(id)
 
             (movies as? Result.Success)?.let {
                 return@withContext Result.Success(it.data.map { results ->
@@ -71,7 +71,7 @@ class DefaultPeopleRepository @Inject constructor(
 
     override suspend fun getPeopleTvCredit(id: String): Result<List<TvEntity>> {
         return withContext(Dispatchers.IO) {
-            val tv = dataSource.peopleTvCredit(id)
+            val tv = dataSource.getPeopleTvCredit(id)
 
             (tv as? Result.Success)?.let {
                 return@withContext Result.Success(it.data.map { results ->

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -33,7 +34,7 @@ class TvFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: TvViewModel
+    private val viewModel by viewModels<TvViewModel> { viewModelFactory }
 
     private lateinit var binding: FragmentTvBinding
 
@@ -45,9 +46,7 @@ class TvFragment : DaggerFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        viewModel = viewModelProvider(viewModelFactory)
-
+    ): View {
         binding = FragmentTvBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -63,8 +62,7 @@ class TvFragment : DaggerFragment() {
         loadTv(null)
 
         binding.tvList.setHasFixedSize(true)
-        val padding = resources.getDimensionPixelSize(R.dimen.padding_small)
-        binding.tvList.addItemDecoration(GridItemDecoration(padding))
+        binding.tvList.addItemDecoration(GridItemDecoration(resources.getDimensionPixelSize(R.dimen.padding_small)))
         binding.retryButton.setOnClickListener { adapter.retry() }
     }
 
@@ -142,7 +140,7 @@ class TvFragment : DaggerFragment() {
     private fun loadTv(genre: String?) {
         tvJob?.cancel()
         tvJob = lifecycleScope.launch {
-            viewModel.discoverTv(genre).collectLatest {
+            viewModel.fetchDiscover(genre).collectLatest {
                 adapter.submitData(it)
             }
         }

@@ -13,6 +13,9 @@ abstract class HomeModule {
     @ContributesAndroidInjector
     internal abstract fun contributeHomeFragment(): HomeFragment
 
+    @ContributesAndroidInjector
+    internal abstract fun contributeHomePagerFragment(): HomePagerFragment
+
     @Binds
     @IntoMap
     @ViewModelKey(HomeViewModel::class)

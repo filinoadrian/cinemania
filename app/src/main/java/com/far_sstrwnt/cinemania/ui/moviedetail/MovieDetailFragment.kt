@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -37,7 +38,7 @@ class MovieDetailFragment : DaggerFragment(), VideoActionsHandler {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: MovieDetailViewModel
+    private val viewModel by viewModels<MovieDetailViewModel> { viewModelFactory }
 
     private lateinit var binding: FragmentMovieDetailBinding
 
@@ -56,8 +57,6 @@ class MovieDetailFragment : DaggerFragment(), VideoActionsHandler {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = viewModelProvider(viewModelFactory)
-
         binding = FragmentMovieDetailBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
@@ -73,9 +72,9 @@ class MovieDetailFragment : DaggerFragment(), VideoActionsHandler {
         initAdapter()
         initNavigation()
 
-        viewModel.loadMovieDetail(args.id)
-        viewModel.loadMovieCast(args.id)
-        viewModel.loadMovieVideo(args.id)
+        viewModel.fetchDetail(args.id)
+        viewModel.fetchCast(args.id)
+        viewModel.fetchVideo(args.id)
         loadMovieSimilar(args.id)
 
         subscribeUi()
@@ -156,7 +155,7 @@ class MovieDetailFragment : DaggerFragment(), VideoActionsHandler {
     private fun loadMovieSimilar(id: String) {
         movieSimilarJob?.cancel()
         movieSimilarJob = lifecycleScope.launch {
-            viewModel.loadMovieSimilar(id).collectLatest {
+            viewModel.fetchSimilar(id).collectLatest {
                 similarAdapter.submitData(it)
             }
         }

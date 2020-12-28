@@ -17,7 +17,7 @@ class TvSimilarPagingSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TvEntity> {
         val position = params.key ?: TMDB_STARTING_PAGE_INDEX
         return try {
-            val response = dataSource.tvSimilar(id, position)
+            val response = dataSource.getTvSimilar(id, position)
             val tv = response.results.map {
                 it.asDomainModel()
             }

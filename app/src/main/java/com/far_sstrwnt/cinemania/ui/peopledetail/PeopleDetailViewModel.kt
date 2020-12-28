@@ -8,9 +8,9 @@ import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.MovieEntity
 import com.far_sstrwnt.cinemania.model.PeopleEntity
 import com.far_sstrwnt.cinemania.model.TvEntity
-import com.far_sstrwnt.cinemania.shared.domain.people.FetchPeopleDetailUseCase
-import com.far_sstrwnt.cinemania.shared.domain.people.FetchPeopleMovieCreditsUseCase
-import com.far_sstrwnt.cinemania.shared.domain.people.FetchPeopleTvCreditsUseCase
+import com.far_sstrwnt.cinemania.shared.domain.people.GetPeopleDetailUseCase
+import com.far_sstrwnt.cinemania.shared.domain.people.GetPeopleMovieCreditsUseCase
+import com.far_sstrwnt.cinemania.shared.domain.people.GetPeopleTvCreditsUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
@@ -18,9 +18,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PeopleDetailViewModel @Inject constructor(
-    private val fetchPeopleDetailUseCase: FetchPeopleDetailUseCase,
-    private val fetchPeopleMovieCreditsUseCase: FetchPeopleMovieCreditsUseCase,
-    private val fetchPeopleTvCreditsUseCase: FetchPeopleTvCreditsUseCase
+    private val getPeopleDetailUseCase: GetPeopleDetailUseCase,
+    private val getPeopleMovieCreditsUseCase: GetPeopleMovieCreditsUseCase,
+    private val getPeopleTvCreditsUseCase: GetPeopleTvCreditsUseCase
 ) : ViewModel(), EventActionsHandler {
 
     private val _people = MutableLiveData<PeopleEntity>()
@@ -51,9 +51,9 @@ class PeopleDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadPeopleDetail(id: String) {
+    fun fetchDetail(id: String) {
         viewModelScope.launch {
-            val peopleResult = fetchPeopleDetailUseCase.execute(id)
+            val peopleResult = getPeopleDetailUseCase(id)
 
             if (peopleResult is Result.Success) {
                 val people = peopleResult.data
@@ -62,9 +62,9 @@ class PeopleDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadPeopleMovieCredit(id: String) {
+    fun fetchMovieCredit(id: String) {
         viewModelScope.launch {
-            val movieCreditResult = fetchPeopleMovieCreditsUseCase.execute(id)
+            val movieCreditResult = getPeopleMovieCreditsUseCase(id)
 
             if (movieCreditResult is Result.Success) {
                 val movies = movieCreditResult.data
@@ -73,9 +73,9 @@ class PeopleDetailViewModel @Inject constructor(
         }
     }
 
-    fun loadPeopleTvCredit(id: String) {
+    fun fetchTvCredit(id: String) {
         viewModelScope.launch {
-            val tvCreditResult = fetchPeopleTvCreditsUseCase.execute(id)
+            val tvCreditResult = getPeopleTvCreditsUseCase(id)
 
             if (tvCreditResult is Result.Success) {
                 val tv = tvCreditResult.data
