@@ -12,14 +12,6 @@ class MovieRemoteDataSource @Inject constructor(
         private val service: TmdbService,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : BaseRemoteDataSource(service, ioDispatcher) {
-    suspend fun getMovies(path: String, genre: String?, query: String?, page: Int): ResultsResponse<NetworkMovieEntity> {
-        return service.getMovies(path, genre, query, page)
-    }
-
-    suspend fun getMoviesByCategory(category: String, page: Int): ResultsResponse<NetworkMovieEntity> {
-        return service.getMoviesByCategory(category, page)
-    }
-
     suspend fun getMovieSimilar(id: String, page: Int): ResultsResponse<NetworkMovieEntity> {
         return service.getMovieSimilar(id, page)
     }

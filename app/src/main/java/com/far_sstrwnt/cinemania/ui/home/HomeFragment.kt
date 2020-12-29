@@ -6,14 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.far_sstrwnt.cinemania.databinding.FragmentHomeBinding
 import com.far_sstrwnt.cinemania.model.Entity
 import com.far_sstrwnt.cinemania.model.MediaCategory
 import com.far_sstrwnt.cinemania.model.MediaType
+import com.far_sstrwnt.cinemania.shared.result.EventObserver
+import com.far_sstrwnt.cinemania.ui.media.MediaFragmentDirections
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 class HomeFragment : DaggerFragment() {
 

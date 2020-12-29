@@ -3,14 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/nav_movie">
+    app:startDestination="@id/nav_home">
 
     <fragment
         android:id="@+id/nav_home"
         android:name="com.far_sstrwnt.cinemania.ui.home.HomeFragment"
         tools:label="Home"
         tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_nav_home_to_nav_media"
+            app:destination="@id/nav_media" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_movie_detail"
+            app:destination="@id/nav_movie_detail" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_tv_detail"
+            app:destination="@id/nav_tv_detail" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/nav_media"
+        android:name="com.far_sstrwnt.cinemania.ui.media.MediaFragment"
+        tools:label="Media"
+        tools:layout="@layout/fragment_media">
+        <argument
+            android:name="mediaType"
+            app:argType="string" />
+        <argument
+            android:name="selectedGenre"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_nav_media_to_nav_movie_detail"
+            app:destination="@id/nav_movie_detail" />
+        <action
+            android:id="@+id/action_nav_media_to_nav_tv_detail"
+            app:destination="@id/nav_tv_detail" />
     </fragment>
 
     <fragment
@@ -23,20 +50,10 @@
             app:destination="@id/nav_movie_detail" />
         <action
             android:id="@+id/action_nav_search_to_nav_tv_detail"
-            app:destination="@id/nav_movie_detail" />
+            app:destination="@id/nav_tv_detail" />
         <action
             android:id="@+id/action_nav_search_to_nav_people_detail"
-            app:destination="@id/nav_movie_detail" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_movie"
-        android:name="com.far_sstrwnt.cinemania.ui.movies.MoviesFragment"
-        android:label="Movies"
-        tools:layout="@layout/fragment_movies">
-        <action
-            android:id="@+id/action_nav_movie_to_nav_movie_detail"
-            app:destination="@id/nav_movie_detail" />
+            app:destination="@id/nav_people_detail" />
     </fragment>
 
     <fragment
@@ -53,16 +70,6 @@
         <action
             android:id="@+id/action_nav_movie_detail_to_self"
             app:destination="@id/nav_movie_detail" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_tv"
-        android:name="com.far_sstrwnt.cinemania.ui.tv.TvFragment"
-        android:label="TV"
-        tools:layout="@layout/fragment_tv">
-        <action
-            android:id="@+id/action_nav_tv_to_nav_tv_detail"
-            app:destination="@id/nav_tv_detail" />
     </fragment>
 
     <fragment

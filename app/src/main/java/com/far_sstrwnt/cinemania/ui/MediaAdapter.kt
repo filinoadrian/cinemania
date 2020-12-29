@@ -5,8 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.far_sstrwnt.cinemania.databinding.ItemTrendingBinding
 import com.far_sstrwnt.cinemania.model.MediaEntity
+import com.far_sstrwnt.cinemania.ui.common.MediaActionsHandler
 
-class MediaAdapter : RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
+class MediaAdapter(
+    val mediaType: String,
+    val eventListener: MediaActionsHandler,
+) : RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
 
     private var mMediaList: List<MediaEntity> = emptyList()
 
@@ -19,7 +23,7 @@ class MediaAdapter : RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mMediaList[position]
         item.let {
-            holder.bind(item)
+            holder.bind(mediaType, eventListener, item)
         }
     }
 
@@ -35,7 +39,9 @@ class MediaAdapter : RecyclerView.Adapter<MediaAdapter.ViewHolder>() {
     class ViewHolder(val binding: ItemTrendingBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(media: MediaEntity) {
+        fun bind(mediaType: String, eventListener: MediaActionsHandler, media: MediaEntity) {
+            binding.mediaType = mediaType
+            binding.eventListener = eventListener
             binding.media = media
             binding.executePendingBindings()
         }

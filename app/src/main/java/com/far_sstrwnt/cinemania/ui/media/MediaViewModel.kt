@@ -1,4 +1,4 @@
-package com.far_sstrwnt.cinemania.ui.home
+package com.far_sstrwnt.cinemania.ui.media
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,24 +9,19 @@ import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MediaEntity
 import com.far_sstrwnt.cinemania.model.MediaType
-import com.far_sstrwnt.cinemania.shared.domain.media.GetMediaByCategoryUseCase
+import com.far_sstrwnt.cinemania.shared.domain.media.GetMediaDiscoverUseCase
 import com.far_sstrwnt.cinemania.shared.domain.media.GetMediaGenreUseCase
-import com.far_sstrwnt.cinemania.shared.domain.media.GetMediaTrendingUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
-import com.far_sstrwnt.cinemania.shared.result.Result.Success
+import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.MediaActionsHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor(
-    private val getMediaTrendingUseCase: GetMediaTrendingUseCase,
+class MediaViewModel @Inject constructor(
     private val getMediaGenreUseCase: GetMediaGenreUseCase,
-    private val getMediaByCategoryUseCase: GetMediaByCategoryUseCase
+    private val getMediaDiscoverUseCase: GetMediaDiscoverUseCase
 ) : ViewModel(), MediaActionsHandler {
-
-    private val _mediaTrending = MutableLiveData<List<MediaEntity>>().apply { value = emptyList() }
-    val mediaTrending: LiveData<List<MediaEntity>> = _mediaTrending
 
     private val _mediaGenre = MutableLiveData<List<GenreEntity>>().apply { value = emptyList() }
     val mediaGenre: LiveData<List<GenreEntity>> = _mediaGenre
@@ -37,24 +32,15 @@ class HomeViewModel @Inject constructor(
     private val _navigateToTvDetailAction = MutableLiveData<Event<String>>()
     val navigateToTvDetailAction: LiveData<Event<String>> = _navigateToTvDetailAction
 
-    fun fetchMediaTrending(mediaType: String) {
-        viewModelScope.launch {
-            val trendingResult = getMediaTrendingUseCase(mediaType)
+    private var currentGenreValue: String? = null
 
-            if (trendingResult is Success) {
-                val trendingList = trendingResult.data
-                _mediaTrending.value = ArrayList(trendingList)
-            } else {
-                _mediaTrending.value = emptyList()
-            }
-        }
-    }
+    private var currentMediaResult: Flow<PagingData<MediaEntity>>? = null
 
     fun fetchMediaGenre(mediaType: String) {
         viewModelScope.launch {
             val genreResult = getMediaGenreUseCase(mediaType)
 
-            if (genreResult is Success) {
+            if (genreResult is Result.Success) {
                 val genreList = genreResult.data
                 _mediaGenre.value = ArrayList(genreList)
             } else {
@@ -63,8 +49,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun fetchMediaByCategory(mediaType: String, category: String): Flow<PagingData<MediaEntity>> {
-        return getMediaByCategoryUseCase(mediaType, category).cachedIn(viewModelScope)
+    fun fetchMediaDiscover(mediaType: String, genre: String?): Flow<PagingData<MediaEntity>> {
+        val lastResult = currentMediaResult
+        if (genre == currentGenreValue && lastResult != null) {
+            return lastResult
+        }
+        currentGenreValue = genre
+        val newResult: Flow<PagingData<MediaEntity>> = getMediaDiscoverUseCase(mediaType, genre)
+            .cachedIn(viewModelScope)
+        currentMediaResult = newResult
+        return newResult
     }
 
     override fun openDetail(mediaType: String, id: String) {

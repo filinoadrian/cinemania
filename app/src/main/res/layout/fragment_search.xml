@@ -20,9 +20,6 @@
             android:layout_height="wrap_content"
             android:background="@color/color_on_primary"
             android:elevation="0dp"
-            app:navigationIcon="@drawable/ic_arrow_back"
-            app:contentInsetEnd="0dp"
-            app:contentInsetStart="0dp"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <androidx.appcompat.widget.SearchView
@@ -36,7 +33,7 @@
                 app:closeIcon="@drawable/ic_clear"
                 app:iconifiedByDefault="false"
                 app:queryBackground="@color/transparent"
-                app:queryHint="Search Movie, TV Series, or People"
+                app:queryHint="Search Movie, Series, or Person"
                 app:searchIcon="@drawable/ic_search" />
 
         </androidx.appcompat.widget.Toolbar>

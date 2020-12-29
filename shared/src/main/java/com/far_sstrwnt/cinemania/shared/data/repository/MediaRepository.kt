@@ -5,7 +5,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MediaEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaPagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaByCategoryPagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaByActionPagingSource
 import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaRemoteDataSource
 import com.far_sstrwnt.cinemania.shared.data.mapper.asDomainModel
 import com.far_sstrwnt.cinemania.shared.result.Result
@@ -57,7 +58,25 @@ class MediaRepository @Inject constructor(
                 enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
             ),
             pagingSourceFactory = {
-                MediaPagingSource(dataSource, mediaType, category)
+                MediaByCategoryPagingSource(dataSource, mediaType, category)
+            }
+        ).flow
+    }
+
+    fun getMediaByActionResultStream(
+        action: String,
+        mediaType: String,
+        genre: String? = null,
+        query: String? = null
+    ): Flow<PagingData<MediaEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                MediaByActionPagingSource(dataSource, action, mediaType, genre, query)
             }
         ).flow
     }

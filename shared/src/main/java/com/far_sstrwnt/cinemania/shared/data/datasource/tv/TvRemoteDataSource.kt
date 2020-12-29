@@ -13,14 +13,6 @@ class TvRemoteDataSource @Inject constructor(
         private val service: TmdbService,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : BaseRemoteDataSource(service, ioDispatcher) {
-    suspend fun getTv(path: String, genre: String?, query: String?, page: Int): ResultsResponse<NetworkTvEntity> {
-        return service.getTv(path, genre, query, page)
-    }
-
-    suspend fun getTvByCategory(category: String, page: Int): ResultsResponse<NetworkTvEntity> {
-        return service.getTvByCategory(category, page)
-    }
-
     suspend fun getTvSimilar(id: String, page: Int): ResultsResponse<NetworkTvEntity> {
         return service.getTvSimilar(id, page)
     }

@@ -1,9 +1,11 @@
 package com.far_sstrwnt.cinemania.ui
 
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.far_sstrwnt.cinemania.model.GenreEntity
 
 @BindingAdapter("app:poster")
 fun setPoster(view: ImageView, posterUrl: String?) {
@@ -38,5 +40,13 @@ fun setRating(ratingBar: AppCompatRatingBar, rating: Float?) {
         ratingBar.rating = rating / 2
     } else {
         ratingBar.rating = 0f
+    }
+}
+
+@BindingAdapter("app:genre")
+fun setGenreList(view: TextView, genreList: List<String>?) {
+    if (!genreList.isNullOrEmpty()) {
+        val genreText = genreList.joinToString()
+        view.text = genreText
     }
 }

@@ -6,13 +6,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.ItemMediaListBinding
 import com.far_sstrwnt.cinemania.ui.home.HomeViewModel
 import com.far_sstrwnt.cinemania.ui.home.MediaList
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class MediaListAdapter(val viewModel: HomeViewModel) : ListAdapter<MediaList, MediaListAdapter.ViewHolder>(MediaListDiffCallback()) {
+class MediaListAdapter(
+    val mediaType: String,
+    val viewModel: HomeViewModel
+) : ListAdapter<MediaList, MediaListAdapter.ViewHolder>(MediaListDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -23,15 +27,19 @@ class MediaListAdapter(val viewModel: HomeViewModel) : ListAdapter<MediaList, Me
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         item?.let {
-            (holder as ViewHolder).bind(viewModel, item)
+            (holder as ViewHolder).bind(mediaType, viewModel, item)
         }
     }
 
     class ViewHolder(private val binding: ItemMediaListBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(viewModel: HomeViewModel, mediaList: MediaList) {
-            val mediaPagingAdapter = MediaPagingAdapter()
+        fun bind(mediaType: String, viewModel: HomeViewModel, mediaList: MediaList) {
+            val mediaPagingAdapter = MediaPagingAdapter(
+                mediaType,
+                viewModel,
+                R.layout.item_media
+            )
 
             binding.mediaListTitle.text = mediaList.title
             binding.mediaListItem.adapter = mediaPagingAdapter.withLoadStateHeaderAndFooter(

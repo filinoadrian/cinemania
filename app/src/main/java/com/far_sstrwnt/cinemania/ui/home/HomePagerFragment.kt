@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
@@ -16,6 +17,7 @@ import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.FragmentHomePagerBinding
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MediaType
+import com.far_sstrwnt.cinemania.shared.result.EventObserver
 import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
 import com.far_sstrwnt.cinemania.ui.MediaAdapter
 import com.far_sstrwnt.cinemania.ui.MediaListAdapter
@@ -63,6 +65,7 @@ class HomePagerFragment(
 
         initAdapter()
         initPagingAdapter()
+        initNavigation()
 
         viewModel.fetchMediaTrending(mediaType.value)
         viewModel.fetchMediaGenre(mediaType.value)
@@ -84,7 +87,10 @@ class HomePagerFragment(
             val chip = inflater.inflate(R.layout.item_genre, chipGroup, false) as Chip
             chip.text = genre.name
             chip.tag = genre.name
-
+            chip.setOnClickListener {
+                val directions = HomeFragmentDirections.actionNavHomeToNavMedia(mediaType.value, genre.id)
+                findNavController().navigate(directions)
+            }
             chip
         }
 
@@ -96,14 +102,24 @@ class HomePagerFragment(
     }
 
     private fun initPagingAdapter() {
-        mediaListAdapter = MediaListAdapter(viewModel)
+        mediaListAdapter = MediaListAdapter(mediaType.value, viewModel)
         mediaListAdapter.submitList(mediaList)
 
         viewDataBinding.mediaList.adapter = mediaListAdapter
     }
 
+    private fun initNavigation() {
+        viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavMovieDetail(it))
+        })
+
+        viewModel.navigateToTvDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavTvDetail(it))
+        })
+    }
+
     private fun initAdapter() {
-        mediaAdapter = MediaAdapter()
+        mediaAdapter = MediaAdapter(mediaType.value, viewModel)
         viewDataBinding.viewPager.adapter = mediaAdapter
         viewDataBinding.viewPager.offscreenPageLimit = 3
 

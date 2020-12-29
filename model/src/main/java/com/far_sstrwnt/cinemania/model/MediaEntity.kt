@@ -2,13 +2,16 @@ package com.far_sstrwnt.cinemania.model
 
 data class MediaEntity(
     val id: String,
-    val posterPath: String?
+    val posterPath: String?,
+    val name: String,
+    val voteAverage: Float?,
+    val genreList: List<String>?
 )
 
 enum class MediaType(val value: String) {
     MOVIE("movie"),
     TV("tv"),
-    PEOPLE("people")
+    PEOPLE("person")
 }
 
 enum class MediaCategory(val value: String) {

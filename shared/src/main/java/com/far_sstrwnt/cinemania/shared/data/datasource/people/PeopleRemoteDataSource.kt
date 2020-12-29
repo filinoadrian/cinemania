@@ -11,10 +11,6 @@ import javax.inject.Inject
 class PeopleRemoteDataSource @Inject constructor(
         private val service: TmdbService
 ) {
-    suspend fun getPeopleSearch(query: String, page: Int): ResultsResponse<NetworkPeopleEntity> {
-        return service.getPeopleSearch(query, page)
-    }
-
     suspend fun getPeopleDetail(id: String): Result<NetworkPeopleEntity> {
         return try {
             Result.Success(service.getPeopleDetail(id))

@@ -6,6 +6,14 @@
     <data>
 
         <variable
+            name="mediaType"
+            type="String" />
+
+        <variable
+            name="eventListener"
+            type="com.far_sstrwnt.cinemania.ui.common.MediaActionsHandler" />
+
+        <variable
             name="media"
             type="com.far_sstrwnt.cinemania.model.MediaEntity" />
     </data>
@@ -15,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="12dp"
+        android:onClick="@{() -> eventListener.openDetail(mediaType, media.id)}"
         app:cardElevation="2dp"
         app:cardCornerRadius="16dp"
         app:cardPreventCornerOverlap="true">

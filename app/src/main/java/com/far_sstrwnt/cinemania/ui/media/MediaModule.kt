@@ -1,4 +1,4 @@
-package com.far_sstrwnt.cinemania.ui.tv
+package com.far_sstrwnt.cinemania.ui.media
 
 import androidx.lifecycle.ViewModel
 import com.far_sstrwnt.cinemania.shared.di.ViewModelKey
@@ -8,13 +8,13 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 
 @Module
-abstract class TvModule {
+abstract class MediaModule {
 
     @ContributesAndroidInjector
-    internal abstract fun contributeTvFragment(): TvFragment
+    internal abstract fun contributeMediaFragment(): MediaFragment
 
     @Binds
     @IntoMap
-    @ViewModelKey(TvViewModel::class)
-    abstract fun bindTvViewModel(viewModel: TvViewModel): ViewModel
+    @ViewModelKey(MediaViewModel::class)
+    abstract fun bindMediaViewModel(viewModel: MediaViewModel): ViewModel
 }

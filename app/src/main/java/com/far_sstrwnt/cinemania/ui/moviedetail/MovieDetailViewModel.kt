@@ -17,6 +17,7 @@ import com.far_sstrwnt.cinemania.shared.domain.movie.GetMovieVideoUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
+import com.far_sstrwnt.cinemania.ui.common.MediaActionsHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,7 +27,7 @@ class MovieDetailViewModel @Inject constructor(
     private val getMovieCastUseCase: GetMovieCastUseCase,
     private val getMovieSimilarUseCase: GetMovieSimilarUseCase,
     private val getMovieVideoUseCase: GetMovieVideoUseCase
-) : ViewModel(), EventActionsHandler {
+) : ViewModel(), MediaActionsHandler {
 
     private val _movie = MutableLiveData<MovieEntity>()
     val movie: LiveData<MovieEntity>
@@ -48,10 +49,10 @@ class MovieDetailViewModel @Inject constructor(
     val navigateToMovieDetailAction: LiveData<Event<String>>
         get() = _navigateToMovieDetailAction
 
-    override fun openDetail(entity: Entity, id: String) {
-        if (entity == Entity.MOVIE) {
+    override fun openDetail(mediaType: String, id: String) {
+        if (mediaType == Entity.MOVIE.value) {
             _navigateToMovieDetailAction.value = Event(id)
-        } else if (entity == Entity.PEOPLE) {
+        } else if (mediaType == Entity.PEOPLE.value) {
             _navigateToPeopleDetailAction.value = Event(id)
         }
     }

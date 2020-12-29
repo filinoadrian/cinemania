@@ -6,10 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.far_sstrwnt.cinemania.model.CastEntity
-import com.far_sstrwnt.cinemania.model.Entity
-import com.far_sstrwnt.cinemania.model.TvEntity
-import com.far_sstrwnt.cinemania.model.VideoEntity
+import com.far_sstrwnt.cinemania.model.*
 import com.far_sstrwnt.cinemania.shared.domain.tv.GetTvCastUseCase
 import com.far_sstrwnt.cinemania.shared.domain.tv.GetTvDetailUseCase
 import com.far_sstrwnt.cinemania.shared.domain.tv.GetTvSimilarUseCase
@@ -17,6 +14,7 @@ import com.far_sstrwnt.cinemania.shared.domain.tv.GetTvVideoUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.EventActionsHandler
+import com.far_sstrwnt.cinemania.ui.common.MediaActionsHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,7 +24,7 @@ class TvDetailViewModel @Inject constructor(
     private val getTvCastUseCase: GetTvCastUseCase,
     private val getTvSimilarUseCase: GetTvSimilarUseCase,
     private val getTvVideoUseCase: GetTvVideoUseCase
-) : ViewModel(), EventActionsHandler {
+) : ViewModel(), MediaActionsHandler {
 
     private val _tv = MutableLiveData<TvEntity>()
     val tv: LiveData<TvEntity>
@@ -48,10 +46,10 @@ class TvDetailViewModel @Inject constructor(
     val navigateToTvDetailAction: LiveData<Event<String>>
         get() = _navigateToTvDetailAction
 
-    override fun openDetail(entity: Entity, id: String) {
-        if (entity == Entity.TV) {
+    override fun openDetail(mediaType: String, id: String) {
+        if (mediaType == MediaType.TV.value) {
             _navigateToTvDetailAction.value = Event(id)
-        } else if (entity == Entity.PEOPLE) {
+        } else if (mediaType == MediaType.PEOPLE.value) {
             _navigateToPeopleDetailAction.value = Event(id)
         }
     }

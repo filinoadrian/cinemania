@@ -17,8 +17,6 @@ import javax.inject.Singleton
 interface MovieRepository {
     suspend fun getCast(entity: String, id: String): Result<List<CastEntity>>
     suspend fun getVideo(entity: String, id: String): Result<List<VideoEntity>>
-    fun getMoviesResultStream(path: String, genre: String? = null, query: String? = null): Flow<PagingData<MovieEntity>>
-    fun getMoviesByCategoryResultStream(category: String): Flow<PagingData<MovieEntity>>
     fun getSimilarResultStream(id: String): Flow<PagingData<MovieEntity>>
     suspend fun getMovieDetail(id: String): Result<MovieEntity>
 }
@@ -28,36 +26,6 @@ class DefaultMovieRepository @Inject constructor(
         private val dataSource: MovieRemoteDataSource,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : MovieRepository, BaseRepository(dataSource, ioDispatcher) {
-
-    override fun getMoviesResultStream(
-        path: String, genre: String?, query: String?
-    ): Flow<PagingData<MovieEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
-                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
-            ),
-            pagingSourceFactory = {
-                MoviePagingSource(
-                    dataSource = dataSource, path = path, genre = genre, query = query
-                )
-            }
-        ).flow
-    }
-
-    override fun getMoviesByCategoryResultStream(category: String): Flow<PagingData<MovieEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
-                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
-            ),
-            pagingSourceFactory = {
-                MovieCategoryPagingSource(dataSource = dataSource, category = category)
-            }
-        ).flow
-    }
 
     override fun getSimilarResultStream(id: String): Flow<PagingData<MovieEntity>> {
         return Pager(

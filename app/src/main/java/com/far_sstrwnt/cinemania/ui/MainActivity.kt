@@ -27,7 +27,7 @@ class MainActivity : DaggerAppCompatActivity() {
             lifecycleScope.launchWhenResumed {
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     when (destination.id) {
-                        R.id.nav_home, R.id.nav_movie, R.id.nav_tv, R.id.nav_search -> bottomNav.show()
+                        R.id.nav_home, R.id.nav_search -> bottomNav.show()
                         else -> bottomNav.hide()
                     }
                 }

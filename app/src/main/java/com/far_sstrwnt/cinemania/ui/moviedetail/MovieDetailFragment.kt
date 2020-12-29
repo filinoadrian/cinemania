@@ -21,11 +21,8 @@ import com.far_sstrwnt.cinemania.ui.CastAdapter
 import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
 import com.far_sstrwnt.cinemania.ui.VideoAdapter
 import com.far_sstrwnt.cinemania.ui.common.VideoActionsHandler
-import com.far_sstrwnt.cinemania.ui.movies.MoviesPagingAdapter
 import com.far_sstrwnt.cinemania.ui.toVisibility
-import com.far_sstrwnt.cinemania.util.openWebsiteUri
 import com.far_sstrwnt.cinemania.util.openWebsiteUrl
-import com.far_sstrwnt.cinemania.util.viewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.Job

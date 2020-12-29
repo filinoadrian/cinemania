@@ -7,7 +7,7 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class MediaPagingSource @Inject constructor(
+class MediaByCategoryPagingSource @Inject constructor(
     private val dataSource: MediaRemoteDataSource,
     private val mediaType: String,
     private val category: String

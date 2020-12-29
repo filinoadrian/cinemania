@@ -7,16 +7,6 @@
         android:title="Home" />
 
     <item
-        android:id="@+id/nav_movie"
-        android:icon="@drawable/ic_nav_movie"
-        android:title="Movies" />
-
-    <item
-        android:id="@+id/nav_tv"
-        android:icon="@drawable/ic_nav_tv"
-        android:title="TV" />
-
-    <item
         android:id="@+id/nav_search"
         android:icon="@drawable/ic_nav_search"
         android:title="Search" />

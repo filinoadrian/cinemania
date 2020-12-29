@@ -17,8 +17,6 @@ import javax.inject.Singleton
 interface TvRepository {
     suspend fun getCast(entity: String, id: String): Result<List<CastEntity>>
     suspend fun getVideo(entity: String, id: String): Result<List<VideoEntity>>
-    fun getTvResultStream(path: String, genre: String? = null, query: String? = null): Flow<PagingData<TvEntity>>
-    fun getTvByCategoryResultStream(category: String): Flow<PagingData<TvEntity>>
     fun getSimilarResultStream(id: String): Flow<PagingData<TvEntity>>
     suspend fun getTvDetail(id: String): Result<TvEntity>
 }
@@ -28,36 +26,6 @@ class DefaultTvRepository @Inject constructor(
         private val dataSource: TvRemoteDataSource,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : TvRepository, BaseRepository(dataSource, ioDispatcher) {
-
-    override fun getTvResultStream(
-        path: String, genre: String?, query: String?
-    ): Flow<PagingData<TvEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
-                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
-            ),
-            pagingSourceFactory = {
-                TvPagingSource(
-                    dataSource = dataSource, path = path, genre = genre, query = query
-                )
-            }
-        ).flow
-    }
-
-    override fun getTvByCategoryResultStream(category: String): Flow<PagingData<TvEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
-                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
-            ),
-            pagingSourceFactory = {
-                TvCategoryPagingSource(dataSource = dataSource, category = category)
-            }
-        ).flow
-    }
 
     override fun getSimilarResultStream(id: String): Flow<PagingData<TvEntity>> {
         return Pager(

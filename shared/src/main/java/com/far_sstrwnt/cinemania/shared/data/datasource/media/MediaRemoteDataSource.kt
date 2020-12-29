@@ -10,6 +10,7 @@ import com.far_sstrwnt.cinemania.shared.result.Result.Error
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.http.Path
 import javax.inject.Inject
 
 class MediaRemoteDataSource @Inject constructor(
@@ -32,7 +33,15 @@ class MediaRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun getMediaByCategory(mediaType: String, category: String, page: Int): ResultsResponse<NetworkMediaEntity> {
+    suspend fun getMediaByCategory(
+        mediaType: String, category: String, page: Int
+    ): ResultsResponse<NetworkMediaEntity> {
         return service.getMediaByCategory(mediaType, category, page)
+    }
+
+    suspend fun getMediaByAction(
+        action: String, mediaType: String, genre: String?, query: String?, page: Int
+    ): ResultsResponse<NetworkMediaEntity> {
+        return service.getMediaByAction(action, mediaType, genre, query, page)
     }
 }

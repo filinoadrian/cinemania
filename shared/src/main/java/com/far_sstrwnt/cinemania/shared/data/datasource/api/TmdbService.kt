@@ -26,6 +26,15 @@ interface TmdbService {
         @Query("page") page: Int
     ): ResultsResponse<NetworkMediaEntity>
 
+    @GET("{action}/{media_type}")
+    suspend fun getMediaByAction(
+        @Path("action") action: String,
+        @Path("media_type") mediaType: String,
+        @Query("with_genres") genre: String?,
+        @Query("query") query: String?,
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkMediaEntity>
+
     @GET("{entity}/{id}/credits")
     suspend fun getCredit(
         @Path("entity") entity: String,
@@ -39,20 +48,6 @@ interface TmdbService {
     ): VideosResponse
 
     // MOVIE
-    @GET("{path}/movie")
-    suspend fun getMovies(
-        @Path("path") path: String,
-        @Query("with_genres") genre: String?,
-        @Query("query") query: String?,
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkMovieEntity>
-
-    @GET("movie/{category}")
-    suspend fun getMoviesByCategory(
-        @Path("category") category: String,
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkMovieEntity>
-
     @GET("movie/{id}")
     suspend fun getMovieDetail(
         @Path("id") id: String
@@ -65,20 +60,6 @@ interface TmdbService {
     ): ResultsResponse<NetworkMovieEntity>
 
     // TV
-    @GET("{path}/tv")
-    suspend fun getTv(
-        @Path("path") path: String,
-        @Query("with_genres") genre: String?,
-        @Query("query") query: String?,
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkTvEntity>
-
-    @GET("tv/{category}")
-    suspend fun getTvByCategory(
-        @Path("category") category: String,
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkTvEntity>
-
     @GET("tv/{id}")
     suspend fun getTvDetail(
         @Path("id") id: String
@@ -91,12 +72,6 @@ interface TmdbService {
     ): ResultsResponse<NetworkTvEntity>
 
     // PEOPLE
-    @GET("search/person")
-    suspend fun getPeopleSearch(
-        @Query("query") query: String,
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkPeopleEntity>
-
     @GET("person/{id}")
     suspend fun getPeopleDetail(
         @Path("id") id: String
