@@ -8,9 +8,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MediaEntity
-import com.far_sstrwnt.cinemania.model.MediaType
-import com.far_sstrwnt.cinemania.shared.domain.media.GetMediaDiscoverUseCase
-import com.far_sstrwnt.cinemania.shared.domain.media.GetMediaGenreUseCase
+import com.far_sstrwnt.cinemania.shared.domain.GetMediaDiscoverUseCase
+import com.far_sstrwnt.cinemania.shared.domain.GetMediaGenreUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.ui.common.MediaActionsHandler
@@ -26,11 +25,8 @@ class MediaViewModel @Inject constructor(
     private val _mediaGenre = MutableLiveData<List<GenreEntity>>().apply { value = emptyList() }
     val mediaGenre: LiveData<List<GenreEntity>> = _mediaGenre
 
-    private val _navigateToMovieDetailAction = MutableLiveData<Event<String>>()
-    val navigateToMovieDetailAction: LiveData<Event<String>> = _navigateToMovieDetailAction
-
-    private val _navigateToTvDetailAction = MutableLiveData<Event<String>>()
-    val navigateToTvDetailAction: LiveData<Event<String>> = _navigateToTvDetailAction
+    private val _navigateToMediaDetailAction = MutableLiveData<Event<Pair<String, String>>>()
+    val navigateToMediaDetailAction: LiveData<Event<Pair<String, String>>> = _navigateToMediaDetailAction
 
     private var currentGenreValue: String? = null
 
@@ -62,13 +58,7 @@ class MediaViewModel @Inject constructor(
     }
 
     override fun openDetail(mediaType: String, id: String) {
-        when (mediaType) {
-            MediaType.MOVIE.value -> {
-                _navigateToMovieDetailAction.value = Event(id)
-            }
-            MediaType.TV.value -> {
-                _navigateToTvDetailAction.value = Event(id)
-            }
-        }
+        val navigationArgs: Pair<String, String> = Pair(mediaType, id)
+        _navigateToMediaDetailAction.value = Event(navigationArgs)
     }
 }

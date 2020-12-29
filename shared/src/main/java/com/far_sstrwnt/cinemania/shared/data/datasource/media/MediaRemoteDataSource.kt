@@ -2,15 +2,16 @@ package com.far_sstrwnt.cinemania.shared.data.datasource.media
 
 import com.far_sstrwnt.cinemania.shared.data.datasource.api.ResultsResponse
 import com.far_sstrwnt.cinemania.shared.data.datasource.api.TmdbService
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkCastEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkGenreEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkMediaEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkVideoEntity
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.shared.result.Result.Success
 import com.far_sstrwnt.cinemania.shared.result.Result.Error
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.http.Path
 import javax.inject.Inject
 
 class MediaRemoteDataSource @Inject constructor(
@@ -31,6 +32,34 @@ class MediaRemoteDataSource @Inject constructor(
         } catch (e: Exception) {
             Error(e)
         }
+    }
+
+    suspend fun getMediaDetail(mediaType: String, id: String): Result<NetworkMediaEntity> = withContext(ioDispatcher) {
+        return@withContext try {
+            Success(service.getMediaDetail(mediaType, id))
+        } catch (e: Exception) {
+            Error(e)
+        }
+    }
+
+    suspend fun getMediaCast(mediaType: String, id: String): Result<List<NetworkCastEntity>> = withContext(ioDispatcher) {
+        return@withContext try {
+            Success(service.getMediaCredits(mediaType, id).cast)
+        } catch (e: Exception) {
+            Error(e)
+        }
+    }
+
+    suspend fun getMediaVideos(mediaType: String, id: String): Result<List<NetworkVideoEntity>> = withContext(ioDispatcher) {
+        return@withContext try {
+            Success(service.getMediaVideos(mediaType, id).results)
+        } catch (e: Exception) {
+            Error(e)
+        }
+    }
+
+    suspend fun getMediaSimilar(mediaType: String, id: String, page: Int): ResultsResponse<NetworkMediaEntity> {
+        return service.getMediaSimilar(mediaType, id, page)
     }
 
     suspend fun getMediaByCategory(

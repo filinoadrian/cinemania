@@ -6,9 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
@@ -18,16 +16,11 @@ import com.far_sstrwnt.cinemania.databinding.FragmentHomePagerBinding
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MediaType
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
-import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
-import com.far_sstrwnt.cinemania.ui.MediaAdapter
-import com.far_sstrwnt.cinemania.ui.MediaListAdapter
-import com.far_sstrwnt.cinemania.ui.MediaPagingAdapter
+import com.far_sstrwnt.cinemania.ui.adapter.MediaAdapter
+import com.far_sstrwnt.cinemania.ui.adapter.MediaListAdapter
 import com.google.android.material.chip.Chip
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.android.support.DaggerFragment
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -109,12 +102,8 @@ class HomePagerFragment(
     }
 
     private fun initNavigation() {
-        viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavMovieDetail(it))
-        })
-
-        viewModel.navigateToTvDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavTvDetail(it))
+        viewModel.navigateToMediaDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavMediaDetail(it.first, it.second))
         })
     }
 

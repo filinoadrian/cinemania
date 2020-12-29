@@ -20,26 +20,11 @@ fun ViewGroup.inflate(@LayoutRes layout: Int, attachToRoot: Boolean = false): Vi
     return LayoutInflater.from(context).inflate(layout, this, attachToRoot)
 }
 
-inline fun <reified VM : ViewModel> FragmentActivity.viewModelProvider(
-    provider: ViewModelProvider.Factory
-) =
-    ViewModelProviders.of(this, provider).get(VM::class.java)
-
-inline fun <reified VM : ViewModel> Fragment.viewModelProvider(
-    provider: ViewModelProvider.Factory
-) =
-    ViewModelProviders.of(this, provider).get(VM::class.java)
-
-inline fun <reified VM : ViewModel> Fragment.activityViewModelProvider(
-    provider: ViewModelProvider.Factory
-) =
-    ViewModelProviders.of(requireActivity(), provider).get(VM::class.java)
-
-inline fun <reified VM : ViewModel> Fragment.parentViewModelProvider(
-    provider: ViewModelProvider.Factory
-) =
-    ViewModelProviders.of(parentFragment!!, provider).get(VM::class.java)
-
+fun toVisibility(constraint: Boolean): Int = if (constraint) {
+    View.VISIBLE
+} else {
+    View.GONE
+}
 
 fun BottomNavigationView.show() {
     if (visibility == View.VISIBLE) return

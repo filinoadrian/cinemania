@@ -3,11 +3,14 @@ package com.far_sstrwnt.cinemania.shared.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.far_sstrwnt.cinemania.model.CastEntity
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MediaEntity
+import com.far_sstrwnt.cinemania.model.VideoEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaByCategoryPagingSource
 import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaByActionPagingSource
 import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaRemoteDataSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaSimilarPagingSource
 import com.far_sstrwnt.cinemania.shared.data.mapper.asDomainModel
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.shared.result.Result.Success
@@ -48,6 +51,59 @@ class MediaRepository @Inject constructor(
 
             return@withContext Error(Exception("Remote data source fetch media genre failed"))
         }
+    }
+
+    suspend fun getMediaDetail(mediaType: String, id: String): Result<MediaEntity> {
+        return withContext(ioDispatcher) {
+            val mediaResult = dataSource.getMediaDetail(mediaType, id)
+
+            (mediaResult as? Success)?.let {
+                return@withContext Success(it.data.asDomainModel())
+            }
+
+            return@withContext Error(Exception("Remote data source fetch media detail failed"))
+        }
+    }
+
+    suspend fun getMediaCast(mediaType: String, id: String): Result<List<CastEntity>> {
+        return withContext(Dispatchers.IO) {
+            val castResult = dataSource.getMediaCast(mediaType, id)
+
+            (castResult as? Success)?.let {
+                return@withContext Success(it.data.map { results ->
+                    results.asDomainModel()
+                })
+            }
+
+            return@withContext Error(Exception("Remote data source fetch media cast failed"))
+        }
+    }
+
+    suspend fun getMediaVideos(mediaType: String, id: String): Result<List<VideoEntity>> {
+        return withContext(ioDispatcher) {
+            val videoResult = dataSource.getMediaVideos(mediaType, id)
+
+            (videoResult as? Success)?.let {
+                return@withContext Success(it.data.map { results ->
+                    results.asDomainModel()
+                })
+            }
+
+            return@withContext Error(Exception("Remote data source fetch media videos failed"))
+        }
+    }
+
+    fun getMediaSimilarResultStream(mediaType: String, id: String): Flow<PagingData<MediaEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
+                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
+            ),
+            pagingSourceFactory = {
+                MediaSimilarPagingSource(dataSource, mediaType, id)
+            }
+        ).flow
     }
 
     fun getMediaByCategoryResultStream(mediaType: String, category: String): Flow<PagingData<MediaEntity>> {

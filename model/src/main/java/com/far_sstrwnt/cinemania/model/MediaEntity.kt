@@ -5,7 +5,10 @@ data class MediaEntity(
     val posterPath: String?,
     val name: String,
     val voteAverage: Float?,
-    val genreList: List<String>?
+    val genreList: List<String>?,
+    val backdropPath: String?,
+    val releaseDate: String?,
+    val overview: String?,
 )
 
 enum class MediaType(val value: String) {

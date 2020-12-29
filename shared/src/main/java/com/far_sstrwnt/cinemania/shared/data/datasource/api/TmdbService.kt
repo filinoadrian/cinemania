@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface TmdbService {
 
-    // https://api.themoviedb.org/3/discover/movie?api_key=a1f3faf95d3a6c30d3e3b20acfcdbeae&page=1
+    // https://api.themoviedb.org/3/discover/movie?api_key=<api_key>&page=1
 
     @GET("trending/{media_type}/day")
     suspend fun getMediaTrending(
@@ -35,55 +35,28 @@ interface TmdbService {
         @Query("page") page: Int
     ): ResultsResponse<NetworkMediaEntity>
 
-    @GET("{entity}/{id}/credits")
-    suspend fun getCredit(
-        @Path("entity") entity: String,
+    @GET("{media_type}/{id}")
+    suspend fun getMediaDetail(
+        @Path("media_type") mediaType: String,
         @Path("id") id: String
-    ): CreditResponse<NetworkCastEntity>
+    ): NetworkMediaEntity
 
-    @GET("{entity}/{id}/videos")
-    suspend fun getVideo(
-        @Path("entity") entity: String,
+    @GET("{media_type}/{id}/similar")
+    suspend fun getMediaSimilar(
+        @Path("media_type") mediaType: String,
+        @Path("id") id: String,
+        @Query("page") page: Int
+    ): ResultsResponse<NetworkMediaEntity>
+
+    @GET("{media_type}/{id}/videos")
+    suspend fun getMediaVideos(
+        @Path("media_type") mediaType: String,
         @Path("id") id: String
     ): VideosResponse
 
-    // MOVIE
-    @GET("movie/{id}")
-    suspend fun getMovieDetail(
+    @GET("{media_type}/{id}/credits")
+    suspend fun getMediaCredits(
+        @Path("media_type") mediaType: String,
         @Path("id") id: String
-    ): NetworkMovieEntity
-
-    @GET("movie/{id}/similar")
-    suspend fun getMovieSimilar(
-        @Path("id") id: String,
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkMovieEntity>
-
-    // TV
-    @GET("tv/{id}")
-    suspend fun getTvDetail(
-        @Path("id") id: String
-    ): NetworkTvEntity
-
-    @GET("tv/{id}/similar")
-    suspend fun getTvSimilar(
-        @Path("id") id: String,
-        @Query("page") page: Int
-    ): ResultsResponse<NetworkTvEntity>
-
-    // PEOPLE
-    @GET("person/{id}")
-    suspend fun getPeopleDetail(
-        @Path("id") id: String
-    ): NetworkPeopleEntity
-
-    @GET("person/{id}/movie_credits")
-    suspend fun getPeopleMovieCredit(
-        @Path("id") id: String
-    ): CreditResponse<NetworkMovieEntity>
-
-    @GET("person/{id}/tv_credits")
-    suspend fun getPeopleTvCredit(
-        @Path("id") id: String
-    ): CreditResponse<NetworkTvEntity>
+    ): CreditResponse<NetworkCastEntity>
 }

@@ -4,10 +4,8 @@ import com.far_sstrwnt.cinemania.shared.di.ActivityScoped
 import com.far_sstrwnt.cinemania.ui.MainActivity
 import com.far_sstrwnt.cinemania.ui.home.HomeModule
 import com.far_sstrwnt.cinemania.ui.media.MediaModule
-import com.far_sstrwnt.cinemania.ui.moviedetail.MovieDetailModule
+import com.far_sstrwnt.cinemania.ui.mediadetail.MediaDetailModule
 import com.far_sstrwnt.cinemania.ui.search.SearchModule
-import com.far_sstrwnt.cinemania.ui.peopledetail.PeopleDetailModule
-import com.far_sstrwnt.cinemania.ui.tvdetail.TvDetailModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -21,9 +19,7 @@ abstract class ActivityBindingModule {
             HomeModule::class,
             MediaModule::class,
             SearchModule::class,
-            MovieDetailModule::class,
-            TvDetailModule::class,
-            PeopleDetailModule::class
+            MediaDetailModule::class
         ]
     )
     internal abstract fun mainActivity(): MainActivity

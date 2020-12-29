@@ -12,9 +12,9 @@ import androidx.paging.LoadState
 import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.FragmentSearchPagerBinding
 import com.far_sstrwnt.cinemania.model.MediaType
-import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
-import com.far_sstrwnt.cinemania.ui.MediaPagingAdapter
-import com.far_sstrwnt.cinemania.ui.toVisibility
+import com.far_sstrwnt.cinemania.ui.adapter.EntityLoadStateAdapter
+import com.far_sstrwnt.cinemania.ui.adapter.MediaPagingAdapter
+import com.far_sstrwnt.cinemania.util.toVisibility
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest

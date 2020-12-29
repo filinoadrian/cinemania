@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.far_sstrwnt.cinemania.model.*
-import com.far_sstrwnt.cinemania.shared.domain.media.GetMediaSearchUseCase
+import com.far_sstrwnt.cinemania.shared.domain.GetMediaSearchUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.ui.common.MediaActionsHandler
 import kotlinx.coroutines.flow.Flow
@@ -20,14 +20,8 @@ class SearchViewModel @Inject constructor(
     private val _currentQueryValue = MutableLiveData<String>()
     val currentQueryValue: LiveData<String> = _currentQueryValue
 
-    private val _navigateToMovieDetailAction = MutableLiveData<Event<String>>()
-    val navigateToMovieDetailAction: LiveData<Event<String>> = _navigateToMovieDetailAction
-
-    private val _navigateToTvDetailAction = MutableLiveData<Event<String>>()
-    val navigateToTvDetailAction: LiveData<Event<String>> = _navigateToTvDetailAction
-
-    private val _navigateToPeopleDetailAction = MutableLiveData<Event<String>>()
-    val navigateToPeopleDetailAction: LiveData<Event<String>> = _navigateToPeopleDetailAction
+    private val _navigateToMediaDetailAction = MutableLiveData<Event<Pair<String, String>>>()
+    val navigateToMediaDetailAction: LiveData<Event<Pair<String, String>>> = _navigateToMediaDetailAction
 
     fun setQueryValue(query: String) {
         _currentQueryValue.value = query
@@ -39,16 +33,7 @@ class SearchViewModel @Inject constructor(
     }
 
     override fun openDetail(mediaType: String, id: String) {
-        when (mediaType) {
-            MediaType.MOVIE.value -> {
-                _navigateToMovieDetailAction.value = Event(id)
-            }
-            MediaType.TV.value -> {
-                _navigateToTvDetailAction.value = Event(id)
-            }
-            MediaType.PEOPLE.value -> {
-                _navigateToPeopleDetailAction.value = Event(id)
-            }
-        }
+        val navigationArgs: Pair<String, String> = Pair(mediaType, id)
+        _navigateToMediaDetailAction.value = Event(navigationArgs)
     }
 }

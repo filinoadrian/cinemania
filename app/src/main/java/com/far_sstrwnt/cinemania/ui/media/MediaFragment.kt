@@ -17,10 +17,10 @@ import com.far_sstrwnt.cinemania.databinding.FragmentMediaBinding
 import com.far_sstrwnt.cinemania.model.GenreEntity
 import com.far_sstrwnt.cinemania.model.MediaType
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
-import com.far_sstrwnt.cinemania.ui.EntityLoadStateAdapter
-import com.far_sstrwnt.cinemania.ui.GridItemDecoration
-import com.far_sstrwnt.cinemania.ui.MediaPagingAdapter
-import com.far_sstrwnt.cinemania.ui.toVisibility
+import com.far_sstrwnt.cinemania.ui.adapter.EntityLoadStateAdapter
+import com.far_sstrwnt.cinemania.ui.adapter.GridItemDecoration
+import com.far_sstrwnt.cinemania.ui.adapter.MediaPagingAdapter
+import com.far_sstrwnt.cinemania.util.toVisibility
 import com.google.android.material.chip.Chip
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.Job
@@ -152,12 +152,8 @@ class MediaFragment : DaggerFragment() {
     }
 
     private fun initNavigation() {
-        viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            findNavController().navigate(MediaFragmentDirections.actionNavMediaToNavMovieDetail(it))
-        })
-
-        viewModel.navigateToTvDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            findNavController().navigate(MediaFragmentDirections.actionNavMediaToNavTvDetail(it))
+        viewModel.navigateToMediaDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            findNavController().navigate(MediaFragmentDirections.actionNavMediaToNavMediaDetail(it.first, it.second))
         })
     }
 

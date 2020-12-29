@@ -61,7 +61,6 @@ class SearchFragment : DaggerFragment() {
             when (position) {
                 0 -> tab.text = "Movies"
                 1 -> tab.text = "Series"
-//                2 -> tab.text = "People"
             }
         }.attach()
     }
@@ -87,16 +86,8 @@ class SearchFragment : DaggerFragment() {
     }
 
     private fun initNavigation() {
-        viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            findNavController().navigate(SearchFragmentDirections.actionNavSearchToNavMovieDetail(it))
-        })
-
-        viewModel.navigateToTvDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            findNavController().navigate(SearchFragmentDirections.actionNavSearchToNavTvDetail(it))
-        })
-
-        viewModel.navigateToPeopleDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            findNavController().navigate(SearchFragmentDirections.actionNavSearchToNavPeopleDetail(it))
+        viewModel.navigateToMediaDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            findNavController().navigate(SearchFragmentDirections.actionNavSearchToNavMediaDetail(it.first, it.second))
         })
     }
 
@@ -108,7 +99,6 @@ class SearchFragment : DaggerFragment() {
             when (position) {
                 0 -> fragment = SearchPagerFragment(MediaType.MOVIE, viewModel)
                 1 -> fragment = SearchPagerFragment(MediaType.TV, viewModel)
-//                2 -> fragment = SearchPagerFragment(MediaType.PEOPLE, viewModel)
             }
             return fragment!!
         }
