@@ -1,11 +1,9 @@
 package com.far_sstrwnt.cinemania.shared.data.datasource.media
 
+import com.far_sstrwnt.cinemania.model.EpisodeEntity
 import com.far_sstrwnt.cinemania.shared.data.datasource.api.ResultsResponse
 import com.far_sstrwnt.cinemania.shared.data.datasource.api.TmdbService
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkCastEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkGenreEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkMediaEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkVideoEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.model.*
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.shared.result.Result.Success
 import com.far_sstrwnt.cinemania.shared.result.Result.Error
@@ -53,6 +51,14 @@ class MediaRemoteDataSource @Inject constructor(
     suspend fun getMediaVideos(mediaType: String, id: String): Result<List<NetworkVideoEntity>> = withContext(ioDispatcher) {
         return@withContext try {
             Success(service.getMediaVideos(mediaType, id).results)
+        } catch (e: Exception) {
+            Error(e)
+        }
+    }
+
+    suspend fun getTvSeason(id: String, seasonNumber: Int): Result<List<NetworkEpisodeEntity>> = withContext(ioDispatcher) {
+        return@withContext try {
+            Success(service.getTvSeason(id, seasonNumber).episodes)
         } catch (e: Exception) {
             Error(e)
         }

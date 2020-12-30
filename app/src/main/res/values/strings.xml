@@ -4,4 +4,6 @@
     <string name="similar_header">Similar</string>
     <string name="video_header">Videos</string>
     <string name="retry">Retry</string>
+    <string name="episodes">Episodes</string>
+    <string name="episode_name">%s. %s</string>
 </resources>

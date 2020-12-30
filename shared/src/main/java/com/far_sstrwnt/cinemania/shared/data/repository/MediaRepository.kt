@@ -3,10 +3,7 @@ package com.far_sstrwnt.cinemania.shared.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.far_sstrwnt.cinemania.model.CastEntity
-import com.far_sstrwnt.cinemania.model.GenreEntity
-import com.far_sstrwnt.cinemania.model.MediaEntity
-import com.far_sstrwnt.cinemania.model.VideoEntity
+import com.far_sstrwnt.cinemania.model.*
 import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaByCategoryPagingSource
 import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaByActionPagingSource
 import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaRemoteDataSource
@@ -90,6 +87,20 @@ class MediaRepository @Inject constructor(
             }
 
             return@withContext Error(Exception("Remote data source fetch media videos failed"))
+        }
+    }
+
+    suspend fun getTvSeason(id: String, seasonNumber: Int): Result<List<EpisodeEntity>> {
+        return withContext(ioDispatcher) {
+            val episodeResult = dataSource.getTvSeason(id, seasonNumber)
+
+            (episodeResult as? Success)?.let {
+                return@withContext Success(it.data.map { results ->
+                    results.asDomainModel()
+                })
+            }
+
+            return@withContext Error(Exception("Remote data source fetch tv series season failed"))
         }
     }
 

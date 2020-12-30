@@ -9,12 +9,12 @@ data class MediaEntity(
     val backdropPath: String?,
     val releaseDate: String?,
     val overview: String?,
+    val numberOfSeasons: Int?
 )
 
 enum class MediaType(val value: String) {
     MOVIE("movie"),
-    TV("tv"),
-    PEOPLE("person")
+    TV("tv")
 }
 
 enum class MediaCategory(val value: String) {

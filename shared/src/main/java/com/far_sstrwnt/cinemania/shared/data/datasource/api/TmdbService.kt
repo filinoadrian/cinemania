@@ -59,4 +59,10 @@ interface TmdbService {
         @Path("media_type") mediaType: String,
         @Path("id") id: String
     ): CreditResponse<NetworkCastEntity>
+
+    @GET("tv/{id}/season/{season_number}")
+    suspend fun getTvSeason(
+        @Path("id") id: String,
+        @Path("season_number") seasonNumber: Int
+    ): SeasonResponse
 }

@@ -57,6 +57,7 @@ fun NetworkMediaEntity.asDomainModel(): MediaEntity {
         genreList = genreList,
         backdropPath = backdropPath,
         releaseDate = releaseDate,
-        overview = overview
+        overview = overview,
+        numberOfSeasons = numberOfSeasons
     )
 }

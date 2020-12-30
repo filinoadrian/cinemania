@@ -12,5 +12,6 @@ data class NetworkMediaEntity (
     @SerializedName(value = "backdrop_path") val backdropPath: String?,
     @SerializedName(value = "release_date", alternate = ["first_air_date"]) val releaseDate: String?,
     @SerializedName(value = "overview") val overview: String?,
-    @SerializedName(value = "genres") val genres: List<GenreEntity>?
+    @SerializedName(value = "genres") val genres: List<GenreEntity>?,
+    @SerializedName(value = "number_of_seasons") val numberOfSeasons: Int?
 )

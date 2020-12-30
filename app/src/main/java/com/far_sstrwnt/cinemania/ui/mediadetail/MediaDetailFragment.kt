@@ -4,20 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.FragmentMediaDetailBinding
+import com.far_sstrwnt.cinemania.model.MediaType
 import com.far_sstrwnt.cinemania.model.VideoEntity
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
-import com.far_sstrwnt.cinemania.ui.adapter.CastAdapter
-import com.far_sstrwnt.cinemania.ui.adapter.EntityLoadStateAdapter
-import com.far_sstrwnt.cinemania.ui.adapter.MediaPagingAdapter
-import com.far_sstrwnt.cinemania.ui.adapter.VideoAdapter
+import com.far_sstrwnt.cinemania.ui.adapter.*
 import com.far_sstrwnt.cinemania.ui.common.VideoActionsHandler
 import com.far_sstrwnt.cinemania.util.openWebsiteUrl
 import com.google.android.material.appbar.AppBarLayout
@@ -38,6 +39,8 @@ class MediaDetailFragment : DaggerFragment(), VideoActionsHandler {
     private lateinit var castAdapter: CastAdapter
 
     private lateinit var videoAdapter: VideoAdapter
+
+    private lateinit var episodeAdapter: EpisodeAdapter
 
     private lateinit var similarAdapter: MediaPagingAdapter
 
@@ -61,6 +64,7 @@ class MediaDetailFragment : DaggerFragment(), VideoActionsHandler {
         viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
         initAppBar()
+        initEpisodeAdapter()
         initCastAdapter()
         initVideoAdapter()
         initPagingAdapter()
@@ -70,6 +74,16 @@ class MediaDetailFragment : DaggerFragment(), VideoActionsHandler {
         viewModel.fetchMediaCast(args.mediaType, args.id)
         viewModel.fetchMediaVideos(args.mediaType, args.id)
         fetchMediaSimilar(args.mediaType, args.id)
+
+        if (args.mediaType == MediaType.TV.value) {
+            viewModel.fetchMediaEpisodes(args.id, 1)
+        }
+
+        viewModel.mediaDetail.observe(this.viewLifecycleOwner, { mediaDetail ->
+            mediaDetail.numberOfSeasons?.let {
+                initSpinner(it)
+            }
+        })
     }
 
     private fun initAppBar() {
@@ -90,6 +104,43 @@ class MediaDetailFragment : DaggerFragment(), VideoActionsHandler {
                 viewDataBinding.collapsingToolbar.title = " "
                 isShow = false
             }
+        })
+    }
+
+    private fun initSpinner(numberOfSeasons: Int) {
+        val seasonChoices = mutableListOf<String>()
+
+        for (i in 1..numberOfSeasons) {
+            seasonChoices.add("Season $i")
+        }
+
+        val spinnerArrayAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            seasonChoices
+        )
+
+        viewDataBinding.mediaSeasonSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.fetchMediaEpisodes(args.id, position + 1)
+            }
+        }
+
+        viewDataBinding.mediaSeasonSpinner.adapter = spinnerArrayAdapter;
+        viewDataBinding.mediaSeasonSpinner.setSelection(0)
+    }
+
+    private fun initEpisodeAdapter() {
+        episodeAdapter = EpisodeAdapter()
+        viewDataBinding.mediaEpisodeList.adapter = episodeAdapter
+        viewDataBinding.mediaEpisodeList.addItemDecoration(ItemDecoration(resources.getDimensionPixelSize(R.dimen.padding_normal)))
+
+        viewModel.mediaEpisodes.observe(this.viewLifecycleOwner, {
+            episodeAdapter.submitList(it)
         })
     }
 
