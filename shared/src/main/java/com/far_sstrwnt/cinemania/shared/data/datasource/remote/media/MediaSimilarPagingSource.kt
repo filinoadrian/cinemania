@@ -1,4 +1,4 @@
-package com.far_sstrwnt.cinemania.shared.data.datasource.media
+package com.far_sstrwnt.cinemania.shared.data.datasource.remote.media
 
 import androidx.paging.PagingSource
 import com.far_sstrwnt.cinemania.model.MediaEntity

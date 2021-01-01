@@ -20,8 +20,14 @@ class MediaDetailViewModel @Inject constructor(
     private val getMediaCastUseCase: GetMediaCastUseCase,
     private val getMediaVideosUseCase: GetMediaVideosUseCase,
     private val getMediaSimilarUseCase: GetMediaSimilarUseCase,
-    private val getTvSeasonUseCase: GetTvSeasonUseCase
+    private val getTvSeasonUseCase: GetTvSeasonUseCase,
+    private val getMediaFavoriteByIdUseCase: GetMediaFavoriteByIdUseCase,
+    private val insertMediaFavoriteUseCase: InsertMediaFavoriteUseCase,
+    private val deleteMediaFavoriteByIdUseCase: DeleteMediaFavoriteByIdUseCase
 ) : ViewModel(), MediaActionsHandler {
+
+    private val _isFavorite = MutableLiveData<Boolean>().apply { value = false }
+    val isFavorite: LiveData<Boolean> = _isFavorite
 
     private val _mediaDetail = MutableLiveData<MediaEntity>()
     val mediaDetail: LiveData<MediaEntity> = _mediaDetail
@@ -48,6 +54,35 @@ class MediaDetailViewModel @Inject constructor(
 
     val isEpisodesEmpty: LiveData<Boolean> = Transformations.map(_mediaEpisodes) {
         it.isNullOrEmpty()
+    }
+
+    fun fetchMediaFavoriteById(id: String) {
+        viewModelScope.launch {
+            val mediaFavoriteResult = getMediaFavoriteByIdUseCase(id)
+            _isFavorite.value = mediaFavoriteResult is Success
+        }
+    }
+
+    fun onFavoriteClicked(mediaEntity: MediaEntity) {
+        if (isFavorite.value != null && isFavorite.value == false) {
+            insertMediaFavorite(mediaEntity)
+        } else {
+            deleteMediaFavoriteById(mediaEntity.id)
+        }
+    }
+
+    private fun insertMediaFavorite(mediaEntity: MediaEntity) {
+        viewModelScope.launch {
+            insertMediaFavoriteUseCase(mediaEntity)
+            fetchMediaFavoriteById(mediaEntity.id)
+        }
+    }
+
+    private fun deleteMediaFavoriteById(id: String) {
+        viewModelScope.launch {
+            deleteMediaFavoriteByIdUseCase(id)
+            fetchMediaFavoriteById(id)
+        }
     }
 
     fun fetchMediaDetail(mediaType: String, id: String) {

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -70,6 +71,7 @@ class MediaDetailFragment : DaggerFragment(), VideoActionsHandler {
         initPagingAdapter()
         initNavigation()
 
+        viewModel.fetchMediaFavoriteById(args.id)
         viewModel.fetchMediaDetail(args.mediaType, args.id)
         viewModel.fetchMediaCast(args.mediaType, args.id)
         viewModel.fetchMediaVideos(args.mediaType, args.id)
@@ -78,6 +80,18 @@ class MediaDetailFragment : DaggerFragment(), VideoActionsHandler {
         if (args.mediaType == MediaType.TV.value) {
             viewModel.fetchMediaEpisodes(args.id, 1)
         }
+
+        viewModel.isFavorite.observe(this.viewLifecycleOwner, { isFavorite ->
+            if (isFavorite) {
+                viewDataBinding.favoriteButton.setColorFilter(
+                    ContextCompat.getColor(requireContext(), R.color.color_secondary),
+                    android.graphics.PorterDuff.Mode.SRC_IN)
+            } else {
+                viewDataBinding.favoriteButton.setColorFilter(
+                    ContextCompat.getColor(requireContext(), android.R.color.darker_gray),
+                    android.graphics.PorterDuff.Mode.SRC_IN)
+            }
+        })
 
         viewModel.mediaDetail.observe(this.viewLifecycleOwner, { mediaDetail ->
             mediaDetail.numberOfSeasons?.let {

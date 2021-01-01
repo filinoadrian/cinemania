@@ -1,4 +1,4 @@
-package com.far_sstrwnt.cinemania.shared.data.datasource.media
+package com.far_sstrwnt.cinemania.shared.data.datasource.remote.media
 
 import androidx.paging.PagingSource
 import com.far_sstrwnt.cinemania.model.MediaEntity
@@ -7,17 +7,19 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class MediaByCategoryPagingSource @Inject constructor(
+class MediaByActionPagingSource @Inject constructor(
     private val dataSource: MediaRemoteDataSource,
+    private val action: String,
     private val mediaType: String,
-    private val category: String
+    private val genre: String?,
+    private val query: String?
 ) : PagingSource<Int, MediaEntity>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MediaEntity> {
         val position = params.key ?: STARTING_PAGE_INDEX
 
         return try {
-            val response = dataSource.getMediaByCategory(mediaType, category, position)
+            val response = dataSource.getMediaByAction(action, mediaType, genre, query, position)
             val mediaList = response.results.map {
                 it.asDomainModel()
             }

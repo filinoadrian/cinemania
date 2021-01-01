@@ -64,7 +64,7 @@ class HomePagerFragment(
         viewModel.fetchMediaGenre(mediaType.value)
 
         viewModel.mediaTrending.observe(this.viewLifecycleOwner, {
-            mediaAdapter.setShowList(it)
+            mediaAdapter.setMediaList(it)
         })
 
         viewModel.mediaGenre.observe(this.viewLifecycleOwner, {
@@ -108,7 +108,7 @@ class HomePagerFragment(
     }
 
     private fun initAdapter() {
-        mediaAdapter = MediaAdapter(mediaType.value, viewModel)
+        mediaAdapter = MediaAdapter(mediaType.value, viewModel, R.layout.item_media_trending)
         viewDataBinding.viewPager.adapter = mediaAdapter
         viewDataBinding.viewPager.offscreenPageLimit = 3
 

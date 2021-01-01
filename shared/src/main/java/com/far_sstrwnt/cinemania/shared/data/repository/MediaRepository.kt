@@ -4,27 +4,63 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.far_sstrwnt.cinemania.model.*
-import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaByCategoryPagingSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaByActionPagingSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaRemoteDataSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaSimilarPagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.local.MediaLocalDataSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.media.MediaByCategoryPagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.media.MediaByActionPagingSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.media.MediaRemoteDataSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.media.MediaSimilarPagingSource
 import com.far_sstrwnt.cinemania.shared.data.mapper.asDomainModel
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.shared.result.Result.Success
 import com.far_sstrwnt.cinemania.shared.result.Result.Error
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MediaRepository @Inject constructor(
-    private val dataSource: MediaRemoteDataSource,
+    private val localDataSource: MediaLocalDataSource,
+    private val remoteDataSource: MediaRemoteDataSource,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
+    suspend fun getMediaFavorite(): Result<List<MediaEntity>> {
+        return withContext(ioDispatcher) {
+            val mediaFavoriteResult = localDataSource.getMediaFavorite()
+
+            (mediaFavoriteResult as? Success)?.let {
+                return@withContext Success(it.data)
+            }
+
+            return@withContext Error(Exception("Local data source fetch media favorite failed"))
+        }
+    }
+
+    suspend fun getMediaFavoriteById(id: String): Result<MediaEntity> {
+        return withContext(ioDispatcher) {
+            val mediaFavoriteResult = localDataSource.getMediaFavoriteById(id)
+
+            (mediaFavoriteResult as? Success)?.let {
+                return@withContext Success(it.data)
+            }
+
+            return@withContext Error(Exception("Local data source fetch media favorite by id failed"))
+        }
+    }
+
+    suspend fun insertMediaFavorite(mediaEntity: MediaEntity) {
+        coroutineScope {
+            launch { localDataSource.insertMediaFavorite(mediaEntity) }
+        }
+    }
+
+    suspend fun deleteMediaFavoriteById(id: String) {
+        coroutineScope {
+            launch { localDataSource.deleteMediaFavoriteById(id) }
+        }
+    }
+
     suspend fun getMediaTrending(mediaType: String): Result<List<MediaEntity>> {
         return withContext(ioDispatcher) {
-            val mediaResult = dataSource.getMediaTrending(mediaType)
+            val mediaResult = remoteDataSource.getMediaTrending(mediaType)
 
             (mediaResult as? Success)?.let {
                 return@withContext Success(it.data.map { results ->
@@ -38,7 +74,7 @@ class MediaRepository @Inject constructor(
 
     suspend fun getMediaGenre(mediaType: String): Result<List<GenreEntity>> {
         return withContext(ioDispatcher) {
-            val genreResult = dataSource.getMediaGenre(mediaType)
+            val genreResult = remoteDataSource.getMediaGenre(mediaType)
 
             (genreResult as? Success)?.let {
                 return@withContext Success(it.data.map { results ->
@@ -52,7 +88,7 @@ class MediaRepository @Inject constructor(
 
     suspend fun getMediaDetail(mediaType: String, id: String): Result<MediaEntity> {
         return withContext(ioDispatcher) {
-            val mediaResult = dataSource.getMediaDetail(mediaType, id)
+            val mediaResult = remoteDataSource.getMediaDetail(mediaType, id)
 
             (mediaResult as? Success)?.let {
                 return@withContext Success(it.data.asDomainModel())
@@ -64,7 +100,7 @@ class MediaRepository @Inject constructor(
 
     suspend fun getMediaCast(mediaType: String, id: String): Result<List<CastEntity>> {
         return withContext(Dispatchers.IO) {
-            val castResult = dataSource.getMediaCast(mediaType, id)
+            val castResult = remoteDataSource.getMediaCast(mediaType, id)
 
             (castResult as? Success)?.let {
                 return@withContext Success(it.data.map { results ->
@@ -78,7 +114,7 @@ class MediaRepository @Inject constructor(
 
     suspend fun getMediaVideos(mediaType: String, id: String): Result<List<VideoEntity>> {
         return withContext(ioDispatcher) {
-            val videoResult = dataSource.getMediaVideos(mediaType, id)
+            val videoResult = remoteDataSource.getMediaVideos(mediaType, id)
 
             (videoResult as? Success)?.let {
                 return@withContext Success(it.data.map { results ->
@@ -92,7 +128,7 @@ class MediaRepository @Inject constructor(
 
     suspend fun getTvSeason(id: String, seasonNumber: Int): Result<List<EpisodeEntity>> {
         return withContext(ioDispatcher) {
-            val episodeResult = dataSource.getTvSeason(id, seasonNumber)
+            val episodeResult = remoteDataSource.getTvSeason(id, seasonNumber)
 
             (episodeResult as? Success)?.let {
                 return@withContext Success(it.data.map { results ->
@@ -112,7 +148,7 @@ class MediaRepository @Inject constructor(
                 enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
             ),
             pagingSourceFactory = {
-                MediaSimilarPagingSource(dataSource, mediaType, id)
+                MediaSimilarPagingSource(remoteDataSource, mediaType, id)
             }
         ).flow
     }
@@ -125,7 +161,7 @@ class MediaRepository @Inject constructor(
                 enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
             ),
             pagingSourceFactory = {
-                MediaByCategoryPagingSource(dataSource, mediaType, category)
+                MediaByCategoryPagingSource(remoteDataSource, mediaType, category)
             }
         ).flow
     }
@@ -143,7 +179,7 @@ class MediaRepository @Inject constructor(
                 enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
             ),
             pagingSourceFactory = {
-                MediaByActionPagingSource(dataSource, action, mediaType, genre, query)
+                MediaByActionPagingSource(remoteDataSource, action, mediaType, genre, query)
             }
         ).flow
     }

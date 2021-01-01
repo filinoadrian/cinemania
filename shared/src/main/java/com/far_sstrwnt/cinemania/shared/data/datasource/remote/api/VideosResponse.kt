@@ -1,6 +1,6 @@
-package com.far_sstrwnt.cinemania.shared.data.datasource.api
+package com.far_sstrwnt.cinemania.shared.data.datasource.remote.api
 
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkVideoEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.model.NetworkVideoEntity
 import com.google.gson.annotations.SerializedName
 
 data class VideosResponse(

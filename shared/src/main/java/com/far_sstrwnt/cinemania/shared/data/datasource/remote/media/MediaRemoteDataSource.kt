@@ -1,9 +1,8 @@
-package com.far_sstrwnt.cinemania.shared.data.datasource.media
+package com.far_sstrwnt.cinemania.shared.data.datasource.remote.media
 
-import com.far_sstrwnt.cinemania.model.EpisodeEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.api.ResultsResponse
-import com.far_sstrwnt.cinemania.shared.data.datasource.api.TmdbService
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.*
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.api.ResultsResponse
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.api.TmdbService
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.model.*
 import com.far_sstrwnt.cinemania.shared.result.Result
 import com.far_sstrwnt.cinemania.shared.result.Result.Success
 import com.far_sstrwnt.cinemania.shared.result.Result.Error

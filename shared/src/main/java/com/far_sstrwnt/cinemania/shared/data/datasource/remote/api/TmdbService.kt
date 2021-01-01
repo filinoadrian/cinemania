@@ -1,6 +1,6 @@
-package com.far_sstrwnt.cinemania.shared.data.datasource.api
+package com.far_sstrwnt.cinemania.shared.data.datasource.remote.api
 
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.*
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.model.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

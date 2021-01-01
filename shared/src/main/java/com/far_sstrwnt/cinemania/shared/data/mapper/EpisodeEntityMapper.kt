@@ -1,7 +1,7 @@
 package com.far_sstrwnt.cinemania.shared.data.mapper
 
 import com.far_sstrwnt.cinemania.model.EpisodeEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkEpisodeEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.model.NetworkEpisodeEntity
 
 fun NetworkEpisodeEntity.asDomainModel(): EpisodeEntity {
     return EpisodeEntity(

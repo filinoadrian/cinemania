@@ -85,12 +85,23 @@
                     style="@style/TextAppearance.Cinemania.H1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_normal"
                     android:maxLines="2"
                     android:text="@{viewmodel.mediaDetail.name}"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="@id/guideline_start"
-                    app:layout_constraintEnd_toEndOf="@id/guideline_end"
+                    app:layout_constraintEnd_toStartOf="@id/favorite_button"
                     tools:text="Avengers: Infinity War"/>
+
+                <ImageView
+                    android:id="@+id/favorite_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:onClick="@{() -> viewmodel.onFavoriteClicked(viewmodel.mediaDetail)}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/guideline_end"
+                    app:srcCompat="@drawable/ic_favorite"
+                    app:tint="@android:color/darker_gray"/>
 
                 <TextView
                     android:id="@+id/media_rating"

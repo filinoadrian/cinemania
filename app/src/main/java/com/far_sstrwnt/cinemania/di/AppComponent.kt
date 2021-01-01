@@ -1,6 +1,7 @@
 package com.far_sstrwnt.cinemania.di
 
 import com.far_sstrwnt.cinemania.MainApplication
+import com.far_sstrwnt.cinemania.shared.di.DatabaseModule
 import com.far_sstrwnt.cinemania.shared.di.NetworkModule
 import com.far_sstrwnt.cinemania.shared.di.SharedModule
 import com.far_sstrwnt.cinemania.shared.di.ViewModelModule
@@ -17,6 +18,7 @@ import javax.inject.Singleton
         ActivityBindingModule::class,
         AppModule::class,
         NetworkModule::class,
+        DatabaseModule::class,
         SharedModule::class,
         ViewModelModule::class
     ]

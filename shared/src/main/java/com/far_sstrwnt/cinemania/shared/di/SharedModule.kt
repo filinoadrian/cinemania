@@ -1,7 +1,10 @@
 package com.far_sstrwnt.cinemania.shared.di
 
-import com.far_sstrwnt.cinemania.shared.data.datasource.media.MediaRemoteDataSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.api.TmdbService
+import com.far_sstrwnt.cinemania.shared.data.datasource.local.CinemaniaDatabase
+import com.far_sstrwnt.cinemania.shared.data.datasource.local.MediaDao
+import com.far_sstrwnt.cinemania.shared.data.datasource.local.MediaLocalDataSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.media.MediaRemoteDataSource
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.api.TmdbService
 import com.far_sstrwnt.cinemania.shared.data.repository.*
 import dagger.Module
 import dagger.Provides
@@ -23,11 +26,21 @@ class SharedModule {
 
     @Singleton
     @Provides
+    fun provideMediaLocalDataSource(
+        database: CinemaniaDatabase,
+        ioDispatcher: CoroutineDispatcher
+    ): MediaLocalDataSource {
+        return MediaLocalDataSource(database.mediaDao(), ioDispatcher)
+    }
+
+    @Singleton
+    @Provides
     fun provideMediaRepository(
-        dataSource: MediaRemoteDataSource,
+        localDataSource: MediaLocalDataSource,
+        remoteDataSource: MediaRemoteDataSource,
         ioDispatcher: CoroutineDispatcher
     ) : MediaRepository {
-        return MediaRepository(dataSource, ioDispatcher)
+        return MediaRepository(localDataSource, remoteDataSource, ioDispatcher)
     }
 
     @Singleton

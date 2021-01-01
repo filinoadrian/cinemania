@@ -1,7 +1,7 @@
 package com.far_sstrwnt.cinemania.shared.data.mapper
 
 import com.far_sstrwnt.cinemania.model.MediaEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkMediaEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.model.NetworkMediaEntity
 
 fun NetworkMediaEntity.asDomainModel(): MediaEntity {
 
@@ -53,6 +53,7 @@ fun NetworkMediaEntity.asDomainModel(): MediaEntity {
         id = id,
         posterPath = posterPath,
         name = name,
+        originalTitle = originalTitle,
         voteAverage = voteAverage,
         genreList = genreList,
         backdropPath = backdropPath,

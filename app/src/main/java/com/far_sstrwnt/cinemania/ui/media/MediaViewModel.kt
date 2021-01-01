@@ -12,6 +12,7 @@ import com.far_sstrwnt.cinemania.shared.domain.GetMediaDiscoverUseCase
 import com.far_sstrwnt.cinemania.shared.domain.GetMediaGenreUseCase
 import com.far_sstrwnt.cinemania.shared.result.Event
 import com.far_sstrwnt.cinemania.shared.result.Result
+import com.far_sstrwnt.cinemania.shared.result.Result.Success
 import com.far_sstrwnt.cinemania.ui.common.MediaActionsHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -36,7 +37,7 @@ class MediaViewModel @Inject constructor(
         viewModelScope.launch {
             val genreResult = getMediaGenreUseCase(mediaType)
 
-            if (genreResult is Result.Success) {
+            if (genreResult is Success) {
                 val genreList = genreResult.data
                 _mediaGenre.value = ArrayList(genreList)
             } else {
