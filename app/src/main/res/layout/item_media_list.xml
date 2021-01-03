@@ -31,7 +31,7 @@
 
         <TextView
             android:id="@+id/media_list_title"
-            style="@style/TextAppearance.Cinemania.H3"
+            style="?textAppearanceHeadline6"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"

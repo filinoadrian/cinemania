@@ -20,8 +20,8 @@ fun openWebsiteUrl(context: Context, url: String) {
 fun openWebsiteUri(context: Context, uri: Uri) {
     if (context.isChromeCustomTabsSupported()) {
         CustomTabsIntent.Builder()
-            .setToolbarColor(ContextCompat.getColor(context, R.color.color_primary))
-            .setSecondaryToolbarColor(ContextCompat.getColor(context, R.color.color_primary_dark))
+            .setToolbarColor(ContextCompat.getColor(context, R.color.blue_800))
+            .setSecondaryToolbarColor(ContextCompat.getColor(context, R.color.blue_700))
             .build()
             .launchUrl(context, uri)
     } else {

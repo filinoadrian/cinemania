@@ -1,21 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorPrimaryVariant">@color/color_primary_dark</item>
-        <item name="colorSecondary">@color/color_secondary</item>
-        <item name="colorSecondaryVariant">@color/color_secondary_dark</item>
+    <style name="Theme.Cinemania.DayNight" parent="Theme.Cinemania" />
 
-        <item name="colorOnPrimary">@color/color_on_primary</item>
-        <item name="colorOnPrimarySurface">@color/color_on_primary_surface</item>
+    <style name="Theme.Cinemania" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
-        <!-- Window decor -->
-        <item name="android:windowLightStatusBar">@bool/use_light_status</item>
-        <item name="android:statusBarColor">@color/transparent</item>
+        <!--Color-->
+        <item name="colorPrimary">@color/blue_700</item>
+        <item name="colorPrimaryVariant">@color/blue_800</item>
+        <item name="colorSecondary">@color/orange_500</item>
+        <item name="colorSecondaryVariant">@color/orange_400</item>
+
+        <item name="android:colorBackground">@color/white_50</item>
+        <item name="colorSurface">@color/white_50</item>
+        <item name="colorPrimarySurfaceVariant">?attr/colorPrimaryVariant</item>
+        <item name="colorError">@color/red_400</item>
+
+        <item name="colorOnPrimary">@color/white_50</item>
+        <item name="colorOnSecondary">@color/black_900</item>
+        <item name="colorOnBackground">@color/black_900</item>
+        <item name="colorOnSurface">@color/black_900</item>
+        <item name="colorOnError">@color/black_900</item>
+
+        <item name="scrimBackground">@color/white_50_alpha_060</item>
+        <item name="android:statusBarColor">@color/blue_50_alpha_060</item>
+        <item name="android:navigationBarColor">@color/nav_bar</item>
+
+        <!--Shape-->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.Cinemania.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.Cinemania.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.Cinemania.LargeComponent</item>
+
+        <!--Typography-->
+        <item name="textAppearanceHeadline2">@style/TextAppearance.Cinemania.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.Cinemania.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.Cinemania.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.Cinemania.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.Cinemania.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Cinemania.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.Cinemania.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.Cinemania.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.Cinemania.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.Cinemania.Caption</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.Cinemania.Overline</item>
+
+        <item name="emphasisHighAlpha">0.87</item>
+        <item name="emphasisMediumAlpha">0.60</item>
+        <item name="emphasisDisabledAlpha">0.38</item>
+
+        <!--System/Platform attributes-->
+        <item name="android:windowBackground">?android:colorBackground</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
+
     </style>
 
-    <style name="AppTheme" parent="Base.AppTheme" />
+<!--    <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">-->
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--        <item name="colorPrimary">@color/color_primary</item>-->
+<!--        <item name="colorPrimaryVariant">@color/color_primary_dark</item>-->
+<!--        <item name="colorSecondary">@color/color_secondary</item>-->
+<!--        <item name="colorSecondaryVariant">@color/color_secondary_dark</item>-->
+
+<!--        <item name="colorOnPrimary">@color/color_on_primary</item>-->
+<!--        <item name="colorOnPrimarySurface">@color/color_on_primary_surface</item>-->
+
+<!--        &lt;!&ndash; Window decor &ndash;&gt;-->
+<!--        <item name="android:windowLightStatusBar">@bool/use_light_status</item>-->
+<!--        <item name="android:statusBarColor">@color/transparent</item>-->
+<!--    </style>-->
+
+<!--    <style name="AppTheme" parent="Base.AppTheme" />-->
 
 </resources>

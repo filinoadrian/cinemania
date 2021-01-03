@@ -68,7 +68,7 @@ class ExpandableTextView @JvmOverloads constructor(
 
         val builder = SpannableStringBuilder(text)
         builder.replace(end - POSTFIX.length, end, POSTFIX)
-        builder.setSpan(ForegroundColorSpan(resources.getColor(R.color.color_secondary)),
+        builder.setSpan(ForegroundColorSpan(resources.getColor(R.color.orange_300)),
             end - POSTFIX.length,
             end,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

@@ -1,5 +1,7 @@
 package com.far_sstrwnt.cinemania.shared.di
 
+import android.content.SharedPreferences
+import android.preference.Preference
 import com.far_sstrwnt.cinemania.shared.data.datasource.local.CinemaniaDatabase
 import com.far_sstrwnt.cinemania.shared.data.datasource.local.MediaDao
 import com.far_sstrwnt.cinemania.shared.data.datasource.local.MediaLocalDataSource

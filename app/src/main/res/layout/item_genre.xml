@@ -6,6 +6,7 @@
     style="@style/Widget.MaterialComponents.Chip.Choice"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:textColor="?colorPrimaryVariant"
     app:chipBackgroundColor="@color/selected_highlight"
     app:chipCornerRadius="8dp"
     app:chipStartPadding="24dp"

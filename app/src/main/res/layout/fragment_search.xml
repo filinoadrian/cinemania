@@ -18,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_on_primary"
+            android:background="?colorSurface"
             android:elevation="0dp"
             app:layout_scrollFlags="scroll|enterAlways">
 
@@ -33,7 +33,7 @@
                 app:closeIcon="@drawable/ic_clear"
                 app:iconifiedByDefault="false"
                 app:queryBackground="@color/transparent"
-                app:queryHint="Search Movie, Series, or Person"
+                app:queryHint="Search Movie or Series"
                 app:searchIcon="@drawable/ic_search" />
 
         </androidx.appcompat.widget.Toolbar>
@@ -42,8 +42,8 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextColor="@color/color_on_primary_surface"
-            app:tabSelectedTextColor="@color/color_primary_dark" />
+            app:tabTextColor="?colorPrimary"
+            app:tabSelectedTextColor="?colorPrimaryVariant" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

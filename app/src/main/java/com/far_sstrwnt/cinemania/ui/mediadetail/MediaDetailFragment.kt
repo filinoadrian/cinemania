@@ -84,7 +84,7 @@ class MediaDetailFragment : DaggerFragment(), VideoActionsHandler {
         viewModel.isFavorite.observe(this.viewLifecycleOwner, { isFavorite ->
             if (isFavorite) {
                 viewDataBinding.favoriteButton.setColorFilter(
-                    ContextCompat.getColor(requireContext(), R.color.color_secondary),
+                    ContextCompat.getColor(requireContext(), R.color.orange_300),
                     android.graphics.PorterDuff.Mode.SRC_IN)
             } else {
                 viewDataBinding.favoriteButton.setColorFilter(

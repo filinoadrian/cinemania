@@ -82,7 +82,7 @@
 
                 <TextView
                     android:id="@+id/media_name"
-                    style="@style/TextAppearance.Cinemania.H1"
+                    style="?textAppearanceHeadline5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_normal"
@@ -166,7 +166,7 @@
 
                 <TextView
                     android:id="@+id/media_episode_title"
-                    style="@style/TextAppearance.Cinemania.H3"
+                    style="?textAppearanceHeadline6"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -202,7 +202,7 @@
 
                 <TextView
                     android:id="@+id/media_cast_title"
-                    style="@style/TextAppearance.Cinemania.H3"
+                    style="?textAppearanceHeadline6"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -230,7 +230,7 @@
 
                 <TextView
                     android:id="@+id/media_video_title"
-                    style="@style/TextAppearance.Cinemania.H3"
+                    style="?textAppearanceHeadline6"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -258,7 +258,7 @@
 
                 <TextView
                     android:id="@+id/media_similar_title"
-                    style="@style/TextAppearance.Cinemania.H3"
+                    style="?textAppearanceHeadline6"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
