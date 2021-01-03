@@ -32,15 +32,5 @@ class SettingsFragment : DaggerFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        val preferenceRepository = (requireActivity().application as MainApplication).preferenceRepository
-
-        preferenceRepository.isDarkThemeLive.observe(this.viewLifecycleOwner) { isDarkTheme ->
-            isDarkTheme?.let { viewDataBinding.darkThemeSwitch.isChecked = it }
-        }
-
-        viewDataBinding.darkThemeSwitch.setOnCheckedChangeListener { _, checked ->
-            preferenceRepository.isDarkTheme = checked
-        }
     }
 }

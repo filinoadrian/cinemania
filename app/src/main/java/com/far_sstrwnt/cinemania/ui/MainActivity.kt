@@ -38,11 +38,6 @@ class MainActivity : DaggerAppCompatActivity() {
                 }
             }
         }
-
-//        (application as MainApplication).preferenceRepository
-//            .nightModeLive.observe(this) { nightMode ->
-//                nightMode?.let { delegate.localNightMode = it }
-//            }
     }
 
     override fun onSupportNavigateUp(): Boolean = navController.navigateUp()
