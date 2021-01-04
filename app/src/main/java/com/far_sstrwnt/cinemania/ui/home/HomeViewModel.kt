@@ -30,10 +30,15 @@ class HomeViewModel @Inject constructor(
     private val _mediaGenre = MutableLiveData<List<GenreEntity>>().apply { value = emptyList() }
     val mediaGenre: LiveData<List<GenreEntity>> = _mediaGenre
 
+    private val _dataLoading = MutableLiveData<Boolean>()
+    val dataLoading: LiveData<Boolean> = _dataLoading
+
     private val _navigateToMediaDetailAction = MutableLiveData<Event<Pair<String, String>>>()
     val navigateToMediaDetailAction: LiveData<Event<Pair<String, String>>> = _navigateToMediaDetailAction
 
     fun fetchMediaTrending(mediaType: String) {
+        _dataLoading.value = true
+
         viewModelScope.launch {
             val trendingResult = getMediaTrendingUseCase(mediaType)
 
@@ -43,6 +48,8 @@ class HomeViewModel @Inject constructor(
             } else {
                 _mediaTrending.value = emptyList()
             }
+
+            _dataLoading.value = false
         }
     }
 

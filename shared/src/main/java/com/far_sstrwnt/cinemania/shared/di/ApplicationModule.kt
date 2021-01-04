@@ -15,7 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
-class SharedModule {
+class ApplicationModule {
 
     @Singleton
     @Provides
@@ -42,7 +42,7 @@ class SharedModule {
         remoteDataSource: MediaRemoteDataSource,
         ioDispatcher: CoroutineDispatcher
     ) : MediaRepository {
-        return MediaRepository(localDataSource, remoteDataSource, ioDispatcher)
+        return DefaultMediaRepository(localDataSource, remoteDataSource, ioDispatcher)
     }
 
     @Singleton

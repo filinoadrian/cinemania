@@ -1,192 +1,27 @@
 package com.far_sstrwnt.cinemania.shared.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.far_sstrwnt.cinemania.model.*
-import com.far_sstrwnt.cinemania.shared.data.datasource.local.MediaLocalDataSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.remote.media.MediaByCategoryPagingSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.remote.media.MediaByActionPagingSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.remote.media.MediaRemoteDataSource
-import com.far_sstrwnt.cinemania.shared.data.datasource.remote.media.MediaSimilarPagingSource
-import com.far_sstrwnt.cinemania.shared.data.mapper.asDomainModel
 import com.far_sstrwnt.cinemania.shared.result.Result
-import com.far_sstrwnt.cinemania.shared.result.Result.Success
-import com.far_sstrwnt.cinemania.shared.result.Result.Error
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class MediaRepository @Inject constructor(
-    private val localDataSource: MediaLocalDataSource,
-    private val remoteDataSource: MediaRemoteDataSource,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
-    suspend fun getMediaFavorite(): Result<List<MediaEntity>> {
-        return withContext(ioDispatcher) {
-            val mediaFavoriteResult = localDataSource.getMediaFavorite()
-
-            (mediaFavoriteResult as? Success)?.let {
-                return@withContext Success(it.data)
-            }
-
-            return@withContext Error(Exception("Local data source fetch media favorite failed"))
-        }
-    }
-
-    suspend fun getMediaFavoriteById(id: String): Result<MediaEntity> {
-        return withContext(ioDispatcher) {
-            val mediaFavoriteResult = localDataSource.getMediaFavoriteById(id)
-
-            (mediaFavoriteResult as? Success)?.let {
-                return@withContext Success(it.data)
-            }
-
-            return@withContext Error(Exception("Local data source fetch media favorite by id failed"))
-        }
-    }
-
-    suspend fun insertMediaFavorite(mediaEntity: MediaEntity) {
-        coroutineScope {
-            launch { localDataSource.insertMediaFavorite(mediaEntity) }
-        }
-    }
-
-    suspend fun deleteMediaFavoriteById(id: String) {
-        coroutineScope {
-            launch { localDataSource.deleteMediaFavoriteById(id) }
-        }
-    }
-
-    suspend fun getMediaTrending(mediaType: String): Result<List<MediaEntity>> {
-        return withContext(ioDispatcher) {
-            val mediaResult = remoteDataSource.getMediaTrending(mediaType)
-
-            (mediaResult as? Success)?.let {
-                return@withContext Success(it.data.map { results ->
-                    results.asDomainModel()
-                })
-            }
-
-            return@withContext Error(Exception("Remote data source fetch media trending failed"))
-        }
-    }
-
-    suspend fun getMediaGenre(mediaType: String): Result<List<GenreEntity>> {
-        return withContext(ioDispatcher) {
-            val genreResult = remoteDataSource.getMediaGenre(mediaType)
-
-            (genreResult as? Success)?.let {
-                return@withContext Success(it.data.map { results ->
-                    results.asDomainModel()
-                })
-            }
-
-            return@withContext Error(Exception("Remote data source fetch media genre failed"))
-        }
-    }
-
-    suspend fun getMediaDetail(mediaType: String, id: String): Result<MediaEntity> {
-        return withContext(ioDispatcher) {
-            val mediaResult = remoteDataSource.getMediaDetail(mediaType, id)
-
-            (mediaResult as? Success)?.let {
-                return@withContext Success(it.data.asDomainModel())
-            }
-
-            return@withContext Error(Exception("Remote data source fetch media detail failed"))
-        }
-    }
-
-    suspend fun getMediaCast(mediaType: String, id: String): Result<List<CastEntity>> {
-        return withContext(Dispatchers.IO) {
-            val castResult = remoteDataSource.getMediaCast(mediaType, id)
-
-            (castResult as? Success)?.let {
-                return@withContext Success(it.data.map { results ->
-                    results.asDomainModel()
-                })
-            }
-
-            return@withContext Error(Exception("Remote data source fetch media cast failed"))
-        }
-    }
-
-    suspend fun getMediaVideos(mediaType: String, id: String): Result<List<VideoEntity>> {
-        return withContext(ioDispatcher) {
-            val videoResult = remoteDataSource.getMediaVideos(mediaType, id)
-
-            (videoResult as? Success)?.let {
-                return@withContext Success(it.data.map { results ->
-                    results.asDomainModel()
-                })
-            }
-
-            return@withContext Error(Exception("Remote data source fetch media videos failed"))
-        }
-    }
-
-    suspend fun getTvSeason(id: String, seasonNumber: Int): Result<List<EpisodeEntity>> {
-        return withContext(ioDispatcher) {
-            val episodeResult = remoteDataSource.getTvSeason(id, seasonNumber)
-
-            (episodeResult as? Success)?.let {
-                return@withContext Success(it.data.map { results ->
-                    results.asDomainModel()
-                })
-            }
-
-            return@withContext Error(Exception("Remote data source fetch tv series season failed"))
-        }
-    }
-
-    fun getMediaSimilarResultStream(mediaType: String, id: String): Flow<PagingData<MediaEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
-                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
-            ),
-            pagingSourceFactory = {
-                MediaSimilarPagingSource(remoteDataSource, mediaType, id)
-            }
-        ).flow
-    }
-
-    fun getMediaByCategoryResultStream(mediaType: String, category: String): Flow<PagingData<MediaEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
-                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
-            ),
-            pagingSourceFactory = {
-                MediaByCategoryPagingSource(remoteDataSource, mediaType, category)
-            }
-        ).flow
-    }
-
+interface MediaRepository {
+    suspend fun getMediaFavorite(): Result<List<MediaEntity>>
+    suspend fun getMediaFavoriteById(id: String): Result<MediaEntity>
+    suspend fun insertMediaFavorite(mediaEntity: MediaEntity)
+    suspend fun deleteMediaFavoriteById(id: String)
+    suspend fun getMediaTrending(mediaType: String): Result<List<MediaEntity>>
+    suspend fun getMediaGenre(mediaType: String): Result<List<GenreEntity>>
+    suspend fun getMediaDetail(mediaType: String, id: String): Result<MediaEntity>
+    suspend fun getMediaCast(mediaType: String, id: String): Result<List<CastEntity>>
+    suspend fun getMediaVideos(mediaType: String, id: String): Result<List<VideoEntity>>
+    suspend fun getTvSeason(id: String, seasonNumber: Int): Result<List<EpisodeEntity>>
+    fun getMediaSimilarResultStream(mediaType: String, id: String): Flow<PagingData<MediaEntity>>
+    fun getMediaByCategoryResultStream(mediaType: String, category: String): Flow<PagingData<MediaEntity>>
     fun getMediaByActionResultStream(
         action: String,
         mediaType: String,
         genre: String? = null,
         query: String? = null
-    ): Flow<PagingData<MediaEntity>> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = NETWORK_PAGE_SIZE,
-                prefetchDistance = NETWORK_PREFETCH_DISTANCE,
-                enablePlaceholders = NETWORK_ENABLE_PLACEHOLDERS
-            ),
-            pagingSourceFactory = {
-                MediaByActionPagingSource(remoteDataSource, action, mediaType, genre, query)
-            }
-        ).flow
-    }
-
-    companion object {
-        private const val NETWORK_PAGE_SIZE = 20
-        private const val NETWORK_PREFETCH_DISTANCE = 4
-        private const val NETWORK_ENABLE_PLACEHOLDERS = false
-    }
+    ): Flow<PagingData<MediaEntity>>
 }
