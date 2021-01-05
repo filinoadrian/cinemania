@@ -11,10 +11,10 @@ import androidx.core.animation.doOnEnd
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.*
+import com.far_sstrwnt.cinemania.shared.result.Event
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 
 fun ViewGroup.inflate(@LayoutRes layout: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layout, this, attachToRoot)
@@ -85,4 +85,31 @@ fun BottomNavigationView.hide() {
         }
         start()
     }
+}
+
+fun View.showSnackbar(snackbarText: String, timeLength: Int) {
+    Snackbar.make(this, snackbarText, timeLength).run {
+        addCallback(object : Snackbar.Callback() {
+            override fun onShown(sb: Snackbar?) {
+                EspressoIdlingResource.increment()
+            }
+
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                EspressoIdlingResource.decrement()
+            }
+        })
+        show()
+    }
+}
+
+fun View.setupSnackbar(
+    lifecycleOwner: LifecycleOwner,
+    snackbarEvent: LiveData<Event<Int>>,
+    timeLength: Int
+) {
+    snackbarEvent.observe(lifecycleOwner, Observer { event ->
+        event.getContentIfNotHandled()?.let {
+            showSnackbar(context.getString(it), timeLength)
+        }
+    })
 }

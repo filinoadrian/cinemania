@@ -11,9 +11,15 @@ import kotlinx.coroutines.flow.Flow
 
 class FakeRepository : MediaRepository {
 
-    var mediaTrendingData: LinkedHashMap<String, MediaEntity> = LinkedHashMap()
+    private var mediaTrendingData: LinkedHashMap<String, MediaEntity> = LinkedHashMap()
+
+    private var mediaGenreData: LinkedHashMap<String, GenreEntity> = LinkedHashMap()
 
     private var shouldReturnError = false
+
+    fun setReturnError(value: Boolean) {
+        shouldReturnError = value
+    }
 
     override suspend fun getMediaFavorite(): Result<List<MediaEntity>> {
         TODO("Not yet implemented")
@@ -39,7 +45,10 @@ class FakeRepository : MediaRepository {
     }
 
     override suspend fun getMediaGenre(mediaType: String): Result<List<GenreEntity>> {
-        TODO("Not yet implemented")
+        if (shouldReturnError) {
+            return Error(Exception("Test Exception"))
+        }
+        return Success(mediaGenreData.values.toList())
     }
 
     override suspend fun getMediaDetail(mediaType: String, id: String): Result<MediaEntity> {
@@ -85,6 +94,13 @@ class FakeRepository : MediaRepository {
     fun addMediaTrending(vararg mediaList: MediaEntity) {
         for (media in mediaList) {
             mediaTrendingData[media.id] = media
+        }
+    }
+
+    @VisibleForTesting
+    fun addMediaGenre(vararg genreList: GenreEntity) {
+        for (genre in genreList) {
+            mediaGenreData[genre.id] = genre
         }
     }
 }

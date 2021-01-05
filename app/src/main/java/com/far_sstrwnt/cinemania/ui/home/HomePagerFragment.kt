@@ -18,7 +18,9 @@ import com.far_sstrwnt.cinemania.model.MediaType
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
 import com.far_sstrwnt.cinemania.ui.adapter.MediaAdapter
 import com.far_sstrwnt.cinemania.ui.adapter.MediaListAdapter
+import com.far_sstrwnt.cinemania.util.setupSnackbar
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -58,6 +60,7 @@ class HomePagerFragment(
 
         initAdapter()
         initPagingAdapter()
+        initSnackbar()
         initNavigation()
 
         viewModel.fetchMediaTrending(mediaType.value)
@@ -105,6 +108,10 @@ class HomePagerFragment(
         viewModel.navigateToMediaDetailAction.observe(this.viewLifecycleOwner, EventObserver {
             findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavMediaDetail(it.first, it.second))
         })
+    }
+
+    private fun initSnackbar() {
+        view?.setupSnackbar(this, viewModel.snackbarMessage, Snackbar.LENGTH_SHORT)
     }
 
     private fun initAdapter() {

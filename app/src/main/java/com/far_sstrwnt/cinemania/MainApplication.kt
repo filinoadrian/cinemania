@@ -31,8 +31,4 @@ open class MainApplication : DaggerApplication() {
                 .build()
         )
     }
-
-    companion object {
-        const val DEFAULT_PREFERENCES = "default_preferences"
-    }
 }
