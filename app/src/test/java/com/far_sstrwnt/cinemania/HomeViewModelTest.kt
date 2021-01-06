@@ -48,7 +48,7 @@ class HomeViewModelTest {
             overview = "Wonder Woman comes into conflict with the Soviet Union during the Cold War in the 1980s and finds a formidable foe by the name of the Cheetah.",
             numberOfSeasons = null
         )
-        mediaRepository.addMediaTrending(mediaTrending1)
+        mediaRepository.addMedia(mediaTrending1)
 
         val mediaGenre1 = GenreEntity(id = "28", name = "Action")
         val mediaGenre2 = GenreEntity(id = "12", name = "Adventure")

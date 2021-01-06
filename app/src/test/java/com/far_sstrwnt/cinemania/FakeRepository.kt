@@ -11,9 +11,15 @@ import kotlinx.coroutines.flow.Flow
 
 class FakeRepository : MediaRepository {
 
-    private var mediaTrendingData: LinkedHashMap<String, MediaEntity> = LinkedHashMap()
+    private var mediaData: LinkedHashMap<String, MediaEntity> = LinkedHashMap()
 
     private var mediaGenreData: LinkedHashMap<String, GenreEntity> = LinkedHashMap()
+
+    private var mediaCastData: LinkedHashMap<String, CastEntity> = LinkedHashMap()
+
+    private var mediaVideosData: LinkedHashMap<String, VideoEntity> = LinkedHashMap()
+
+    private var mediaEpisodesData: LinkedHashMap<String, EpisodeEntity> = LinkedHashMap()
 
     private var shouldReturnError = false
 
@@ -41,7 +47,7 @@ class FakeRepository : MediaRepository {
         if (shouldReturnError) {
             return Error(Exception("Test Exception"))
         }
-        return Success(mediaTrendingData.values.toList())
+        return Success(mediaData.values.toList())
     }
 
     override suspend fun getMediaGenre(mediaType: String): Result<List<GenreEntity>> {
@@ -52,19 +58,34 @@ class FakeRepository : MediaRepository {
     }
 
     override suspend fun getMediaDetail(mediaType: String, id: String): Result<MediaEntity> {
-        TODO("Not yet implemented")
+        if (shouldReturnError) {
+            return Error(Exception("Test Exception"))
+        }
+        mediaData[id]?.let {
+            return Success(it)
+        }
+        return Error(Exception("Could not find media"))
     }
 
     override suspend fun getMediaCast(mediaType: String, id: String): Result<List<CastEntity>> {
-        TODO("Not yet implemented")
+        if (shouldReturnError) {
+            return Error(Exception("Test Exception"))
+        }
+        return Success(mediaCastData.values.toList())
     }
 
     override suspend fun getMediaVideos(mediaType: String, id: String): Result<List<VideoEntity>> {
-        TODO("Not yet implemented")
+        if (shouldReturnError) {
+            return Error(Exception("Test Exception"))
+        }
+        return Success(mediaVideosData.values.toList())
     }
 
     override suspend fun getTvSeason(id: String, seasonNumber: Int): Result<List<EpisodeEntity>> {
-        TODO("Not yet implemented")
+        if (shouldReturnError) {
+            return Error(Exception("Test Exception"))
+        }
+        return Success(mediaEpisodesData.values.toList())
     }
 
     override fun getMediaSimilarResultStream(
@@ -91,9 +112,9 @@ class FakeRepository : MediaRepository {
     }
 
     @VisibleForTesting
-    fun addMediaTrending(vararg mediaList: MediaEntity) {
+    fun addMedia(vararg mediaList: MediaEntity) {
         for (media in mediaList) {
-            mediaTrendingData[media.id] = media
+            mediaData[media.id] = media
         }
     }
 
@@ -101,6 +122,27 @@ class FakeRepository : MediaRepository {
     fun addMediaGenre(vararg genreList: GenreEntity) {
         for (genre in genreList) {
             mediaGenreData[genre.id] = genre
+        }
+    }
+
+    @VisibleForTesting
+    fun addMediaCast(vararg castList: CastEntity) {
+        for (cast in castList) {
+            mediaCastData[cast.id] = cast
+        }
+    }
+
+    @VisibleForTesting
+    fun addMediaVideo(vararg videoList: VideoEntity) {
+        for (video in videoList) {
+            mediaVideosData[video.id] = video
+        }
+    }
+
+    @VisibleForTesting
+    fun addMediaEpisode(vararg episodeList: EpisodeEntity) {
+        for (episode in episodeList) {
+            mediaEpisodesData[episode.id] = episode
         }
     }
 }

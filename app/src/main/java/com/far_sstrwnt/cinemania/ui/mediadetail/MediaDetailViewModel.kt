@@ -41,6 +41,9 @@ class MediaDetailViewModel @Inject constructor(
     private val _mediaEpisodes = MutableLiveData<List<EpisodeEntity>>().apply { value = emptyList() }
     val mediaEpisodes: LiveData<List<EpisodeEntity>> = _mediaEpisodes
 
+    private val _dataLoading = MutableLiveData<Boolean>()
+    val dataLoading: LiveData<Boolean> = _dataLoading
+
     private val _navigateToMediaDetailAction = MutableLiveData<Event<Pair<String, String>>>()
     val navigateToMediaDetailAction: LiveData<Event<Pair<String, String>>> = _navigateToMediaDetailAction
 
@@ -86,6 +89,8 @@ class MediaDetailViewModel @Inject constructor(
     }
 
     fun fetchMediaDetail(mediaType: String, id: String) {
+        _dataLoading.value = true
+
         viewModelScope.launch {
             val mediaResult = getMediaDetailUseCase(mediaType, id)
 
@@ -93,10 +98,14 @@ class MediaDetailViewModel @Inject constructor(
                 val media = mediaResult.data
                 _mediaDetail.value = media
             }
+
+            _dataLoading.value = false
         }
     }
 
     fun fetchMediaCast(mediaType: String, id: String) {
+        _dataLoading.value = true
+
         viewModelScope.launch {
             val castResult = getMediaCastUseCase(mediaType, id)
 
@@ -104,10 +113,14 @@ class MediaDetailViewModel @Inject constructor(
                 val cast = castResult.data
                 _mediaCast.value = cast
             }
+
+            _dataLoading.value = false
         }
     }
 
     fun fetchMediaVideos(mediaType: String, id: String) {
+        _dataLoading.value = true
+
         viewModelScope.launch {
             val videosResult = getMediaVideosUseCase(mediaType, id)
 
@@ -115,10 +128,14 @@ class MediaDetailViewModel @Inject constructor(
                 val videos = videosResult.data
                 _mediaVideos.value = videos
             }
+
+            _dataLoading.value = false
         }
     }
 
     fun fetchMediaEpisodes(id: String, seasonNumber: Int) {
+        _dataLoading.value = false
+
         viewModelScope.launch {
             val episodesResult = getTvSeasonUseCase(id, seasonNumber)
 
@@ -126,6 +143,8 @@ class MediaDetailViewModel @Inject constructor(
                 val episodes = episodesResult.data
                 _mediaEpisodes.value = episodes
             }
+
+            _dataLoading.value = true
         }
     }
 
