@@ -60,13 +60,7 @@ class MediaFragment : DaggerFragment() {
         initPagingAdapter()
         initNavigation()
 
-        viewModel.fetchMediaGenre(args.mediaType)
-
-        fetchMediaDiscover(args.mediaType, args.selectedGenre)
-
-        viewModel.mediaGenre.observe(this.viewLifecycleOwner, {
-            initGenre(args.mediaType, it)
-        })
+        fetchMediaDiscover(args.mediaType, args.selectedGenreId)
 
         viewDataBinding.mediaList.setHasFixedSize(true)
         viewDataBinding.mediaList.addItemDecoration(GridItemDecoration(resources.getDimensionPixelSize(R.dimen.padding_extra_small)))
@@ -79,31 +73,9 @@ class MediaFragment : DaggerFragment() {
         appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (args.mediaType == MediaType.MOVIE.value) {
-            appCompatActivity.supportActionBar?.title = "Movies"
+            appCompatActivity.supportActionBar?.title = "Movies - ${args.selectedGenreName}"
         } else if (args.mediaType == MediaType.TV.value) {
-            appCompatActivity.supportActionBar?.title = "Series"
-        }
-    }
-
-    private fun initGenre(mediaType: String, genreList: List<GenreEntity>) {
-        val chipGroup = viewDataBinding.genreList
-        val inflater = LayoutInflater.from(chipGroup.context)
-
-        val children = genreList.map { genre ->
-            val chip = inflater.inflate(R.layout.item_genre, chipGroup, false) as Chip
-            chip.text = genre.name
-            chip.tag = genre.id
-            chip.isChecked = genre.id == args.selectedGenre
-            chip.setOnClickListener {
-                updateMediaListFromInput(mediaType, genre.id)
-            }
-            chip
-        }
-
-        chipGroup.removeAllViews()
-
-        for (chip in children) {
-            chipGroup.addView(chip)
+            appCompatActivity.supportActionBar?.title = "Series - ${args.selectedGenreName}"
         }
     }
 
@@ -163,13 +135,6 @@ class MediaFragment : DaggerFragment() {
             viewModel.fetchMediaDiscover(mediaType, genre).collectLatest {
                 adapter.submitData(it)
             }
-        }
-    }
-
-    private fun updateMediaListFromInput(mediaType: String, genre: String) {
-        viewDataBinding.genreList.checkedChipId.let {
-            viewDataBinding.mediaList.scrollToPosition(0)
-            fetchMediaDiscover(mediaType, genre)
         }
     }
 }

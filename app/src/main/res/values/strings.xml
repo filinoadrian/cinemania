@@ -9,4 +9,5 @@
     <string name="enable_dark_title">Enable dark theme</string>
     <string name="loading_genre_error">Error while loading genre</string>
     <string name="loading_trending_error">Error loading trending media</string>
+    <string name="genre">Genre</string>
 </resources>

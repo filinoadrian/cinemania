@@ -22,7 +22,7 @@
             android:background="?colorSurface"
             android:elevation="0dp"
             app:titleTextColor="?colorPrimaryVariant"
-            app:title="Favorites"
+            app:title="Settings"
             app:layout_scrollFlags="scroll|enterAlways"/>
 
     </com.google.android.material.appbar.AppBarLayout>

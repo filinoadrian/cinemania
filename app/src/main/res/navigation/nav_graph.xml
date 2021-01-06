@@ -11,9 +11,6 @@
         tools:label="Home"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_nav_home_to_nav_media"
-            app:destination="@id/nav_media" />
-        <action
             android:id="@+id/action_nav_home_to_nav_media_detail"
             app:destination="@id/nav_media_detail" />
     </fragment>
@@ -27,7 +24,10 @@
             android:name="mediaType"
             app:argType="string" />
         <argument
-            android:name="selectedGenre"
+            android:name="selectedGenreName"
+            app:argType="string" />
+        <argument
+            android:name="selectedGenreId"
             app:argType="string" />
         <action
             android:id="@+id/action_nav_media_to_nav_media_detail"
@@ -39,6 +39,9 @@
         android:name="com.far_sstrwnt.cinemania.ui.search.SearchFragment"
         android:label="Search"
         tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_nav_search_to_nav_media"
+            app:destination="@id/nav_media" />
         <action
             android:id="@+id/action_nav_search_to_nav_media_detail"
             app:destination="@id/nav_media_detail" />
