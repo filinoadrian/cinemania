@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="mediaType"
+            type="String" />
+
+        <variable
+            name="eventListener"
+            type="com.far_sstrwnt.cinemania.ui.common.MediaActionsHandler" />
+
+        <variable
+            name="media"
+            type="com.far_sstrwnt.cinemania.model.MediaEntity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="115dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:onClick="@{() -> eventListener.openDetail(mediaType, media.id)}">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/media_card"
+            android:layout_width="115dp"
+            android:layout_height="172dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="8dp"
+            app:cardPreventCornerOverlap="true">
+
+            <ImageView
+                android:id="@+id/media_poster"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                app:poster="@{media.posterPath}"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

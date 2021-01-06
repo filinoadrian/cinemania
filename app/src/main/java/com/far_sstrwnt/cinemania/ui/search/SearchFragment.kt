@@ -8,14 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.far_sstrwnt.cinemania.databinding.FragmentSearchBinding
-import com.far_sstrwnt.cinemania.model.Entity
+import com.far_sstrwnt.cinemania.model.MediaType
 import com.far_sstrwnt.cinemania.shared.result.EventObserver
-import com.far_sstrwnt.cinemania.util.viewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.android.support.DaggerFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,20 +27,18 @@ class SearchFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModels<SearchViewModel> { viewModelFactory }
 
-    private lateinit var binding: FragmentSearchBinding
+    private lateinit var viewDataBinding: FragmentSearchBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        viewModel = viewModelProvider(viewModelFactory)
+    ): View {
+        viewDataBinding = FragmentSearchBinding.inflate(inflater, container, false)
 
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
-
-        return binding.root
+        return viewDataBinding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -54,28 +52,24 @@ class SearchFragment : DaggerFragment() {
 
     private fun initAppBar() {
         val appCompatActivity = activity as AppCompatActivity
-        appCompatActivity.setSupportActionBar(binding.toolbar)
-        appCompatActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        appCompatActivity.setSupportActionBar(viewDataBinding.toolbar)
     }
 
     private fun initAdapter() {
-        binding.viewPager.adapter = MyAdapter(childFragmentManager, lifecycle)
-        TabLayoutMediator(binding.tabLayout, binding.viewPager,
-            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                when (position) {
-                    0 -> tab.text = "Movie"
-                    1 -> tab.text = "Tv Show"
-                    2 -> tab.text = "People"
-                }
-        }).attach()
+        viewDataBinding.viewPager.adapter = SearchFragmentStateAdapter(childFragmentManager, lifecycle)
+        TabLayoutMediator(viewDataBinding.tabLayout, viewDataBinding.viewPager) { tab, position ->
+            when (position) {
+                0 -> tab.text = "Movies"
+                1 -> tab.text = "Series"
+            }
+        }.attach()
     }
 
     private fun initSearch() {
-
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        viewDataBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.isNotEmpty()) {
-                    viewModel.search(query)
+                    viewModel.setQueryValue(query)
                 }
                 return true
             }
@@ -92,62 +86,25 @@ class SearchFragment : DaggerFragment() {
     }
 
     private fun initNavigation() {
-        viewModel.navigateToMovieDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            openDetail(Entity.MOVIE, it)
-        })
-        viewModel.navigateToTvDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            openDetail(Entity.TV, it)
-        })
-        viewModel.navigateToPeopleDetailAction.observe(this.viewLifecycleOwner, EventObserver {
-            openDetail(Entity.PEOPLE, it)
+        viewModel.navigateToMediaDetailAction.observe(this.viewLifecycleOwner, EventObserver {
+            findNavController().navigate(SearchFragmentDirections.actionNavSearchToNavMediaDetail(it.first, it.second))
         })
     }
 
-    private fun openDetail(entity: Entity, id: String) {
-        val action = when (entity) {
-            Entity.MOVIE -> {
-                SearchFragmentDirections.actionNavSearchToNavMovieDetail(
-                    id
-                )
-            }
-            Entity.TV -> {
-                SearchFragmentDirections.actionNavSearchToNavTvDetail(
-                    id
-                )
-            }
-            Entity.PEOPLE -> {
-                SearchFragmentDirections.actionNavSearchToNavPeopleDetail(
-                    id
-                )
-            }
-        }
-        findNavController().navigate(action)
-    }
-
-    private inner class MyAdapter(fm: FragmentManager?, lifecycle: Lifecycle) : FragmentStateAdapter(fm!!, lifecycle) {
-        private val intItems = 3
+    private inner class SearchFragmentStateAdapter(fm: FragmentManager?, lifecycle: Lifecycle)
+        : FragmentStateAdapter(fm!!, lifecycle) {
 
         override fun createFragment(position: Int): Fragment {
             var fragment: Fragment? = null
             when (position) {
-                0 -> fragment =
-                    SearchMoviePagerFragment(
-                        viewModel
-                    )
-                1 -> fragment =
-                    SearchTvPagerFragment(
-                        viewModel
-                    )
-                2 -> fragment =
-                    SearchPeoplePagerFragment(
-                        viewModel
-                    )
+                0 -> fragment = SearchPagerFragment(MediaType.MOVIE, viewModel)
+                1 -> fragment = SearchPagerFragment(MediaType.TV, viewModel)
             }
             return fragment!!
         }
 
         override fun getItemCount(): Int {
-            return intItems
+            return 2
         }
     }
 }

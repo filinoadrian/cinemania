@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="mediaType"
+            type="String" />
+
+        <variable
+            name="eventListener"
+            type="com.far_sstrwnt.cinemania.ui.common.MediaActionsHandler" />
+
+        <variable
+            name="media"
+            type="com.far_sstrwnt.cinemania.model.MediaEntity" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp"
+        android:onClick="@{() -> eventListener.openDetail(mediaType, media.id)}">
+
+        <ImageView
+            android:id="@+id/media_poster"
+            android:layout_width="68dp"
+            android:layout_height="103dp"
+            android:scaleType="fitXY"
+            app:poster="@{media.posterPath}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/media_name"
+            style="?textAppearanceHeadline6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:text="@{media.name}"
+            app:layout_constraintStart_toEndOf="@id/media_poster"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/media_poster"
+            tools:text="Title"/>
+
+        <TextView
+            android:id="@+id/media_genre"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            app:genre="@{media.genreList}"
+            app:layout_constraintStart_toEndOf="@id/media_poster"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/media_name"
+            tools:text="Action, Adventure, Drama"/>
+
+        <TextView
+            android:id="@+id/media_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:text="@{Float.toString(media.voteAverage)}"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/colorSecondary"
+            app:layout_constraintBottom_toBottomOf="@id/media_poster"
+            app:layout_constraintStart_toEndOf="@id/media_poster"
+            tools:text="8.6"/>
+
+        <androidx.appcompat.widget.AppCompatRatingBar
+            android:id="@+id/media_rating_bar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:numStars="5"
+            android:stepSize="0.1"
+            app:rating="@{media.voteAverage}"
+            app:layout_constraintStart_toEndOf="@id/media_rating"
+            app:layout_constraintTop_toTopOf="@id/media_rating"
+            app:layout_constraintBottom_toBottomOf="@id/media_rating"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="375dp"
+            android:paddingStart="75dp"
+            android:paddingEnd="75dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            android:overScrollMode="never"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/view_pager"
+            app:tabBackground="@drawable/tab_selector"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp"
+            app:tabPaddingEnd="7.5dp"
+            app:tabPaddingStart="7.5dp"/>
+
+        <HorizontalScrollView
+            android:id="@+id/genre_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:scrollbars="none"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tab_layout">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/genre_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true">
+
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/media_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="96dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/genre_list_view"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

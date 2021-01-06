@@ -12,12 +12,9 @@ open class MainApplication : DaggerApplication() {
     override fun onCreate() {
         if (BuildConfig.DEBUG) {
             enableStrictMode()
-        }
-        super.onCreate()
-
-        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+        super.onCreate()
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

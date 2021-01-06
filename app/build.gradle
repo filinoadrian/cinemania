@@ -1,8 +1,10 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: "androidx.navigation.safeargs.kotlin"
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-android-extensions'
+    id 'androidx.navigation.safeargs.kotlin'
+}
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -14,7 +16,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.far_sstrwnt.cinemania.CustomTestRunner"
     }
 
     buildTypes {
@@ -30,8 +32,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildFeatures {
@@ -44,6 +46,7 @@ android {
 dependencies {
     implementation project(':shared')
     implementation project(':model')
+    testImplementation project(':shared')
     implementation fileTree(dir: 'libs')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
@@ -52,19 +55,23 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$supportLibVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
-    implementation "androidx.browser:browser:$rootProject.browserVersion"
+    implementation "androidx.browser:browser:$browserVersion"
     implementation "com.google.android.material:material:$materialVersion"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
 
     // architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-    implementation "androidx.paging:paging-runtime:$pagingVersion"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
 
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
@@ -80,8 +87,13 @@ dependencies {
 
     // testing
     testImplementation "junit:junit:$junitVersion"
+    testImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
+    testImplementation "androidx.test.ext:junit-ktx:$androidXTestExtKotlinRunnerVersion"
+    testImplementation "androidx.test:rules:$androidXTestRulesVersion"
+    testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    testImplementation "com.google.truth:truth:$truthVersion"
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
     androidTestImplementation "androidx.test:runner:$runnerVersion"

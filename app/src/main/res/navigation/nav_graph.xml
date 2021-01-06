@@ -3,7 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/nav_movie">
+    app:startDestination="@id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.far_sstrwnt.cinemania.ui.home.HomeFragment"
+        tools:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_nav_home_to_nav_media"
+            app:destination="@id/nav_media" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_media_detail"
+            app:destination="@id/nav_media_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_media"
+        android:name="com.far_sstrwnt.cinemania.ui.media.MediaFragment"
+        tools:label="Media"
+        tools:layout="@layout/fragment_media">
+        <argument
+            android:name="mediaType"
+            app:argType="string" />
+        <argument
+            android:name="selectedGenre"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_nav_media_to_nav_media_detail"
+            app:destination="@id/nav_media_detail" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_search"
@@ -11,82 +40,42 @@
         android:label="Search"
         tools:layout="@layout/fragment_search">
         <action
-            android:id="@+id/action_nav_search_to_nav_movie_detail"
-            app:destination="@id/nav_movie_detail" />
-        <action
-            android:id="@+id/action_nav_search_to_nav_tv_detail"
-            app:destination="@id/nav_movie_detail" />
-        <action
-            android:id="@+id/action_nav_search_to_nav_people_detail"
-            app:destination="@id/nav_movie_detail" />
+            android:id="@+id/action_nav_search_to_nav_media_detail"
+            app:destination="@id/nav_media_detail" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_movie"
-        android:name="com.far_sstrwnt.cinemania.ui.movies.MoviesFragment"
-        android:label="Movies"
-        tools:layout="@layout/fragment_movies">
+        android:id="@+id/nav_favorites"
+        android:name="com.far_sstrwnt.cinemania.ui.favorites.FavoriteFragment"
+        android:label="Favorite"
+        tools:layout="@layout/fragment_favorites">
         <action
-            android:id="@+id/action_nav_movie_to_nav_movie_detail"
-            app:destination="@id/nav_movie_detail" />
+            android:id="@+id/action_nav_favorites_to_nav_media_detail"
+            app:destination="@id/nav_media_detail" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_movie_detail"
-        android:name="com.far_sstrwnt.cinemania.ui.moviedetail.MovieDetailFragment"
-        android:label="Movie Detail"
-        tools:layout="@layout/fragment_movie_detail">
+        android:id="@+id/nav_settings"
+        android:name="com.far_sstrwnt.cinemania.ui.settings.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_media_detail"
+        android:name="com.far_sstrwnt.cinemania.ui.mediadetail.MediaDetailFragment"
+        android:label="Detail"
+        tools:layout="@layout/fragment_media_detail">
+        <argument
+            android:name="mediaType"
+            app:argType="string" />
         <argument
             android:name="id"
             app:argType="string" />
         <action
-            android:id="@+id/action_nav_movie_detail_to_nav_people_detail"
-            app:destination="@id/nav_people_detail" />
-        <action
-            android:id="@+id/action_nav_movie_detail_to_self"
-            app:destination="@id/nav_movie_detail" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_tv"
-        android:name="com.far_sstrwnt.cinemania.ui.tv.TvFragment"
-        android:label="TV"
-        tools:layout="@layout/fragment_tv">
-        <action
-            android:id="@+id/action_nav_tv_to_nav_tv_detail"
-            app:destination="@id/nav_tv_detail" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_tv_detail"
-        android:name="com.far_sstrwnt.cinemania.ui.tvdetail.TvDetailFragment"
-        android:label="TV Detail"
-        tools:layout="@layout/fragment_tv_detail">
-        <argument
-            android:name="id"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_nav_tv_detail_to_nav_people_detail"
-            app:destination="@id/nav_people_detail" />
-        <action
-            android:id="@+id/action_nav_tv_detail_to_self"
-            app:destination="@id/nav_tv_detail" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_people_detail"
-        android:name="com.far_sstrwnt.cinemania.ui.peopledetail.PeopleDetailFragment"
-        android:label="People Detail"
-        tools:layout="@layout/fragment_people_detail">
-        <argument
-            android:name="id"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_nav_people_detail_to_nav_movie_detail"
-            app:destination="@id/nav_movie_detail" />
-        <action
-            android:id="@+id/action_nav_people_detail_to_nav_tv_detail"
-            app:destination="@id/nav_tv_detail" />
+            android:id="@+id/action_nav_media_detail_self"
+            app:destination="@id/nav_media_detail" />
     </fragment>
 
 </navigation>

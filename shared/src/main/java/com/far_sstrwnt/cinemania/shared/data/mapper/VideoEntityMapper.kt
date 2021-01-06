@@ -1,7 +1,7 @@
 package com.far_sstrwnt.cinemania.shared.data.mapper
 
 import com.far_sstrwnt.cinemania.model.VideoEntity
-import com.far_sstrwnt.cinemania.shared.data.datasource.model.NetworkVideoEntity
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.model.NetworkVideoEntity
 
 fun NetworkVideoEntity.asDomainModel(): VideoEntity {
     return VideoEntity(

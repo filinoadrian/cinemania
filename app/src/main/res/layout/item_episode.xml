@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="episode"
+            type="com.far_sstrwnt.cinemania.model.EpisodeEntity" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/episode_image"
+            android:layout_width="138dp"
+            android:layout_height="78dp"
+            android:scaleType="fitXY"
+            app:poster="@{episode.stillPath}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/episode_name"
+            style="?textAppearanceHeadline6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:text="@{String.format(@string/episode_name, episode.episodeNumber, episode.name)}"
+            app:layout_constraintStart_toEndOf="@id/episode_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/episode_image"
+            tools:text="Title"/>
+
+        <com.far_sstrwnt.cinemania.ui.widget.ExpandableTextView
+            android:id="@+id/episode_overview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@{episode.overview}"
+            android:textAppearance="?attr/textAppearanceBody2"
+            app:layout_constraintTop_toBottomOf="@+id/episode_image"
+            app:layout_constraintStart_toStartOf="@id/episode_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="As the Avengers and their allies have continued to protect the world from threats too large for any one hero to handle, a new danger has emerged from the cosmic shadows: Thanos. "/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
