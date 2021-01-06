@@ -50,14 +50,8 @@ class HomeViewModelTest {
         )
         mediaRepository.addMedia(mediaTrending1)
 
-        val mediaGenre1 = GenreEntity(id = "28", name = "Action")
-        val mediaGenre2 = GenreEntity(id = "12", name = "Adventure")
-        val mediaGenre3 = GenreEntity(id = "16", name = "Animation")
-        mediaRepository.addMediaGenre(mediaGenre1, mediaGenre2, mediaGenre3)
-
         homeViewModel = HomeViewModel(
             GetMediaTrendingUseCase(mediaRepository),
-            GetMediaGenreUseCase(mediaRepository),
             GetMediaByCategoryUseCase(mediaRepository)
         )
     }
@@ -86,29 +80,6 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun fetchMediaGenre_loadingTogglesAndDataLoaded() {
-        // Pause dispatcher so we can verify initial values
-        mainCoroutineRule.pauseDispatcher()
-
-        // Given an initialized HomeViewModel with initialized media genre
-        // When loading of genre is requested
-        // Trigger loading of genre
-        homeViewModel.fetchMediaGenre(MediaType.MOVIE.value)
-
-        // Then progress indicator is shown
-        assertThat(LiveDataTestUtil.getValue(homeViewModel.dataLoading)).isTrue()
-
-        // Execute pending coroutines actions
-        mainCoroutineRule.resumeDispatcher()
-
-        // Then progress indicator is hidden
-        assertThat(LiveDataTestUtil.getValue(homeViewModel.dataLoading)).isFalse()
-
-        // And data correctly loaded
-        assertThat(LiveDataTestUtil.getValue(homeViewModel.mediaGenre)).hasSize(3)
-    }
-
-    @Test
     fun fetchMediaTrending_error() {
         // Make the repository return errors
         mediaRepository.setReturnError(true)
@@ -124,24 +95,6 @@ class HomeViewModelTest {
 
         // And the snackbar updated
         assertSnackbarMessage(homeViewModel.snackbarMessage, R.string.loading_trending_error)
-    }
-
-    @Test
-    fun fetchMediaGenre_error() {
-        // Make the repository return errors
-        mediaRepository.setReturnError(true)
-
-        // Fetch media trending
-        homeViewModel.fetchMediaGenre(MediaType.MOVIE.value)
-
-        // Then progress indicator is hidden
-        assertThat(LiveDataTestUtil.getValue(homeViewModel.dataLoading)).isFalse()
-
-        // And the list of items is empty
-        assertThat(LiveDataTestUtil.getValue(homeViewModel.mediaGenre)).isEmpty()
-
-        // And the snackbar updated
-        assertSnackbarMessage(homeViewModel.snackbarMessage, R.string.loading_genre_error)
     }
 
     @Test
