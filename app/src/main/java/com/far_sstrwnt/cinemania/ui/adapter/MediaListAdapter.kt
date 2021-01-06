@@ -1,8 +1,11 @@
 package com.far_sstrwnt.cinemania.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.viewModelScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +13,7 @@ import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.ItemMediaListBinding
 import com.far_sstrwnt.cinemania.ui.home.HomeViewModel
 import com.far_sstrwnt.cinemania.ui.home.MediaList
+import com.far_sstrwnt.cinemania.util.toVisibility
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -46,6 +50,18 @@ class MediaListAdapter(
                 header = EntityLoadStateAdapter { mediaPagingAdapter.retry() },
                 footer = EntityLoadStateAdapter { mediaPagingAdapter.retry() }
             )
+
+            mediaPagingAdapter.addLoadStateListener { loadState ->
+                if (loadState.refresh !is LoadState.NotLoading) {
+                    binding.progressBar.visibility =
+                        toVisibility(loadState.refresh is LoadState.Loading)
+                    binding.retryButton.visibility =
+                        toVisibility(loadState.refresh is LoadState.Error)
+                } else {
+                    binding.progressBar.visibility = View.GONE
+                    binding.retryButton.visibility = View.GONE
+                }
+            }
 
             viewModel.viewModelScope.launch {
                 viewModel.fetchMediaByCategory(
