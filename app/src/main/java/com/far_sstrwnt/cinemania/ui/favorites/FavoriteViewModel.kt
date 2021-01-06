@@ -24,7 +24,12 @@ class FavoriteViewModel @Inject constructor(
     private val _navigateToMediaDetailAction = MutableLiveData<Event<Pair<String, String>>>()
     val navigateToMediaDetailAction: LiveData<Event<Pair<String, String>>> = _navigateToMediaDetailAction
 
+    private val _dataLoading = MutableLiveData<Boolean>()
+    val dataLoading: LiveData<Boolean> = _dataLoading
+
     fun fetchMediaFavorite() {
+        _dataLoading.value = true
+
         viewModelScope.launch {
             val mediaFavoriteResult = getMediaFavoriteUseCase()
 
@@ -34,6 +39,8 @@ class FavoriteViewModel @Inject constructor(
             } else {
                 _mediaFavorite.value = emptyList()
             }
+
+            _dataLoading.value = false
         }
     }
 

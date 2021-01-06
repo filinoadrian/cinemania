@@ -13,6 +13,8 @@ class FakeRepository : MediaRepository {
 
     private var mediaData: LinkedHashMap<String, MediaEntity> = LinkedHashMap()
 
+    private var mediaFavoriteData: LinkedHashMap<String, MediaEntity> = LinkedHashMap()
+
     private var mediaGenreData: LinkedHashMap<String, GenreEntity> = LinkedHashMap()
 
     private var mediaCastData: LinkedHashMap<String, CastEntity> = LinkedHashMap()
@@ -28,7 +30,10 @@ class FakeRepository : MediaRepository {
     }
 
     override suspend fun getMediaFavorite(): Result<List<MediaEntity>> {
-        TODO("Not yet implemented")
+        if (shouldReturnError) {
+            return Error(Exception("Test Exception"))
+        }
+        return Success(mediaFavoriteData.values.toList())
     }
 
     override suspend fun getMediaFavoriteById(id: String): Result<MediaEntity> {
@@ -115,6 +120,13 @@ class FakeRepository : MediaRepository {
     fun addMedia(vararg mediaList: MediaEntity) {
         for (media in mediaList) {
             mediaData[media.id] = media
+        }
+    }
+
+    @VisibleForTesting
+    fun addMediaFavorite(vararg mediaList: MediaEntity) {
+        for (media in mediaList) {
+            mediaFavoriteData[media.id] = media
         }
     }
 
