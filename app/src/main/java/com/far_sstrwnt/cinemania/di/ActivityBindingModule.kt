@@ -7,7 +7,6 @@ import com.far_sstrwnt.cinemania.ui.home.HomeModule
 import com.far_sstrwnt.cinemania.ui.media.MediaModule
 import com.far_sstrwnt.cinemania.ui.mediadetail.MediaDetailModule
 import com.far_sstrwnt.cinemania.ui.search.SearchModule
-import com.far_sstrwnt.cinemania.ui.settings.SettingsModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -22,8 +21,7 @@ abstract class ActivityBindingModule {
             MediaModule::class,
             SearchModule::class,
             MediaDetailModule::class,
-            FavoriteModule::class,
-            SettingsModule::class
+            FavoriteModule::class
         ]
     )
     internal abstract fun mainActivity(): MainActivity

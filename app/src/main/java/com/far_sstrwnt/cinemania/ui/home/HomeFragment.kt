@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
@@ -34,6 +35,12 @@ class HomeFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
 
         initAdapter()
+        initAppBar()
+    }
+
+    private fun initAppBar() {
+        val appCompatActivity = activity as AppCompatActivity
+        appCompatActivity.setSupportActionBar(viewDataBinding.toolbar)
     }
 
     private fun initAdapter() {

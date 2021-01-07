@@ -6,10 +6,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
-import com.far_sstrwnt.cinemania.MainApplication
 import com.far_sstrwnt.cinemania.R
 import com.far_sstrwnt.cinemania.databinding.ActivityMainBinding
-import com.far_sstrwnt.cinemania.util.contentView
 import com.far_sstrwnt.cinemania.util.hide
 import com.far_sstrwnt.cinemania.util.show
 import dagger.android.support.DaggerAppCompatActivity
@@ -32,7 +30,7 @@ class MainActivity : DaggerAppCompatActivity() {
             lifecycleScope.launchWhenResumed {
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     when (destination.id) {
-                        R.id.nav_home, R.id.nav_search, R.id.nav_favorites, R.id.nav_settings -> bottomNav.show()
+                        R.id.nav_home, R.id.nav_search, R.id.nav_favorites -> bottomNav.show()
                         else -> bottomNav.hide()
                     }
                 }

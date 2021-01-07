@@ -1,6 +1,8 @@
 package com.far_sstrwnt.cinemania.shared.di
 
 import com.far_sstrwnt.cinemania.shared.data.datasource.remote.api.TmdbService
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.api.TmdbService.Companion.API_KEY
+import com.far_sstrwnt.cinemania.shared.data.datasource.remote.api.TmdbService.Companion.BASE_URL
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -16,7 +18,7 @@ class NetworkModule {
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/")
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -40,7 +42,7 @@ class NetworkModule {
                 val originalUrl = chain.request()
                     .url
                     .newBuilder()
-                    .addQueryParameter("api_key", "a1f3faf95d3a6c30d3e3b20acfcdbeae")
+                    .addQueryParameter("api_key", API_KEY)
                     .build()
 
                 val request = chain.request()
