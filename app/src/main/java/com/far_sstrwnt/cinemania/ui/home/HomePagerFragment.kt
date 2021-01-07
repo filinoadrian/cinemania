@@ -50,13 +50,17 @@ class HomePagerFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewDataBinding = FragmentHomePagerBinding.inflate(inflater, container, false)
+        viewDataBinding = FragmentHomePagerBinding.inflate(inflater, container, false).apply {
+            viewmodel = viewModel
+        }
 
         return viewDataBinding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
         initAdapter()
         initPagingAdapter()
