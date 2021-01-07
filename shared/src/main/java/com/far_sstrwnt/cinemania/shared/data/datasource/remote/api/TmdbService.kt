@@ -1,5 +1,6 @@
 package com.far_sstrwnt.cinemania.shared.data.datasource.remote.api
 
+import com.far_sstrwnt.cinemania.shared.BuildConfig
 import com.far_sstrwnt.cinemania.shared.data.datasource.remote.model.*
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -7,7 +8,10 @@ import retrofit2.http.Query
 
 interface TmdbService {
 
-    // https://api.themoviedb.org/3/discover/movie?api_key=<api_key>&page=1
+    companion object {
+        const val BASE_URL = "https://api.themoviedb.org/3/"
+        const val API_KEY = BuildConfig.TMDB_API_TOKEN
+    }
 
     @GET("trending/{media_type}/day")
     suspend fun getMediaTrending(

@@ -1,9 +1,6 @@
 package com.far_sstrwnt.cinemania.ui.favorites
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.far_sstrwnt.cinemania.model.MediaEntity
 import com.far_sstrwnt.cinemania.shared.domain.DeleteMediaFavoriteByIdUseCase
 import com.far_sstrwnt.cinemania.shared.domain.GetMediaFavoriteUseCase
@@ -24,7 +21,16 @@ class FavoriteViewModel @Inject constructor(
     private val _navigateToMediaDetailAction = MutableLiveData<Event<Pair<String, String>>>()
     val navigateToMediaDetailAction: LiveData<Event<Pair<String, String>>> = _navigateToMediaDetailAction
 
+    private val _dataLoading = MutableLiveData<Boolean>()
+    val dataLoading: LiveData<Boolean> = _dataLoading
+
+    val empty: LiveData<Boolean> = Transformations.map(_mediaFavorite) {
+        it.isEmpty()
+    }
+
     fun fetchMediaFavorite() {
+        _dataLoading.value = true
+
         viewModelScope.launch {
             val mediaFavoriteResult = getMediaFavoriteUseCase()
 
@@ -34,6 +40,8 @@ class FavoriteViewModel @Inject constructor(
             } else {
                 _mediaFavorite.value = emptyList()
             }
+
+            _dataLoading.value = false
         }
     }
 

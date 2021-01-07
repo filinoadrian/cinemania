@@ -8,10 +8,9 @@
     android:layout_height="wrap_content"
     android:textColor="?colorPrimaryVariant"
     app:chipBackgroundColor="@color/selected_highlight"
-    app:chipCornerRadius="8dp"
-    app:chipStartPadding="24dp"
-    app:chipEndPadding="24dp"
-    app:chipMinHeight="60dp"
+    app:chipCornerRadius="16dp"
+    app:chipStartPadding="@dimen/padding_normal"
+    app:chipEndPadding="@dimen/padding_normal"
     tools:checked="true">
 
 </com.google.android.material.chip.Chip>

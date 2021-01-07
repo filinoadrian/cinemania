@@ -50,7 +50,9 @@ class HomePagerFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewDataBinding = FragmentHomePagerBinding.inflate(inflater, container, false)
+        viewDataBinding = FragmentHomePagerBinding.inflate(inflater, container, false).apply {
+            viewmodel = viewModel
+        }
 
         return viewDataBinding.root
     }
@@ -58,43 +60,18 @@ class HomePagerFragment(
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
+
         initAdapter()
         initPagingAdapter()
         initSnackbar()
         initNavigation()
 
         viewModel.fetchMediaTrending(mediaType.value)
-        viewModel.fetchMediaGenre(mediaType.value)
 
         viewModel.mediaTrending.observe(this.viewLifecycleOwner, {
             mediaAdapter.setMediaList(it)
         })
-
-        viewModel.mediaGenre.observe(this.viewLifecycleOwner, {
-            initGenre(it)
-        })
-    }
-
-    private fun initGenre(genreList: List<GenreEntity>) {
-        val chipGroup = viewDataBinding.genreList
-        val inflater = LayoutInflater.from(chipGroup.context)
-
-        val children = genreList.map { genre ->
-            val chip = inflater.inflate(R.layout.item_genre, chipGroup, false) as Chip
-            chip.text = genre.name
-            chip.tag = genre.name
-            chip.setOnClickListener {
-                val directions = HomeFragmentDirections.actionNavHomeToNavMedia(mediaType.value, genre.id)
-                findNavController().navigate(directions)
-            }
-            chip
-        }
-
-        chipGroup.removeAllViews()
-
-        for (chip in children) {
-            chipGroup.addView(chip)
-        }
     }
 
     private fun initPagingAdapter() {

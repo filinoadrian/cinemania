@@ -70,15 +70,18 @@ class SearchFragment : DaggerFragment() {
             override fun onQueryTextSubmit(query: String): Boolean {
                 if (query.isNotEmpty()) {
                     viewModel.setQueryValue(query)
+                    viewModel.setGenreVisibility(false)
                 }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText!!.isNotEmpty()) {
-                    //
+                if (newText!!.isNotEmpty() && newText.length >= 3) {
+                    viewModel.setQueryValue(newText)
+                    viewModel.setGenreVisibility(false)
                 } else {
-                    //
+                    viewModel.setQueryValue(newText)
+                    viewModel.setGenreVisibility(true)
                 }
                 return false;
             }

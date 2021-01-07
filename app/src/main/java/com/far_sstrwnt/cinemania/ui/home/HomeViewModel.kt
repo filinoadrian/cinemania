@@ -22,15 +22,11 @@ import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
     private val getMediaTrendingUseCase: GetMediaTrendingUseCase,
-    private val getMediaGenreUseCase: GetMediaGenreUseCase,
     private val getMediaByCategoryUseCase: GetMediaByCategoryUseCase
 ) : ViewModel(), MediaActionsHandler {
 
     private val _mediaTrending = MutableLiveData<List<MediaEntity>>().apply { value = emptyList() }
     val mediaTrending: LiveData<List<MediaEntity>> = _mediaTrending
-
-    private val _mediaGenre = MutableLiveData<List<GenreEntity>>().apply { value = emptyList() }
-    val mediaGenre: LiveData<List<GenreEntity>> = _mediaGenre
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
@@ -55,27 +51,6 @@ class HomeViewModel @Inject constructor(
                 } else {
                     _mediaTrending.value = emptyList()
                     showSnackbarMessage(R.string.loading_trending_error)
-                }
-
-                _dataLoading.value = false
-            }
-        }
-    }
-
-    fun fetchMediaGenre(mediaType: String) {
-        _dataLoading.value = true
-
-        wrapEspressoIdlingResource {
-
-            viewModelScope.launch {
-                val genreResult = getMediaGenreUseCase(mediaType)
-
-                if (genreResult is Success) {
-                    val genreList = genreResult.data
-                    _mediaGenre.value = ArrayList(genreList)
-                } else {
-                    _mediaGenre.value = emptyList()
-                    showSnackbarMessage(R.string.loading_genre_error)
                 }
 
                 _dataLoading.value = false

@@ -19,12 +19,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MediaViewModel @Inject constructor(
-    private val getMediaGenreUseCase: GetMediaGenreUseCase,
     private val getMediaDiscoverUseCase: GetMediaDiscoverUseCase
 ) : ViewModel(), MediaActionsHandler {
-
-    private val _mediaGenre = MutableLiveData<List<GenreEntity>>().apply { value = emptyList() }
-    val mediaGenre: LiveData<List<GenreEntity>> = _mediaGenre
 
     private val _navigateToMediaDetailAction = MutableLiveData<Event<Pair<String, String>>>()
     val navigateToMediaDetailAction: LiveData<Event<Pair<String, String>>> = _navigateToMediaDetailAction
@@ -32,19 +28,6 @@ class MediaViewModel @Inject constructor(
     private var currentGenreValue: String? = null
 
     private var currentMediaResult: Flow<PagingData<MediaEntity>>? = null
-
-    fun fetchMediaGenre(mediaType: String) {
-        viewModelScope.launch {
-            val genreResult = getMediaGenreUseCase(mediaType)
-
-            if (genreResult is Success) {
-                val genreList = genreResult.data
-                _mediaGenre.value = ArrayList(genreList)
-            } else {
-                _mediaGenre.value = emptyList()
-            }
-        }
-    }
 
     fun fetchMediaDiscover(mediaType: String, genre: String?): Flow<PagingData<MediaEntity>> {
         val lastResult = currentMediaResult
