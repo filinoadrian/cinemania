@@ -55,6 +55,9 @@
         <action
             android:id="@+id/action_nav_favorites_to_nav_media_detail"
             app:destination="@id/nav_media_detail" />
+        <action
+            android:id="@+id/action_nav_favorites_to_nav_search"
+            app:destination="@id/nav_search" />
     </fragment>
 
     <fragment

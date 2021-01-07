@@ -32,13 +32,17 @@ class FavoriteFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewDataBinding = FragmentFavoritesBinding.inflate(inflater, container, false)
+        viewDataBinding = FragmentFavoritesBinding.inflate(inflater, container, false).apply {
+            viewmodel = viewModel
+        }
 
         return viewDataBinding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        viewDataBinding.lifecycleOwner = this.viewLifecycleOwner
 
         initAppBar()
         initAdapter()
@@ -65,5 +69,9 @@ class FavoriteFragment : DaggerFragment() {
         viewModel.navigateToMediaDetailAction.observe(this.viewLifecycleOwner, EventObserver {
             findNavController().navigate(FavoriteFragmentDirections.actionNavFavoritesToNavMediaDetail(it.first, it.second))
         })
+
+        viewDataBinding.findFavoriteButton.setOnClickListener {
+            findNavController().navigate(FavoriteFragmentDirections.actionNavFavoritesToNavSearch())
+        }
     }
 }

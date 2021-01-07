@@ -10,4 +10,6 @@
     <string name="loading_genre_error">Error while loading genre</string>
     <string name="loading_trending_error">Error loading trending media</string>
     <string name="genre">Genre</string>
+    <string name="no_favorites">You have no favorites Movies or Series</string>
+    <string name="find_movies_or_series">Find Movies or Series</string>
 </resources>
